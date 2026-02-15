@@ -1,0 +1,46 @@
+{
+  "name": "game-patch-companion",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --workspaces --if-present dev",
+    "drizzle:push": "bun run --workspaces --if-present drizzle:push",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "bun run --workspaces --if-present lint",
+    "lint-staged": "lint-staged",
+    "lint:fix": "bun run --workspaces --if-present lint:fix",
+    "prepare": "husky",
+    "type-check": "tsc -b --noEmit"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/bun": "latest",
+    "eslint": "^9.22.0",
+    "eslint-config-next": "16.1.6",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript-eslint": "^8.55.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix --max-warnings=0",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}
