@@ -40,6 +40,29 @@ export default [
           alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],
+      "import/extensions": [
+        "error",
+        "never",
+        {
+          js: "never",
+          jsx: "never",
+          ts: "never",
+          tsx: "never",
+          mjs: "never",
+          cjs: "never",
+        },
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["*.ts", "*.tsx", "*.js", "*.jsx", "*.mjs", "*.cjs"],
+              message: "Do not include file extensions in import/export specifiers.",
+            },
+          ],
+        },
+      ],
 
       /* Code quality */
       "no-nested-ternary": "error",

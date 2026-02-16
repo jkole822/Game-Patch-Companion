@@ -1,3 +1,4 @@
+import * as schema from "@db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Elysia } from "elysia";
 import { Pool } from "pg";
@@ -8,7 +9,7 @@ const pool = new Pool({
   connectionString: requireEnv("DATABASE_URL"),
 });
 
-export const db = drizzle(pool);
+export const db = drizzle({ client: pool, schema });
 
 export type AppDb = typeof db;
 

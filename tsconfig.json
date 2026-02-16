@@ -29,7 +29,9 @@
     // Aliases
     "baseUrl": ".",
     "paths": {
+      "@api-modules": ["apps/api/src/modules/index.ts"],
       "@api-modules/*": ["apps/api/src/modules/*"],
+      "@api-utils": ["apps/api/src/utils/index.ts"],
       "@api-utils/*": ["apps/api/src/utils/*"],
       "@db/*": ["packages/db/*"],
       "@shared/*": ["packages/shared/*"]

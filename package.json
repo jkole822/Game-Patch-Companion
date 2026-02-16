@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "bun run --workspaces --if-present dev",
+    "drizzle:generate": "bun run --workspaces --if-present drizzle:generate",
+    "drizzle:migrate": "bun run --workspaces --if-present drizzle:migrate",
+    "drizzle:pull": "bun run --workspaces --if-present drizzle:pull",
     "drizzle:push": "bun run --workspaces --if-present drizzle:push",
     "format": "prettier . --write",
     "format:check": "prettier . --check",

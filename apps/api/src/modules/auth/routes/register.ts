@@ -1,7 +1,7 @@
 import { users } from "@db/schema";
 import { registerResponseSchema } from "@shared/auth";
 
-import type { AppDb } from "@api-utils/db";
+import type { AppDb, JwtType } from "@api-utils";
 import type { registerConflictSchema, registerSchema } from "@shared/auth";
 import type { z } from "zod";
 
@@ -15,7 +15,8 @@ export const register = async ({
   db,
   email,
   password,
-}: RegisterInput & { db: AppDb }): Promise<RegisterResult> => {
+  jwt,
+}: RegisterInput & { db: AppDb; jwt: JwtType }): Promise<RegisterResult> => {
   const passwordHash = await Bun.password.hash(password);
 
   try {
@@ -37,12 +38,15 @@ export const register = async ({
       throw new Error("Failed to create user");
     }
 
+    const token = await jwt.decorator.jwt.sign({ id: createdUser.id });
+
     return {
       ok: true,
       data: registerResponseSchema.parse({
         id: createdUser.id,
         email: createdUser.email,
         createdAt: createdUser.createdAt.toISOString(),
+        token,
       }),
     };
   } catch (error) {

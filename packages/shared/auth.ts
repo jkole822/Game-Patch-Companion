@@ -12,6 +12,15 @@ export const loginSchema = z.object({
   password: z.string().min(8),
 });
 
+export const loginResponseSchema = z.object({
+  token: z.string(),
+});
+
+export const loginConflictSchema = z.object({
+  error: z.literal("INVALID_CREDENTIALS"),
+  message: z.string(),
+});
+
 export const registerSchema = z.object({
   email: EmailSchema,
   password: z.string().min(8),
@@ -20,6 +29,7 @@ export const registerSchema = z.object({
 export const registerResponseSchema = z.object({
   id: z.uuid(),
   email: EmailSchema,
+  token: z.string(),
   createdAt: z.iso.datetime(),
 });
 
