@@ -16,6 +16,16 @@ export const sourceInsertInputSchema = z.object({
   type: z.enum(["rss", "html", "api"]),
 });
 
+export const sourceUpdateInputSchema = sourceInsertInputSchema
+  .partial()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one source field must be provided.",
+  });
+
+export const sourceParamsSchema = z.object({
+  id: z.uuid(),
+});
+
 export const sourceResponseSchema = sourceInsertInputSchema.extend({
   id: z.string(),
   createdAt: z.date(),
@@ -25,5 +35,19 @@ export const sourcesResponseSchema = z.array(sourceResponseSchema);
 
 export const sourceConflictSchema = z.object({
   error: z.literal("SOURCE_KEY_ALREADY_EXISTS"),
+  message: z.string(),
+});
+
+export const sourceNotFoundConflictSchema = z.object({
+  error: z.literal("SOURCE_NOT_FOUND"),
+  message: z.string(),
+});
+
+export const sourceInUseConflictSchema = z.object({
+  error: z.literal("SOURCE_IN_USE"),
+  message: z.string(),
+});
+
+export const sourceDeleteResponseSchema = z.object({
   message: z.string(),
 });
