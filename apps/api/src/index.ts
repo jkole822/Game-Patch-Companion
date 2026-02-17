@@ -1,4 +1,4 @@
-import { AuthModule } from "@api-modules";
+import { AuthModule, SourcesModule } from "@api-modules";
 import { dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
@@ -12,6 +12,7 @@ const app = new Elysia()
   )
   .use(dbPlugin)
   .use(AuthModule)
+  .use(SourcesModule)
   .listen(4000);
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

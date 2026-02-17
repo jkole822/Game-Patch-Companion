@@ -1,8 +1,8 @@
 import { users } from "@db/schema";
-import { registerResponseSchema } from "@shared/auth";
+import { registerConflictSchema, registerResponseSchema } from "@shared/auth";
 
-import type { AppDb, JwtType } from "@api-utils";
-import type { registerConflictSchema, registerSchema } from "@shared/auth";
+import type { AppDb } from "@api-utils";
+import type { registerSchema } from "@shared/auth";
 import type { z } from "zod";
 
 type RegisterInput = z.infer<typeof registerSchema>;
@@ -15,8 +15,11 @@ export const register = async ({
   db,
   email,
   password,
-  jwt,
-}: RegisterInput & { db: AppDb; jwt: JwtType }): Promise<RegisterResult> => {
+  signToken,
+}: RegisterInput & {
+  db: AppDb;
+  signToken: (id: string) => Promise<string>;
+}): Promise<RegisterResult> => {
   const passwordHash = await Bun.password.hash(password);
 
   try {
@@ -38,7 +41,7 @@ export const register = async ({
       throw new Error("Failed to create user");
     }
 
-    const token = await jwt.decorator.jwt.sign({ id: createdUser.id });
+    const token = await signToken(createdUser.id);
 
     return {
       ok: true,
@@ -53,10 +56,10 @@ export const register = async ({
     if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {
       return {
         ok: false,
-        error: {
+        error: registerConflictSchema.parse({
           error: "EMAIL_ALREADY_EXISTS",
           message: "An account with this email already exists.",
-        },
+        }),
       };
     }
 

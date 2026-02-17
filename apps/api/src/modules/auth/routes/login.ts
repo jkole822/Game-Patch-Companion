@@ -2,7 +2,7 @@ import { users } from "@db/schema";
 import { loginResponseSchema } from "@shared/auth";
 import { eq } from "drizzle-orm";
 
-import type { AppDb, JwtType } from "@api-utils";
+import type { AppDb } from "@api-utils";
 import type { loginSchema, loginConflictSchema } from "@shared/auth";
 import type { z } from "zod";
 
@@ -20,9 +20,12 @@ const INVALID_CREDENTIALS_ERROR: LoginConflict = {
 export const login = async ({
   db,
   email,
-  jwt,
   password,
-}: LoginInput & { db: AppDb; jwt: JwtType }): Promise<LoginResult> => {
+  signToken,
+}: LoginInput & {
+  db: AppDb;
+  signToken: (id: string) => Promise<string>;
+}): Promise<LoginResult> => {
   const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
   if (!user) {
@@ -41,7 +44,7 @@ export const login = async ({
     };
   }
 
-  const token = await jwt.decorator.jwt.sign({ id: user.id });
+  const token = await signToken(user.id);
 
   return {
     ok: true,

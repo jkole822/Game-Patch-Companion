@@ -37,3 +37,8 @@ export const registerConflictSchema = z.object({
   error: z.literal("EMAIL_ALREADY_EXISTS"),
   message: z.string(),
 });
+
+export const rolePermissionConflictSchema = z.object({
+  error: z.literal("NO_PERMISSION_FOR_ROLE"),
+  message: z.string(),
+});

@@ -1,4 +1,4 @@
-import { dbPlugin, jwtPlugin } from "@api-utils";
+import { dbPlugin, jwtPlugin, mapRouteResult } from "@api-utils";
 import {
   loginConflictSchema,
   loginResponseSchema,
@@ -11,32 +11,13 @@ import { Elysia } from "elysia";
 
 import { login, register } from "./routes";
 
-type RouteResult<TSuccess, TError> = { ok: true; data: TSuccess } | { ok: false; error: TError };
-
-const mapRouteResult = <TSuccess, TError, TSuccessResult, TErrorResult>(
-  response: RouteResult<TSuccess, TError>,
-  {
-    onError,
-    onSuccess,
-  }: {
-    onError: (error: TError) => TErrorResult;
-    onSuccess: (data: TSuccess) => TSuccessResult;
-  },
-): TErrorResult | TSuccessResult => {
-  if ("error" in response) {
-    return onError(response.error);
-  }
-
-  return onSuccess(response.data);
-};
-
 export const AuthModule = new Elysia({ prefix: "/auth" })
   .use(dbPlugin)
   .use(jwtPlugin)
   .post(
     "/register",
     async ({ body, status, db, jwt }) => {
-      const response = await register({ db, jwt, ...body });
+      const response = await register({ db, ...body, signToken: (id) => jwt.sign({ id }) });
 
       return mapRouteResult(response, {
         onError: (error) => status(400, error),
@@ -54,7 +35,7 @@ export const AuthModule = new Elysia({ prefix: "/auth" })
   .post(
     "/login",
     async ({ body, status, db, jwt }) => {
-      const response = await login({ db, jwt, ...body });
+      const response = await login({ db, ...body, signToken: (id) => jwt.sign({ id }) });
 
       return mapRouteResult(response, {
         onError: (error) => status(400, error),
