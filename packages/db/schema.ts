@@ -1,5 +1,6 @@
 import {
   boolean,
+  integer,
   index,
   jsonb,
   pgEnum,
@@ -81,6 +82,7 @@ export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
+  tokenVersion: integer("token_version").notNull().default(0),
   role: userRoleEnum("role").notNull().default("user"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -88,7 +90,7 @@ export const users = pgTable("users", {
 export const watchlists = pgTable("watchlists", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   name: text("name").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -97,7 +99,7 @@ export const watchlists = pgTable("watchlists", {
 export const watchlistItems = pgTable("watchlist_items", {
   id: uuid("id").primaryKey().defaultRandom(),
   watchlistId: uuid("watchlist_id")
-    .references(() => watchlists.id)
+    .references(() => watchlists.id, { onDelete: "cascade" })
     .notNull(),
   keyword: text("keyword").notNull(),
 });

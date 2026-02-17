@@ -24,7 +24,7 @@ export const login = async ({
   signToken,
 }: LoginInput & {
   db: AppDb;
-  signToken: (id: string) => Promise<string>;
+  signToken: (id: string, tokenVersion: number) => Promise<string>;
 }): Promise<LoginResult> => {
   const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
@@ -44,7 +44,7 @@ export const login = async ({
     };
   }
 
-  const token = await signToken(user.id);
+  const token = await signToken(user.id, user.tokenVersion);
 
   return {
     ok: true,

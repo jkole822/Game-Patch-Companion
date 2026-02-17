@@ -42,3 +42,21 @@ export const rolePermissionConflictSchema = z.object({
   error: z.literal("NO_PERMISSION_FOR_ROLE"),
   message: z.string(),
 });
+
+export const unauthorizedConflictSchema = z.object({
+  error: z.literal("UNAUTHORIZED"),
+  message: z.string(),
+});
+
+export const logoutResponseSchema = z.object({
+  message: z.string(),
+});
+
+export const deleteUserResponseSchema = z.object({
+  message: z.string(),
+});
+
+export const deleteUserConflictSchema = z.object({
+  error: z.literal("USER_NOT_FOUND"),
+  message: z.string(),
+});

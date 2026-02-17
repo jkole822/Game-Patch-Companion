@@ -1,5 +1,5 @@
 import { authGuard, dbPlugin } from "@api-utils";
-import { rolePermissionConflictSchema } from "@shared/auth";
+import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/auth";
 import {
   sourceInsertInputSchema,
   sourceResponseSchema,
@@ -36,6 +36,7 @@ export const SourcesModule = new Elysia({ prefix: "/sources" })
       response: {
         201: sourceResponseSchema,
         400: sourceConflictSchema,
+        401: unauthorizedConflictSchema,
         403: rolePermissionConflictSchema,
       },
     },

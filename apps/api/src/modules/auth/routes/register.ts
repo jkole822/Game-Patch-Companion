@@ -18,7 +18,7 @@ export const register = async ({
   signToken,
 }: RegisterInput & {
   db: AppDb;
-  signToken: (id: string) => Promise<string>;
+  signToken: (id: string, tokenVersion: number) => Promise<string>;
 }): Promise<RegisterResult> => {
   const passwordHash = await Bun.password.hash(password);
 
@@ -34,6 +34,7 @@ export const register = async ({
       .returning({
         id: users.id,
         email: users.email,
+        tokenVersion: users.tokenVersion,
         createdAt: users.createdAt,
       });
 
@@ -41,7 +42,7 @@ export const register = async ({
       throw new Error("Failed to create user");
     }
 
-    const token = await signToken(createdUser.id);
+    const token = await signToken(createdUser.id, createdUser.tokenVersion);
 
     return {
       ok: true,
