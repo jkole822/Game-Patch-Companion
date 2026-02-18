@@ -1,9 +1,9 @@
 import { sources } from "@db/schema";
-import { sourcesResponseSchema } from "@shared/sources";
+import { sourcesResponseSchema } from "@shared/schemas";
 import { and, eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
-import type { sourceQuerySchema } from "@shared/sources";
+import type { sourceQuerySchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type FindManySourcesInput = z.infer<typeof sourceQuerySchema>;

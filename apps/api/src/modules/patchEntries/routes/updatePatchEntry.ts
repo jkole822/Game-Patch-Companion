@@ -1,14 +1,14 @@
 import { patchEntries, users } from "@db/schema";
-import { rolePermissionConflictSchema } from "@shared/auth";
+import { rolePermissionConflictSchema } from "@shared/schemas";
 import {
   patchEntryConflictSchema,
   patchEntryNotFoundConflictSchema,
   patchEntryResponseSchema,
-} from "@shared/patchEntries";
+} from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
-import type { patchEntryUpdateInputSchema } from "@shared/patchEntries";
+import type { patchEntryUpdateInputSchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type UpdatePatchEntryInput = z.infer<typeof patchEntryUpdateInputSchema>;

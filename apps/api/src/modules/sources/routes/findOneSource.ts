@@ -1,5 +1,5 @@
 import { sources } from "@db/schema";
-import { sourceNotFoundConflictSchema, sourceResponseSchema } from "@shared/sources";
+import { sourceNotFoundConflictSchema, sourceResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";

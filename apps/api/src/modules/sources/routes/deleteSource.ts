@@ -1,10 +1,10 @@
 import { sources, users } from "@db/schema";
-import { rolePermissionConflictSchema } from "@shared/auth";
+import { rolePermissionConflictSchema } from "@shared/schemas";
 import {
   sourceDeleteResponseSchema,
   sourceInUseConflictSchema,
   sourceNotFoundConflictSchema,
-} from "@shared/sources";
+} from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";

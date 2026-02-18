@@ -1,5 +1,5 @@
 import { patchEntries } from "@db/schema";
-import { patchEntryNotFoundConflictSchema, patchEntryResponseSchema } from "@shared/patchEntries";
+import { patchEntryNotFoundConflictSchema, patchEntryResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";

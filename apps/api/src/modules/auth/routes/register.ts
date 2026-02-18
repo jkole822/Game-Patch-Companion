@@ -1,8 +1,8 @@
 import { users } from "@db/schema";
-import { registerConflictSchema, registerResponseSchema } from "@shared/auth";
+import { registerConflictSchema, registerResponseSchema } from "@shared/schemas";
 
 import type { AppDb } from "@api-utils";
-import type { registerSchema } from "@shared/auth";
+import type { registerSchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type RegisterInput = z.infer<typeof registerSchema>;

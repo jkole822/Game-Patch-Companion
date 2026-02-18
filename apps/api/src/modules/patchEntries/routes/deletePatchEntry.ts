@@ -1,9 +1,6 @@
 import { patchEntries, users } from "@db/schema";
-import { rolePermissionConflictSchema } from "@shared/auth";
-import {
-  patchEntryDeleteResponseSchema,
-  patchEntryNotFoundConflictSchema,
-} from "@shared/patchEntries";
+import { rolePermissionConflictSchema } from "@shared/schemas";
+import { patchEntryDeleteResponseSchema, patchEntryNotFoundConflictSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";

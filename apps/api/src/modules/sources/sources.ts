@@ -1,5 +1,5 @@
 import { authGuard, dbPlugin } from "@api-utils";
-import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/auth";
+import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
 import {
   sourceDeleteResponseSchema,
   sourceInsertInputSchema,
@@ -11,7 +11,7 @@ import {
   sourceInUseConflictSchema,
   sourcesResponseSchema,
   sourceUpdateInputSchema,
-} from "@shared/sources";
+} from "@shared/schemas";
 import { Elysia } from "elysia";
 
 import { createSource, deleteSource, findManySources, findOneSource, updateSource } from "./routes";

@@ -1,5 +1,5 @@
 import { users } from "@db/schema";
-import { logoutResponseSchema } from "@shared/auth";
+import { logoutResponseSchema } from "@shared/schemas";
 import { eq, sql } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";

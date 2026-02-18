@@ -10,7 +10,7 @@ import {
   registerResponseSchema,
   registerSchema,
   unauthorizedConflictSchema,
-} from "@shared/auth";
+} from "@shared/schemas";
 import { Elysia } from "elysia";
 
 import { deleteUser, login, logout, register } from "./routes";

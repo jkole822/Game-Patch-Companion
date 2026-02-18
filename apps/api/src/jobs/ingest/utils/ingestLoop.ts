@@ -3,7 +3,7 @@ import { patchEntries } from "@db/schema";
 import { listRecentHtmlEntries } from "./listRecentHtmlEntries";
 
 import type { AppDb } from "@api-utils/db";
-import type { sourcesResponseSchema } from "@shared/sources";
+import type { sourcesResponseSchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type Sources = z.infer<typeof sourcesResponseSchema>;

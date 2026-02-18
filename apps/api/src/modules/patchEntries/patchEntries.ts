@@ -1,5 +1,5 @@
 import { authGuard, dbPlugin } from "@api-utils";
-import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/auth";
+import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
 import {
   patchEntriesResponseSchema,
   patchEntryConflictSchema,
@@ -9,7 +9,7 @@ import {
   patchEntryQuerySchema,
   patchEntryResponseSchema,
   patchEntryUpdateInputSchema,
-} from "@shared/patchEntries";
+} from "@shared/schemas";
 import { Elysia } from "elysia";
 
 import {

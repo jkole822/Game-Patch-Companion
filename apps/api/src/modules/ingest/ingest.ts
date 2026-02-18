@@ -1,8 +1,8 @@
 import { runIngestJob } from "@api-jobs/ingest";
 import { authGuard, dbPlugin } from "@api-utils";
 import { users } from "@db/schema";
-import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/auth";
-import { ingestAlreadyRunningConflictSchema, ingestRunResponseSchema } from "@shared/ingest";
+import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
+import { ingestAlreadyRunningConflictSchema, ingestRunResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 

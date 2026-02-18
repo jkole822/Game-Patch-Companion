@@ -1,5 +1,5 @@
 import { users } from "@db/schema";
-import { deleteUserConflictSchema, deleteUserResponseSchema } from "@shared/auth";
+import { deleteUserConflictSchema, deleteUserResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";

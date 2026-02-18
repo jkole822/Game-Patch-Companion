@@ -1,9 +1,9 @@
 import { patchEntries } from "@db/schema";
-import { patchEntriesResponseSchema } from "@shared/patchEntries";
+import { patchEntriesResponseSchema } from "@shared/schemas";
 import { and, eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
-import type { patchEntryQuerySchema } from "@shared/patchEntries";
+import type { patchEntryQuerySchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type FindManyPatchEntriesInput = z.infer<typeof patchEntryQuerySchema>;

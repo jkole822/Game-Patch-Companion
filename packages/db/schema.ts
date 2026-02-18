@@ -11,8 +11,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+/* Enums */
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
-
 export const patchEntryStateEnum = pgEnum("patch_entry_state", [
   "new",
   "assigned",
@@ -20,12 +20,13 @@ export const patchEntryStateEnum = pgEnum("patch_entry_state", [
   "error",
 ]);
 
+/* Core Domain */
 export const patches = pgTable(
   "patches",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    game: text("game").notNull(), // "wow", "diablo4", "helldivers2"
-    version: text("version"), // "11.0.5" (nullable if unknown)
+    game: text("game").notNull(),
+    version: text("version"),
     title: text("title").notNull(),
     publishedAt: timestamp("published_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -36,6 +37,25 @@ export const patches = pgTable(
   }),
 );
 
+/* Source Registry */
+export const sources = pgTable(
+  "sources",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    key: text("key").notNull(),
+    name: text("name").notNull(),
+    baseUrl: text("base_url").notNull(),
+    type: text("type").notNull(),
+    isEnabled: boolean("is_enabled").default(true).notNull(),
+    config: jsonb("config").$type<Record<string, unknown>>().default({}).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    keyUnique: uniqueIndex("sources_key_unique").on(t.key),
+  }),
+);
+
+/* Ingested Entries */
 export const patchEntries = pgTable(
   "patch_entries",
   {
@@ -46,13 +66,11 @@ export const patchEntries = pgTable(
       .notNull(),
     url: text("url").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-
-    // Ingestion Tracking
-    checksum: text("checksum"), // sha256 of normalized content
-    content: text("content").notNull(), // cleaned markdown/plaintext
+    checksum: text("checksum"),
+    content: text("content").notNull(),
     fetchedAt: timestamp("fetched_at"),
-    publishedAt: timestamp("published_at"), // from source page if present
-    raw: text("raw"), // raw HTML/JSON
+    publishedAt: timestamp("published_at"),
+    raw: text("raw"),
     state: patchEntryStateEnum("state").notNull().default("new"),
   },
   (t) => ({
@@ -61,23 +79,7 @@ export const patchEntries = pgTable(
   }),
 );
 
-export const sources = pgTable(
-  "sources",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    key: text("key").notNull(), // "wow-retail-us", "lol", etc
-    name: text("name").notNull(), // "World of Warcraft (US)"
-    baseUrl: text("base_url").notNull(),
-    type: text("type").notNull(), // "rss" | "html" | "api"
-    isEnabled: boolean("is_enabled").default(true).notNull(),
-    config: jsonb("config").$type<Record<string, unknown>>().default({}).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-  },
-  (t) => ({
-    keyUnique: uniqueIndex("sources_key_unique").on(t.key),
-  }),
-);
-
+/* Auth */
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
@@ -87,6 +89,7 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+/* User Watchlists */
 export const watchlists = pgTable("watchlists", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")

@@ -1,2 +1,2 @@
 export * from "./ingestLoop";
-export * from "./listRecentWowRetail";
+export * from "./listRecentHtmlEntries";

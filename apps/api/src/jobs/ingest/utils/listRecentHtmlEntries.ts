@@ -1,4 +1,4 @@
-import { htmlSourceConfigSchema } from "@shared/sources";
+import { htmlSourceConfigSchema } from "@shared/schemas";
 import * as cheerio from "cheerio";
 
 export type DiscoveredItem = {

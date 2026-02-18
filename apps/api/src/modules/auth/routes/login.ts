@@ -1,9 +1,9 @@
 import { users } from "@db/schema";
-import { loginResponseSchema } from "@shared/auth";
+import { loginResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
-import type { loginSchema, loginConflictSchema } from "@shared/auth";
+import type { loginSchema, loginConflictSchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type LoginInput = z.infer<typeof loginSchema>;

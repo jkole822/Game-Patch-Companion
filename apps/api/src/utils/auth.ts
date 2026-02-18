@@ -1,5 +1,5 @@
 import { users } from "@db/schema";
-import { unauthorizedConflictSchema } from "@shared/auth";
+import { unauthorizedConflictSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 

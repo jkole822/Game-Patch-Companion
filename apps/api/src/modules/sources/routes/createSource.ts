@@ -1,10 +1,10 @@
 import { sources, users } from "@db/schema";
-import { rolePermissionConflictSchema } from "@shared/auth";
-import { sourceConflictSchema, sourceResponseSchema } from "@shared/sources";
+import { rolePermissionConflictSchema } from "@shared/schemas";
+import { sourceConflictSchema, sourceResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
-import type { sourceInsertInputSchema } from "@shared/sources";
+import type { sourceInsertInputSchema } from "@shared/schemas";
 import type { z } from "zod";
 
 type CreateSourceInput = z.infer<typeof sourceInsertInputSchema>;

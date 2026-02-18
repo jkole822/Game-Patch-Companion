@@ -1,5 +1,5 @@
 import { sources } from "@db/schema";
-import { sourcesResponseSchema } from "@shared/sources";
+import { sourcesResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
 import { ingestLoop } from "./utils";
