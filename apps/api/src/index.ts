@@ -1,7 +1,21 @@
-import { AuthModule, SourcesModule } from "@api-modules";
-import { dbPlugin } from "@api-utils";
+import { startIngestScheduler } from "@api-jobs/ingest";
+import { AuthModule, IngestModule, PatchEntriesModule, SourcesModule } from "@api-modules";
+import { db, dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
+
+const parsePositiveInt = (value: string | undefined, fallback: number): number => {
+  const parsed = value ? Number.parseInt(value, 10) : Number.NaN;
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    return fallback;
+  }
+
+  return parsed;
+};
+
+const isIngestJobEnabled = process.env.INGEST_JOB_ENABLED !== "false";
+const ingestIntervalMs = parsePositiveInt(process.env.INGEST_INTERVAL_MS, 5 * 60 * 1000);
 
 const app = new Elysia()
   .use(
@@ -12,7 +26,17 @@ const app = new Elysia()
   )
   .use(dbPlugin)
   .use(AuthModule)
+  .use(IngestModule)
+  .use(PatchEntriesModule)
   .use(SourcesModule)
   .listen(4000);
+
+if (isIngestJobEnabled) {
+  startIngestScheduler({
+    db,
+    intervalMs: ingestIntervalMs,
+    runOnStartup: true,
+  });
+}
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

@@ -45,5 +45,8 @@
     "*.{json,md,css,scss,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0"
   }
 }
