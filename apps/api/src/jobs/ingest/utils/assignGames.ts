@@ -31,9 +31,48 @@ const inferGameKeyFromText = ({
   return null;
 };
 
-const inferGameKeyFromSourceConfig = (config: Record<string, unknown>): string | null => {
-  const rawGame = config.game;
-  return typeof rawGame === "string" && rawGame.trim() ? normalizeText(rawGame) : null;
+const inferGameKeyFromSourceKey = ({
+  knownGameKeys,
+  sourceKey,
+}: {
+  knownGameKeys: string[];
+  sourceKey: string;
+}): string | null => {
+  const normalizedSourceKey = normalizeText(sourceKey);
+
+  if (!normalizedSourceKey) {
+    return null;
+  }
+
+  if (knownGameKeys.includes(normalizedSourceKey)) {
+    return normalizedSourceKey;
+  }
+
+  const compactSourceKey = normalizedSourceKey.replace(/[^a-z0-9]/g, "");
+
+  const sortedKeys = [...knownGameKeys].sort((a, b) => b.length - a.length);
+
+  for (const gameKey of sortedKeys) {
+    const compactGameKey = gameKey.replace(/[^a-z0-9]/g, "");
+
+    if (
+      normalizedSourceKey.startsWith(`${gameKey}-`) ||
+      normalizedSourceKey.startsWith(`${gameKey}_`) ||
+      normalizedSourceKey.startsWith(`${gameKey}:`) ||
+      compactSourceKey.startsWith(compactGameKey)
+    ) {
+      return gameKey;
+    }
+  }
+
+  const segments = normalizedSourceKey.split(/[^a-z0-9]+/).filter(Boolean);
+  for (const segment of segments) {
+    if (knownGameKeys.includes(segment)) {
+      return segment;
+    }
+  }
+
+  return null;
 };
 
 export const assignGames = async ({ db }: { db: AppDb }): Promise<AssignGamesJobResult> => {
@@ -65,29 +104,26 @@ export const assignGames = async ({ db }: { db: AppDb }): Promise<AssignGamesJob
   const uniqueSourceIds = [...new Set(unassignedEntries.map((entry) => entry.sourceId))];
 
   const sourceRows = await db
-    .select({ config: sources.config, id: sources.id })
+    .select({ id: sources.id, key: sources.key })
     .from(sources)
     .where(inArray(sources.id, uniqueSourceIds));
 
-  const sourceConfigById = new Map(sourceRows.map((sourceRow) => [sourceRow.id, sourceRow.config]));
+  const sourceKeyById = new Map(sourceRows.map((sourceRow) => [sourceRow.id, sourceRow.key]));
 
   const gameRows = await db.select({ key: games.key, id: games.id }).from(games);
   const gameIdByGameKey = new Map(
     gameRows.map((gameRow) => [normalizeText(gameRow.key), gameRow.id]),
   );
+  const knownGameKeys = [...gameIdByGameKey.keys()];
 
   let assignedEntries = 0;
   let skippedEntries = 0;
 
   for (const entry of unassignedEntries) {
-    const sourceConfigRaw = sourceConfigById.get(entry.sourceId);
-    const sourceConfig =
-      typeof sourceConfigRaw === "object" && sourceConfigRaw !== null
-        ? (sourceConfigRaw as Record<string, unknown>)
-        : {};
+    const sourceKey = sourceKeyById.get(entry.sourceId);
 
     const gameKey =
-      inferGameKeyFromSourceConfig(sourceConfig) ||
+      (sourceKey ? inferGameKeyFromSourceKey({ knownGameKeys, sourceKey }) : null) ||
       inferGameKeyFromText({ content: entry.content, title: entry.title });
 
     if (!gameKey) {

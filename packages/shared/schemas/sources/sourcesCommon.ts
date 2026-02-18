@@ -14,7 +14,6 @@ export const sourceBaseSchema = z.object({
 export const htmlSourceConfigSchema = z.object({
   contentSelector: z.string(),
   entrySelector: z.string(),
-  game: z.string().optional(),
   linkSelector: z.string().default("a"),
   listPath: z.string(),
   publishedAtAttribute: z.string().default("datetime"),
