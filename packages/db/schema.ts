@@ -21,19 +21,16 @@ export const patchEntryStateEnum = pgEnum("patch_entry_state", [
 ]);
 
 /* Core Domain */
-export const patches = pgTable(
-  "patches",
+export const games = pgTable(
+  "games",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    game: text("game").notNull(),
-    version: text("version"),
+    key: text("key").notNull(),
     title: text("title").notNull(),
-    publishedAt: timestamp("published_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (t) => ({
-    gameIdx: index("patches_game_idx").on(t.game),
-    versionIdx: index("patches_version_idx").on(t.version),
+    keyIdx: index("games_key_idx").on(t.key),
   }),
 );
 
@@ -60,22 +57,22 @@ export const patchEntries = pgTable(
   "patch_entries",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    patchId: uuid("patch_id").references(() => patches.id),
+    gameId: uuid("game_id").references(() => games.id),
     sourceId: uuid("source_id")
       .references(() => sources.id)
       .notNull(),
-    url: text("url").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
     checksum: text("checksum"),
     content: text("content").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     fetchedAt: timestamp("fetched_at"),
     publishedAt: timestamp("published_at"),
     raw: text("raw"),
-    state: patchEntryStateEnum("state").notNull().default("new"),
+    title: text("title").notNull(),
+    url: text("url").notNull(),
   },
   (t) => ({
     sourceUrlUnique: uniqueIndex("patch_entries_source_url_unique").on(t.sourceId, t.url),
-    patchIdx: index("patch_entries_patch_idx").on(t.patchId),
+    gameIdx: index("patch_entries_game_idx").on(t.gameId),
   }),
 );
 
@@ -84,8 +81,8 @@ export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
-  tokenVersion: integer("token_version").notNull().default(0),
   role: userRoleEnum("role").notNull().default("user"),
+  tokenVersion: integer("token_version").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

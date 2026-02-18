@@ -1,4 +1,4 @@
-import { startIngestScheduler } from "@api-jobs/ingest";
+import { startIngestScheduler } from "@api-jobs";
 import { AuthModule, IngestModule, PatchEntriesModule, SourcesModule } from "@api-modules";
 import { db, dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";

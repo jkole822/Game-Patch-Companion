@@ -56,10 +56,10 @@ export const ingestLoop = async ({
                 checksum: sha256(entry.content),
                 content: entry.content,
                 fetchedAt: new Date(),
+                title: entry.title,
                 publishedAt: entry.publishedAt,
                 raw: entry.raw,
                 sourceId: source.id,
-                state: "new" as const,
                 url: entry.url,
               })),
             )

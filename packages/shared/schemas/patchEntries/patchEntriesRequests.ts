@@ -1,18 +1,17 @@
 import { z } from "zod";
 
 import {
+  GameIdSchema,
   PatchEntryDateInputSchema,
   PatchEntryIdSchema,
   PatchEntryTextNullableSchema,
-  PatchIdSchema,
-  patchEntryStateSchema,
 } from "./patchEntriesCommon";
 
 export const patchEntryQuerySchema = z.object({
+  gameId: GameIdSchema.optional(),
   id: PatchEntryIdSchema.optional(),
-  patchId: PatchIdSchema.optional(),
   sourceId: z.uuid().optional(),
-  state: patchEntryStateSchema.optional(),
+  title: z.string().optional(),
   url: z.string().optional(),
 });
 
@@ -24,11 +23,11 @@ export const patchEntryInsertInputSchema = z.object({
   checksum: PatchEntryTextNullableSchema.optional(),
   content: z.string(),
   fetchedAt: PatchEntryDateInputSchema,
-  patchId: PatchIdSchema.optional(),
+  gameId: GameIdSchema.optional(),
   publishedAt: PatchEntryDateInputSchema,
   raw: PatchEntryTextNullableSchema.optional(),
   sourceId: z.uuid(),
-  state: patchEntryStateSchema.optional().default("new"),
+  title: z.string(),
   url: z.string(),
 });
 

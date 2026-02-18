@@ -2,8 +2,9 @@ import { sources } from "@db/schema";
 import { sourcesResponseSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 
-import { ingestLoop } from "./utils";
+import { assignGames, ingestLoop } from "./utils";
 
+import type { AssignGamesJobResult } from "./utils";
 import type { AppDb } from "@api-utils";
 
 export type IngestJobResult =
@@ -12,6 +13,7 @@ export type IngestJobResult =
       createdEntries: number;
       failedSources: number;
       processedSources: number;
+      assignGames: AssignGamesJobResult;
       startedAt: string;
       finishedAt: string;
       durationMs: number;
@@ -53,6 +55,7 @@ export const runIngestJob = async ({ db }: { db: AppDb }): Promise<IngestJobResu
 
     const enabledSources = sourcesResponseSchema.parse(enabledSourcesRows);
     const result = await ingestLoop({ db, enabledSources });
+    const assignedGames = await assignGames({ db });
 
     const finishedAt = new Date();
 
@@ -61,6 +64,7 @@ export const runIngestJob = async ({ db }: { db: AppDb }): Promise<IngestJobResu
       createdEntries: result.createdEntries,
       failedSources: result.failedSources,
       processedSources: result.processedSources,
+      assignGames: assignedGames,
       startedAt: startedAt.toISOString(),
       finishedAt: finishedAt.toISOString(),
       durationMs: finishedAt.getTime() - startedAt.getTime(),
@@ -85,7 +89,7 @@ export const startIngestScheduler = ({
 
       if (result.status === "completed") {
         console.log(
-          `[ingest] completed processed=${result.processedSources} created=${result.createdEntries} failed=${result.failedSources} durationMs=${result.durationMs}`,
+          `[ingest] completed processed=${result.processedSources} created=${result.createdEntries} failed=${result.failedSources} assignedGames=${result.assignGames.assignedEntries} durationMs=${result.durationMs}`,
         );
       } else {
         console.log("[ingest] skipped: already running");

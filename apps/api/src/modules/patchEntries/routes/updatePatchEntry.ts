@@ -59,12 +59,12 @@ export const updatePatchEntry = async ({
         content: patchEntries.content,
         createdAt: patchEntries.createdAt,
         fetchedAt: patchEntries.fetchedAt,
+        gameId: patchEntries.gameId,
         id: patchEntries.id,
-        patchId: patchEntries.patchId,
         publishedAt: patchEntries.publishedAt,
         raw: patchEntries.raw,
         sourceId: patchEntries.sourceId,
-        state: patchEntries.state,
+        title: patchEntries.title,
         url: patchEntries.url,
       });
 
@@ -98,7 +98,7 @@ export const updatePatchEntry = async ({
         ok: false,
         error: patchEntryConflictSchema.parse({
           error: "PATCH_ENTRY_REFERENCE_NOT_FOUND",
-          message: "The provided source or patch does not exist.",
+          message: "The provided source or game does not exist.",
         }),
       };
     }

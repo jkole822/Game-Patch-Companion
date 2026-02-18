@@ -1,4 +1,4 @@
-import { runIngestJob } from "@api-jobs/ingest";
+import { runIngestJob } from "@api-jobs";
 import { authGuard, dbPlugin } from "@api-utils";
 import { users } from "@db/schema";
 import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";

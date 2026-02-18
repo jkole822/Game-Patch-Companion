@@ -24,12 +24,12 @@ export const findOnePatchEntry = async ({
       content: patchEntries.content,
       createdAt: patchEntries.createdAt,
       fetchedAt: patchEntries.fetchedAt,
+      gameId: patchEntries.gameId,
       id: patchEntries.id,
-      patchId: patchEntries.patchId,
       publishedAt: patchEntries.publishedAt,
       raw: patchEntries.raw,
       sourceId: patchEntries.sourceId,
-      state: patchEntries.state,
+      title: patchEntries.title,
       url: patchEntries.url,
     })
     .from(patchEntries)

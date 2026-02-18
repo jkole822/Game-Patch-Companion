@@ -1,10 +1,9 @@
 import { z } from "zod";
 
 import {
+  GameIdSchema,
   PatchEntryIdSchema,
   PatchEntryTextNullableSchema,
-  PatchIdSchema,
-  patchEntryStateSchema,
 } from "./patchEntriesCommon";
 
 export const patchEntryResponseSchema = z.object({
@@ -12,12 +11,12 @@ export const patchEntryResponseSchema = z.object({
   content: z.string(),
   createdAt: z.date(),
   fetchedAt: z.date().nullable(),
+  gameId: GameIdSchema,
   id: PatchEntryIdSchema,
-  patchId: PatchIdSchema,
   publishedAt: z.date().nullable(),
   raw: PatchEntryTextNullableSchema,
   sourceId: z.uuid(),
-  state: patchEntryStateSchema,
+  title: z.string(),
   url: z.string(),
 });
 

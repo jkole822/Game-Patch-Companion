@@ -17,10 +17,10 @@ export const findManyPatchEntries = async ({
   data: FindManyPatchEntriesSuccess;
 }> => {
   const filters = [
+    query.gameId ? eq(patchEntries.gameId, query.gameId) : undefined,
     query.id ? eq(patchEntries.id, query.id) : undefined,
-    query.patchId ? eq(patchEntries.patchId, query.patchId) : undefined,
     query.sourceId ? eq(patchEntries.sourceId, query.sourceId) : undefined,
-    query.state ? eq(patchEntries.state, query.state) : undefined,
+    query.title ? eq(patchEntries.title, query.title) : undefined,
     query.url ? eq(patchEntries.url, query.url) : undefined,
   ];
 
@@ -30,12 +30,12 @@ export const findManyPatchEntries = async ({
       content: patchEntries.content,
       createdAt: patchEntries.createdAt,
       fetchedAt: patchEntries.fetchedAt,
+      gameId: patchEntries.gameId,
       id: patchEntries.id,
-      patchId: patchEntries.patchId,
       publishedAt: patchEntries.publishedAt,
       raw: patchEntries.raw,
       sourceId: patchEntries.sourceId,
-      state: patchEntries.state,
+      title: patchEntries.title,
       url: patchEntries.url,
     })
     .from(patchEntries)
