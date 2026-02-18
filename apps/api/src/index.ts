@@ -1,5 +1,11 @@
 import { startIngestScheduler } from "@api-jobs";
-import { AuthModule, IngestModule, PatchEntriesModule, SourcesModule } from "@api-modules";
+import {
+  AuthModule,
+  GamesModule,
+  IngestModule,
+  PatchEntriesModule,
+  SourcesModule,
+} from "@api-modules";
 import { db, dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
@@ -26,6 +32,7 @@ const app = new Elysia()
   )
   .use(dbPlugin)
   .use(AuthModule)
+  .use(GamesModule)
   .use(IngestModule)
   .use(PatchEntriesModule)
   .use(SourcesModule)
