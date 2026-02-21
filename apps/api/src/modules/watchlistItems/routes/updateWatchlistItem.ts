@@ -1,6 +1,5 @@
-import { games, watchlistItems, watchlists } from "@db/schema";
+import { watchlistItems, watchlists } from "@db/schema";
 import {
-  gameNotFoundConflictSchema,
   watchlistItemConflictSchema,
   watchlistItemNotFoundConflictSchema,
   watchlistItemResponseSchema,
@@ -10,7 +9,6 @@ import { and, eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type {
-  gameNotFoundConflictSchema as gameNotFoundConflictSchemaType,
   watchlistItemConflictSchema as watchlistItemConflictSchemaType,
   watchlistItemNotFoundConflictSchema as watchlistItemNotFoundConflictSchemaType,
   watchlistItemResponseSchema as watchlistItemResponseSchemaType,
@@ -26,14 +24,12 @@ type UpdateWatchlistItemNotFoundConflict = z.infer<typeof watchlistItemNotFoundC
 type UpdateWatchlistItemWatchlistNotFoundConflict = z.infer<
   typeof watchlistNotFoundConflictSchemaType
 >;
-type UpdateWatchlistItemGameNotFoundConflict = z.infer<typeof gameNotFoundConflictSchemaType>;
 
 type UpdateWatchlistItemResult =
   | { ok: true; data: UpdateWatchlistItemSuccess }
   | { ok: false; error: UpdateWatchlistItemConflict }
   | { ok: false; error: UpdateWatchlistItemNotFoundConflict }
-  | { ok: false; error: UpdateWatchlistItemWatchlistNotFoundConflict }
-  | { ok: false; error: UpdateWatchlistItemGameNotFoundConflict };
+  | { ok: false; error: UpdateWatchlistItemWatchlistNotFoundConflict };
 
 export const updateWatchlistItem = async ({
   db,
@@ -80,24 +76,6 @@ export const updateWatchlistItem = async ({
     }
   }
 
-  if (input.gameId) {
-    const [game] = await db
-      .select({ id: games.id })
-      .from(games)
-      .where(eq(games.id, input.gameId))
-      .limit(1);
-
-    if (!game) {
-      return {
-        ok: false,
-        error: gameNotFoundConflictSchema.parse({
-          error: "GAME_NOT_FOUND",
-          message: "Game not found.",
-        }),
-      };
-    }
-  }
-
   try {
     const [updatedWatchlistItem] = await db
       .update(watchlistItems)
@@ -105,7 +83,6 @@ export const updateWatchlistItem = async ({
       .where(eq(watchlistItems.id, watchlistItemId))
       .returning({
         createdAt: watchlistItems.createdAt,
-        gameId: watchlistItems.gameId,
         id: watchlistItems.id,
         keyword: watchlistItems.keyword,
         watchlistId: watchlistItems.watchlistId,

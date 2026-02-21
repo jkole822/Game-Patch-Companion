@@ -1,5 +1,6 @@
 import { authGuard, dbPlugin } from "@api-utils";
 import {
+  gameNotFoundConflictSchema,
   unauthorizedConflictSchema,
   watchlistDeleteResponseSchema,
   watchlistInsertInputSchema,
@@ -11,6 +12,7 @@ import {
   watchlistUpdateInputSchema,
 } from "@shared/schemas";
 import { Elysia } from "elysia";
+import { z } from "zod";
 
 import {
   createWatchlist,
@@ -80,7 +82,7 @@ export const WatchlistsModule = new Elysia({ prefix: "/watchlists" })
       const response = await createWatchlist({ db, user, ...body });
 
       if (!response.ok) {
-        throw new Error("Unhandled create watchlist error.");
+        return status(404, response.error);
       }
 
       return status(201, response.data);
@@ -90,6 +92,7 @@ export const WatchlistsModule = new Elysia({ prefix: "/watchlists" })
       response: {
         201: watchlistResponseSchema,
         401: unauthorizedConflictSchema,
+        404: gameNotFoundConflictSchema,
       },
     },
   )
@@ -114,7 +117,7 @@ export const WatchlistsModule = new Elysia({ prefix: "/watchlists" })
       response: {
         200: watchlistResponseSchema,
         401: unauthorizedConflictSchema,
-        404: watchlistNotFoundConflictSchema,
+        404: z.union([watchlistNotFoundConflictSchema, gameNotFoundConflictSchema]),
       },
     },
   )

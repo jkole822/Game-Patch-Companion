@@ -5,6 +5,8 @@ import {
   IngestModule,
   PatchEntriesModule,
   SourcesModule,
+  WatchlistItemsModule,
+  WatchlistsModule,
 } from "@api-modules";
 import { db, dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";
@@ -36,6 +38,8 @@ const app = new Elysia()
   .use(IngestModule)
   .use(PatchEntriesModule)
   .use(SourcesModule)
+  .use(WatchlistsModule)
+  .use(WatchlistItemsModule)
   .listen(4000);
 
 if (isIngestJobEnabled) {

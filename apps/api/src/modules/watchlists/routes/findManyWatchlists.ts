@@ -19,12 +19,14 @@ export const findManyWatchlists = async ({
 }): Promise<{ ok: true; data: FindManyWatchlistsSuccess }> => {
   const filters = [
     eq(watchlists.userId, user.id),
+    query.gameId ? eq(watchlists.gameId, query.gameId) : undefined,
     query.name ? eq(watchlists.name, query.name) : undefined,
   ];
 
   const records = await db
     .select({
       createdAt: watchlists.createdAt,
+      gameId: watchlists.gameId,
       id: watchlists.id,
       name: watchlists.name,
       userId: watchlists.userId,

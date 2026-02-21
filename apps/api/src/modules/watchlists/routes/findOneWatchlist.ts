@@ -24,6 +24,7 @@ export const findOneWatchlist = async ({
   const [watchlist] = await db
     .select({
       createdAt: watchlists.createdAt,
+      gameId: watchlists.gameId,
       id: watchlists.id,
       name: watchlists.name,
       userId: watchlists.userId,

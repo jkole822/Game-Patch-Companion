@@ -19,7 +19,6 @@ export const findManyWatchlistItems = async ({
 }): Promise<{ ok: true; data: FindManyWatchlistItemsSuccess }> => {
   const filters = [
     eq(watchlists.userId, user.id),
-    query.gameId ? eq(watchlistItems.gameId, query.gameId) : undefined,
     query.keyword ? eq(watchlistItems.keyword, query.keyword) : undefined,
     query.watchlistId ? eq(watchlistItems.watchlistId, query.watchlistId) : undefined,
   ];
@@ -27,7 +26,6 @@ export const findManyWatchlistItems = async ({
   const records = await db
     .select({
       createdAt: watchlistItems.createdAt,
-      gameId: watchlistItems.gameId,
       id: watchlistItems.id,
       keyword: watchlistItems.keyword,
       watchlistId: watchlistItems.watchlistId,

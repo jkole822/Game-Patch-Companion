@@ -1,6 +1,5 @@
 import { authGuard, dbPlugin } from "@api-utils";
 import {
-  gameNotFoundConflictSchema,
   unauthorizedConflictSchema,
   watchlistItemConflictSchema,
   watchlistItemDeleteResponseSchema,
@@ -84,10 +83,7 @@ export const WatchlistItemsModule = new Elysia({ prefix: "/watchlist-items" })
       const response = await createWatchlistItem({ db, user, ...body });
 
       if (!response.ok) {
-        if (
-          response.error.error === "WATCHLIST_NOT_FOUND" ||
-          response.error.error === "GAME_NOT_FOUND"
-        ) {
+        if (response.error.error === "WATCHLIST_NOT_FOUND") {
           return status(404, response.error);
         }
 
@@ -102,7 +98,7 @@ export const WatchlistItemsModule = new Elysia({ prefix: "/watchlist-items" })
         201: watchlistItemResponseSchema,
         400: watchlistItemConflictSchema,
         401: unauthorizedConflictSchema,
-        404: z.union([gameNotFoundConflictSchema, watchlistNotFoundConflictSchema]),
+        404: watchlistNotFoundConflictSchema,
       },
     },
   )
@@ -118,8 +114,7 @@ export const WatchlistItemsModule = new Elysia({ prefix: "/watchlist-items" })
       if (!response.ok) {
         if (
           response.error.error === "WATCHLIST_ITEM_NOT_FOUND" ||
-          response.error.error === "WATCHLIST_NOT_FOUND" ||
-          response.error.error === "GAME_NOT_FOUND"
+          response.error.error === "WATCHLIST_NOT_FOUND"
         ) {
           return status(404, response.error);
         }
@@ -136,11 +131,7 @@ export const WatchlistItemsModule = new Elysia({ prefix: "/watchlist-items" })
         200: watchlistItemResponseSchema,
         400: watchlistItemConflictSchema,
         401: unauthorizedConflictSchema,
-        404: z.union([
-          watchlistItemNotFoundConflictSchema,
-          watchlistNotFoundConflictSchema,
-          gameNotFoundConflictSchema,
-        ]),
+        404: z.union([watchlistItemNotFoundConflictSchema, watchlistNotFoundConflictSchema]),
       },
     },
   )

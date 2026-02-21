@@ -3,7 +3,6 @@ import { z } from "zod";
 import { WatchlistItemBaseSchema, WatchlistItemRecordIdSchema } from "./watchlistItemsCommon";
 
 export const watchlistItemQuerySchema = z.object({
-  gameId: z.uuid().optional(),
   keyword: z.string().optional(),
   watchlistId: z.uuid().optional(),
 });

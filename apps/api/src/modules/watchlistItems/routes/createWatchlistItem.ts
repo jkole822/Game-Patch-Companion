@@ -1,6 +1,5 @@
-import { games, watchlistItems, watchlists } from "@db/schema";
+import { watchlistItems, watchlists } from "@db/schema";
 import {
-  gameNotFoundConflictSchema,
   watchlistItemConflictSchema,
   watchlistItemResponseSchema,
   watchlistNotFoundConflictSchema,
@@ -9,7 +8,6 @@ import { and, eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type {
-  gameNotFoundConflictSchema as gameNotFoundConflictSchemaType,
   watchlistItemConflictSchema as watchlistItemConflictSchemaType,
   watchlistItemInsertInputSchema,
   watchlistItemResponseSchema as watchlistItemResponseSchemaType,
@@ -23,13 +21,11 @@ type CreateWatchlistItemConflict = z.infer<typeof watchlistItemConflictSchemaTyp
 type CreateWatchlistItemWatchlistNotFoundConflict = z.infer<
   typeof watchlistNotFoundConflictSchemaType
 >;
-type CreateWatchlistItemGameNotFoundConflict = z.infer<typeof gameNotFoundConflictSchemaType>;
 
 type CreateWatchlistItemResult =
   | { ok: true; data: CreateWatchlistItemSuccess }
   | { ok: false; error: CreateWatchlistItemConflict }
-  | { ok: false; error: CreateWatchlistItemWatchlistNotFoundConflict }
-  | { ok: false; error: CreateWatchlistItemGameNotFoundConflict };
+  | { ok: false; error: CreateWatchlistItemWatchlistNotFoundConflict };
 
 export const createWatchlistItem = async ({
   db,
@@ -55,26 +51,9 @@ export const createWatchlistItem = async ({
     };
   }
 
-  const [game] = await db
-    .select({ id: games.id })
-    .from(games)
-    .where(eq(games.id, input.gameId))
-    .limit(1);
-
-  if (!game) {
-    return {
-      ok: false,
-      error: gameNotFoundConflictSchema.parse({
-        error: "GAME_NOT_FOUND",
-        message: "Game not found.",
-      }),
-    };
-  }
-
   try {
     const [createdWatchlistItem] = await db.insert(watchlistItems).values(input).returning({
       createdAt: watchlistItems.createdAt,
-      gameId: watchlistItems.gameId,
       id: watchlistItems.id,
       keyword: watchlistItems.keyword,
       watchlistId: watchlistItems.watchlistId,
