@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "bun run --workspaces --if-present dev",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres",
     "drizzle:generate": "bun run --workspaces --if-present drizzle:generate",
     "drizzle:migrate": "bun run --workspaces --if-present drizzle:migrate",
     "drizzle:pull": "bun run --workspaces --if-present drizzle:pull",
