@@ -40,18 +40,6 @@ export default [
           alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],
-      "import/extensions": [
-        "error",
-        "never",
-        {
-          js: "never",
-          jsx: "never",
-          ts: "never",
-          tsx: "never",
-          mjs: "never",
-          cjs: "never",
-        },
-      ],
       "no-restricted-imports": [
         "error",
         {

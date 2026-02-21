@@ -56,17 +56,19 @@ export const ingestLoop = async ({
                 checksum: sha256(entry.content),
                 content: entry.content,
                 fetchedAt: new Date(),
-                title: entry.title,
                 publishedAt: entry.publishedAt,
                 raw: entry.raw,
                 sourceId: source.id,
+                title: entry.title,
                 url: entry.url,
               })),
             )
             .onConflictDoNothing({
               target: [patchEntries.sourceId, patchEntries.url],
             })
-            .returning({ id: patchEntries.id });
+            .returning({
+              id: patchEntries.id,
+            });
 
           createdEntries += inserted.length;
           processedSources += 1;

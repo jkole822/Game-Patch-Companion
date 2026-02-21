@@ -6,6 +6,14 @@ import {
   PatchEntryTextNullableSchema,
 } from "./patchEntriesCommon";
 
+export const createPatchEntryResponseSchema = z.object({
+  id: PatchEntryIdSchema,
+  content: z.string(),
+  gameId: GameIdSchema,
+  sourceId: z.uuid(),
+  url: z.string(),
+});
+
 export const patchEntryResponseSchema = z.object({
   checksum: PatchEntryTextNullableSchema,
   content: z.string(),

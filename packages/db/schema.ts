@@ -13,11 +13,11 @@ import {
 
 /* Enums */
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
-export const patchEntryStateEnum = pgEnum("patch_entry_state", [
-  "new",
-  "assigned",
-  "ignored",
-  "error",
+
+export const watchlistMatchStateEnum = pgEnum("watchlist_match_state", [
+  "context",
+  "added",
+  "removed",
 ]);
 
 /* Core Domain */
@@ -63,16 +63,33 @@ export const patchEntries = pgTable(
       .notNull(),
     checksum: text("checksum"),
     content: text("content").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
     fetchedAt: timestamp("fetched_at"),
     publishedAt: timestamp("published_at"),
     raw: text("raw"),
     title: text("title").notNull(),
     url: text("url").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (t) => ({
     sourceUrlUnique: uniqueIndex("patch_entries_source_url_unique").on(t.sourceId, t.url),
     gameIdx: index("patch_entries_game_idx").on(t.gameId),
+  }),
+);
+
+export const patchEntryDiffs = pgTable(
+  "patch_entry_diffs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    patchEntryId: uuid("patch_entry_id")
+      .references(() => patchEntries.id)
+      .notNull(),
+    added: jsonb("added").notNull(),
+    removed: jsonb("removed").notNull(),
+    stats: jsonb("stats").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    patchEntryIdx: index("patch_entry_diffs_patch_entry_idx").on(t.patchEntryId),
   }),
 );
 
@@ -87,19 +104,59 @@ export const users = pgTable("users", {
 });
 
 /* User Watchlists */
-export const watchlists = pgTable("watchlists", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-  name: text("name").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const watchlists = pgTable(
+  "watchlists",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    gameId: uuid("game_id")
+      .references(() => games.id, { onDelete: "cascade" })
+      .notNull(),
+    name: text("name").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    gameIdx: index("watchlists_game_idx").on(t.gameId),
+  }),
+);
 
-export const watchlistItems = pgTable("watchlist_items", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  watchlistId: uuid("watchlist_id")
-    .references(() => watchlists.id, { onDelete: "cascade" })
-    .notNull(),
-  keyword: text("keyword").notNull(),
-});
+export const watchlistItems = pgTable(
+  "watchlist_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    watchlistId: uuid("watchlist_id")
+      .references(() => watchlists.id, { onDelete: "cascade" })
+      .notNull(),
+    keyword: text("keyword").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    watchlistIdx: index("watchlist_items_watchlist_idx").on(t.watchlistId),
+    keywordUnique: uniqueIndex("watchlist_items_keyword_unique").on(t.keyword),
+  }),
+);
+
+export const watchlistMatches = pgTable(
+  "watchlist_matches",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    patchEntryId: uuid("patch_entry_id")
+      .references(() => patchEntries.id, { onDelete: "cascade" })
+      .notNull(),
+    watchlistId: uuid("watchlist_id")
+      .references(() => watchlists.id, { onDelete: "cascade" })
+      .notNull(),
+    watchlistItemId: uuid("watchlist_item_id")
+      .references(() => watchlistItems.id, { onDelete: "cascade" })
+      .notNull(),
+    matchText: text("match_text").notNull(),
+    state: watchlistMatchStateEnum().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    patchEntryIdx: index("watchlist_matches_patch_entry_idx").on(t.patchEntryId),
+    watchlistIdx: index("watchlist_matches_watchlist_idx").on(t.watchlistId),
+  }),
+);

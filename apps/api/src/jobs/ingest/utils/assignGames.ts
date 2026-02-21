@@ -1,6 +1,8 @@
 import { games, patchEntries, sources } from "@db/schema";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 
+import { processNewPatchEntry } from "./processNewPatchEntry";
+
 import type { AppDb } from "@api-utils";
 
 export type AssignGamesJobResult = {
@@ -104,11 +106,13 @@ export const assignGames = async ({ db }: { db: AppDb }): Promise<AssignGamesJob
   const uniqueSourceIds = [...new Set(unassignedEntries.map((entry) => entry.sourceId))];
 
   const sourceRows = await db
-    .select({ id: sources.id, key: sources.key })
+    .select({ id: sources.id, key: sources.key, config: sources.config })
     .from(sources)
     .where(inArray(sources.id, uniqueSourceIds));
 
-  const sourceKeyById = new Map(sourceRows.map((sourceRow) => [sourceRow.id, sourceRow.key]));
+  const sourceById = new Map(
+    sourceRows.map((sourceRow) => [sourceRow.id, { key: sourceRow.key, config: sourceRow.config }]),
+  );
 
   const gameRows = await db.select({ key: games.key, id: games.id }).from(games);
   const gameIdByGameKey = new Map(
@@ -120,7 +124,9 @@ export const assignGames = async ({ db }: { db: AppDb }): Promise<AssignGamesJob
   let skippedEntries = 0;
 
   for (const entry of unassignedEntries) {
-    const sourceKey = sourceKeyById.get(entry.sourceId);
+    const source = sourceById.get(entry.sourceId);
+    const sourceKey = source?.key;
+    const sourceConfig = source?.config;
 
     const gameKey =
       (sourceKey ? inferGameKeyFromSourceKey({ knownGameKeys, sourceKey }) : null) ||
@@ -142,10 +148,24 @@ export const assignGames = async ({ db }: { db: AppDb }): Promise<AssignGamesJob
       .update(patchEntries)
       .set({ gameId })
       .where(and(eq(patchEntries.id, entry.id), isNull(patchEntries.gameId)))
-      .returning({ id: patchEntries.id });
+      .returning({
+        id: patchEntries.id,
+        content: patchEntries.content,
+        gameId: patchEntries.gameId,
+        sourceId: patchEntries.sourceId,
+        url: patchEntries.url,
+      });
 
     if (updated) {
       assignedEntries += 1;
+      try {
+        await processNewPatchEntry({ newPatchEntry: updated, db, sourceConfig });
+      } catch (error) {
+        console.error(
+          `[ingest] post-assign processing failed patchEntryId=${updated.id} sourceId=${updated.sourceId} url=${updated.url}`,
+          error,
+        );
+      }
     } else {
       skippedEntries += 1;
     }
