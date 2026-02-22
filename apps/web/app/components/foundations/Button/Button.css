@@ -49,7 +49,7 @@
 }
 
 .button-corner {
-  @apply bg-surface-alt absolute size-1.5;
+  @apply bg-border absolute size-1.5;
 
   &.button-corner--top-left {
     @apply top-0 left-0;

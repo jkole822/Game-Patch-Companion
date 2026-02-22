@@ -93,7 +93,7 @@
 }
 
 .text-field-corner {
-  @apply bg-surface-alt absolute size-1.5;
+  @apply bg-border absolute size-1.5;
 
   &.text-field-corner--top-left {
     @apply top-0 left-0;
