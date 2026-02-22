@@ -29,9 +29,9 @@
   @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
 
   /* Invalid Glow Border Focus */
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:shadow-danger-one data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:shadow-danger-one data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:shadow-danger-one data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
 
   /* Invalid Label Hover */
   @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-label]:text-danger-light;
@@ -51,7 +51,7 @@
 
 .text-field-input {
   @apply border-border relative inline-flex cursor-pointer appearance-none;
-  @apply w-full border px-7 py-1 font-bold capitalize duration-300 outline-none;
+  @apply w-full border px-7 py-1 font-bold capitalize outline-none;
   @apply group-hover:border-primary focus-visible:border-primary;
   @apply in-data-[touched=true]:invalid:group-hover:border-danger in-data-[touched=true]:invalid:focus-visible:border-danger;
 }
@@ -63,7 +63,7 @@
 }
 
 .text-field-border {
-  @apply bg-border absolute h-2.5 w-px duration-300;
+  @apply bg-border absolute h-2.5 w-px;
   @apply group-hover:bg-primary;
 
   &.text-field-border--top-left {
@@ -112,7 +112,7 @@
 }
 
 .text-field-glow-border {
-  @apply absolute left-1/2 z-1 h-px -translate-x-1/2 bg-transparent duration-300;
+  @apply absolute left-1/2 z-1 h-px -translate-x-1/2 bg-transparent;
   @apply group-hover:shadow-primary-two;
 
   &.text-field-glow-border--top {
