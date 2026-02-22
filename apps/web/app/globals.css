@@ -6,10 +6,10 @@
   --animate-drawer-overlay-out: drawer-overlay-out 550ms ease-in;
   --animate-drawer-overlay-in: drawer-overlay-in 450ms ease-out;
 
-  --color-background: oklch(0.1665 0.0124 254.17);
-  --color-surface: oklch(0.2073 0.0202 258.34); /* cards */
-  --color-surface-alt: oklch(0.241 0.0242 256.44); /* hover panels */
-  --color-border: oklch(0.3061 0.035 257.11);
+  --color-background: oklch(0.1665 0.018 278);
+  --color-surface: oklch(0.2073 0.028 280); /* cards */
+  --color-surface-alt: oklch(0.241 0.032 282); /* hover panels */
+  --color-border: oklch(0.3061 0.04 280);
 
   --color-text: oklch(0.9425 0.0111 243.66);
   --color-text-muted: oklch(0.7502 0.0333 251.2);
