@@ -35,6 +35,7 @@
 
   /* Invalid Label Hover */
   @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-label]:text-danger-light;
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-icon]:text-danger-light;
 
   /* Invalid Border Hover */
   @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-border]:bg-danger;
