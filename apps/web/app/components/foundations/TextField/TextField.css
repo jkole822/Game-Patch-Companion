@@ -1,7 +1,7 @@
 @reference "../../../globals.css";
 
 .text-field {
-  @apply relative mb-6 backdrop-blur-[20px];
+  @apply relative mb-6 backdrop-blur-lg;
 
   /* Label & Icon Focus */
   @apply has-[input:focus-visible]:[&_.text-field-label]:text-primary-light;

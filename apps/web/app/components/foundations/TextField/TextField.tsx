@@ -1,3 +1,5 @@
+"use client";
+
 import { LucideBomb, LucideMail, Eye, EyeClosed } from "lucide-react";
 import { useMemo, useState } from "react";
 
