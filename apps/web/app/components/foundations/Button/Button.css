@@ -1,0 +1,96 @@
+@reference "../../../globals.css";
+
+.button-container {
+  @apply relative w-fit;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-border]:bg-primary;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--one]:shadow-primary-one;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--one]:shadow-primary-one;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--two]:shadow-primary-two;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--two]:shadow-primary-two;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--three]:shadow-primary-three has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--three]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--three]:shadow-primary-three has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--three]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+}
+
+.button {
+  @apply border-border font-display relative inline-flex cursor-pointer appearance-none;
+  @apply border px-7 py-1 text-sm font-bold capitalize backdrop-blur-[20px] duration-300 outline-none;
+  @apply group-hover:border-primary focus-visible:border-primary;
+}
+
+.button-glow-border,
+.button-border,
+.button-corner {
+  pointer-events: none;
+}
+
+.button-border {
+  @apply bg-border absolute h-2.5 w-0.5 duration-300;
+  @apply group-hover:bg-primary;
+
+  &.button-border--top-left {
+    @apply -top-0.5 left-px rotate-45;
+  }
+
+  &.button-border--top-right {
+    @apply -top-0.5 right-px -rotate-45;
+  }
+
+  &.button-border--bottom-left {
+    @apply -bottom-0.5 left-px -rotate-45;
+  }
+
+  &.button-border--bottom-right {
+    @apply right-px -bottom-0.5 rotate-45;
+  }
+}
+
+.button-corner {
+  @apply bg-surface-alt absolute size-1.5;
+
+  &.button-corner--top-left {
+    @apply top-0 left-0;
+  }
+
+  &.button-corner--top-right {
+    @apply top-0 right-0 rotate-90;
+  }
+
+  &.button-corner--bottom-left {
+    @apply bottom-0 left-0 rotate-270;
+  }
+
+  &.button-corner--bottom-right {
+    @apply right-0 bottom-0 rotate-180;
+  }
+}
+
+.button-glow-border {
+  @apply absolute left-1/2 z-1 h-px -translate-x-1/2 rounded-full bg-transparent duration-300;
+
+  &.button-glow-border--top--one,
+  &.button-glow-border--top--two,
+  &.button-glow-border--top--three {
+    @apply top-0;
+  }
+
+  &.button-glow-border--bottom--one,
+  &.button-glow-border--bottom--two,
+  &.button-glow-border--bottom--three {
+    @apply bottom-0;
+  }
+
+  &.button-glow-border--top--one,
+  &.button-glow-border--bottom--one {
+    @apply group-hover:shadow-primary-one w-1/2;
+  }
+
+  &.button-glow-border--top--two,
+  &.button-glow-border--bottom--two {
+    @apply group-hover:shadow-primary-two w-3/4;
+  }
+
+  &.button-glow-border--top--three,
+  &.button-glow-border--bottom--three {
+    @apply group-hover:shadow-primary-three w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  }
+}

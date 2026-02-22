@@ -71,3 +71,6 @@ apps/api/.env
 **/.DS_Store
 **/.idea
 *.pem
+
+*storybook.log
+storybook-static

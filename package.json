@@ -17,6 +17,8 @@
     "lint": "bun run --workspaces --if-present lint",
     "lint-staged": "lint-staged",
     "lint:fix": "bun run --workspaces --if-present lint:fix",
+    "storybook": "bun run --cwd apps/web storybook",
+    "build-storybook": "bun run --cwd apps/web build-storybook",
     "prepare": "husky",
     "type-check": "tsc -b --noEmit"
   },
