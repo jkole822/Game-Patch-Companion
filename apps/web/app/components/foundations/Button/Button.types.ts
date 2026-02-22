@@ -13,6 +13,7 @@ type LinkButtonProps = SharedButtonProps &
 type NativeButtonProps = SharedButtonProps &
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "className"> & {
     href?: undefined;
+    loading?: boolean;
   };
 
 export type ButtonProps = LinkButtonProps | NativeButtonProps;

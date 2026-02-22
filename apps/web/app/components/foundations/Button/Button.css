@@ -2,21 +2,22 @@
 
 .button-container {
   @apply relative w-fit;
-  @apply data-[disabled=true]:opacity-60;
   @apply has-[a:focus-visible,button:focus-visible]:[&_.button-border]:bg-primary;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--one]:shadow-primary-one;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--one]:shadow-primary-one;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--two]:shadow-primary-two;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--two]:shadow-primary-two;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--three]:shadow-primary-three has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top--three]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--three]:shadow-primary-three has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom--three]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top]:shadow-primary-one;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom]:shadow-primary-one;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
 }
 
 .button {
-  @apply border-border font-display relative inline-flex cursor-pointer appearance-none;
-  @apply border px-7 py-1 text-sm font-bold capitalize backdrop-blur-[20px] duration-300 outline-none;
+  @apply border-border font-display inline-flex cursor-pointer appearance-none items-center justify-center gap-2;
+  @apply relative border px-7 py-1 text-sm font-bold capitalize backdrop-blur-lg duration-300 outline-none;
   @apply disabled:text-text-muted! disabled:border-border! disabled:cursor-not-allowed;
   @apply group-hover:border-primary focus-visible:border-primary;
+}
+
+.button-spinner {
+  @apply text-primary size-3.5 animate-spin;
 }
 
 .button-glow-border,
@@ -71,30 +72,16 @@
   @apply absolute left-1/2 z-1 h-px -translate-x-1/2 rounded-full bg-transparent duration-300;
   @apply in-data-[disabled=true]:bg-none! in-data-[disabled=true]:shadow-none!;
 
-  &.button-glow-border--top--one,
-  &.button-glow-border--top--two,
-  &.button-glow-border--top--three {
+  &.button-glow-border--top {
     @apply top-0;
   }
 
-  &.button-glow-border--bottom--one,
-  &.button-glow-border--bottom--two,
-  &.button-glow-border--bottom--three {
+  &.button-glow-border--bottom {
     @apply bottom-0;
   }
 
-  &.button-glow-border--top--one,
-  &.button-glow-border--bottom--one {
-    @apply group-hover:shadow-primary-one w-1/2;
-  }
-
-  &.button-glow-border--top--two,
-  &.button-glow-border--bottom--two {
-    @apply group-hover:shadow-primary-two w-3/4;
-  }
-
-  &.button-glow-border--top--three,
-  &.button-glow-border--bottom--three {
-    @apply group-hover:shadow-primary-three w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  &.button-glow-border--top,
+  &.button-glow-border--bottom {
+    @apply group-hover:shadow-primary-two w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
   }
 }

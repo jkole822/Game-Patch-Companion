@@ -4,15 +4,10 @@ import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constant
 
 import type { ButtonProps } from "./Button.types";
 
+import Spinner from "@/assets/spinner.svg?react";
+import { getClassName } from "@/lib/utils";
+
 import "./Button.css";
-
-const getClassName = (className?: string): string => {
-  if (!className) {
-    return BASE_CLASS_NAME;
-  }
-
-  return `${BASE_CLASS_NAME} ${className}`;
-};
 
 const Borders = () => {
   return (
@@ -28,12 +23,8 @@ const Borders = () => {
 const GlowBorders = () => {
   return (
     <>
-      <span className="button-glow-border button-glow-border--top--one"></span>
-      <span className="button-glow-border button-glow-border--top--two"></span>
-      <span className="button-glow-border button-glow-border--top--three"></span>
-      <span className="button-glow-border button-glow-border--bottom--one"></span>
-      <span className="button-glow-border button-glow-border--bottom--two"></span>
-      <span className="button-glow-border button-glow-border--bottom--three"></span>
+      <span className="button-glow-border button-glow-border--top"></span>
+      <span className="button-glow-border button-glow-border--bottom"></span>
     </>
   );
 };
@@ -67,7 +58,7 @@ export const Button = (props: ButtonProps) => {
     const safeRel = target === "_blank" && !rel ? "noopener noreferrer" : rel;
 
     return (
-      <div className={getClassName(className)}>
+      <div className={getClassName(BASE_CLASS_NAME, className)}>
         <Corners />
         <GlowBorders />
         <Link
@@ -85,19 +76,22 @@ export const Button = (props: ButtonProps) => {
     );
   }
 
-  const { children, className, disabled, type = "button", ...restProps } = props;
+  const { children, className, disabled, loading, type = "button", ...restProps } = props;
+
+  const isDisabled = disabled || loading;
 
   return (
-    <div className={getClassName(className)} data-disabled={disabled}>
+    <div className={getClassName(BASE_CLASS_NAME, className)} data-disabled={isDisabled}>
       <Corners />
       <GlowBorders />
       <button
         className="button"
-        disabled={disabled}
+        disabled={isDisabled}
         style={{ clipPath: CLIP_PATH }}
         type={type}
         {...restProps}
       >
+        {loading && <Spinner className="button-spinner" />}
         <Borders />
         {children}
       </button>

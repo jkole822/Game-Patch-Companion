@@ -8,6 +8,7 @@ const meta = {
   args: {
     children: "Lorem ipsum",
     disabled: false,
+    loading: false,
   },
 } satisfies Meta<typeof Button>;
 
