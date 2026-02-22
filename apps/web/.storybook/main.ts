@@ -34,6 +34,13 @@ const config: StorybookConfig = {
   staticDirs: ["../public"],
   async viteFinal(config) {
     return mergeConfig(config, {
+      resolve: {
+        alias: {
+          react: getAbsolutePath("react"),
+          "react-dom": getAbsolutePath("react-dom"),
+        },
+        dedupe: ["react", "react-dom"],
+      },
       plugins: [
         svgr({
           include: "**/*.svg?react",
