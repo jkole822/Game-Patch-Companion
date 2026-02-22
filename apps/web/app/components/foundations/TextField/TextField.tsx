@@ -79,9 +79,9 @@ export const TextField = ({
 
   return (
     <div className={getClassName(className)} data-touched={touched}>
-      <div className="text-field-label" id={id}>
+      <label className="text-field-label" htmlFor={id}>
         {label}
-      </div>
+      </label>
       <Corners />
       <Borders />
       <GlowBorders />
@@ -90,6 +90,7 @@ export const TextField = ({
       >
         <input
           className="text-field-input"
+          id={id}
           onBlur={() => setTouched(true)}
           onChange={handleChange}
           style={{ clipPath: CLIP_PATH }}
