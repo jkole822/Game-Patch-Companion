@@ -116,7 +116,7 @@
   @apply group-hover:shadow-primary-two;
 
   &.text-field-glow-border--top {
-    @apply top-0 left-37.75 w-2/5 group-hover:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
+    @apply top-0 left-[7.5px] w-2/5 translate-x-0 group-hover:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
   }
 
   &.text-field-glow-border--center {
