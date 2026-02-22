@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constants";
 
 import type { ButtonProps } from "./Button.types";
@@ -68,7 +70,7 @@ export const Button = (props: ButtonProps) => {
       <div className={getClassName(className)}>
         <Corners />
         <GlowBorders />
-        <a
+        <Link
           className="button"
           href={href}
           rel={safeRel}
@@ -78,18 +80,24 @@ export const Button = (props: ButtonProps) => {
         >
           <Borders />
           {children}
-        </a>
+        </Link>
       </div>
     );
   }
 
-  const { children, className, type = "button", ...restProps } = props;
+  const { children, className, disabled, type = "button", ...restProps } = props;
 
   return (
-    <div className={getClassName(className)}>
+    <div className={getClassName(className)} data-disabled={disabled}>
       <Corners />
       <GlowBorders />
-      <button className="button" style={{ clipPath: CLIP_PATH }} type={type} {...restProps}>
+      <button
+        className="button"
+        disabled={disabled}
+        style={{ clipPath: CLIP_PATH }}
+        type={type}
+        {...restProps}
+      >
         <Borders />
         {children}
       </button>

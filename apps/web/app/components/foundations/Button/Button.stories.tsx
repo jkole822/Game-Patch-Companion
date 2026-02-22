@@ -7,6 +7,7 @@ const meta = {
   component: Button,
   args: {
     children: "Lorem ipsum",
+    disabled: false,
   },
 } satisfies Meta<typeof Button>;
 
