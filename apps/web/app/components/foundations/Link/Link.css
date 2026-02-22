@@ -1,0 +1,15 @@
+@reference "../../../globals.css";
+
+.link {
+  @apply relative text-sm font-bold capitalize outline-hidden duration-300;
+  @apply active:text-text!;
+  @apply focus-visible:text-primary-light focus-visible:before:scale-100 focus-visible:after:scale-100;
+  @apply focus-visible:before:shadow-primary-two focus-visible:after:h-0.5;
+  @apply hover:text-primary-light hover:before:scale-100 hover:after:scale-100;
+
+  @apply after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-0 after:duration-300;
+  @apply after:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply after:[clip-path:polygon(25%_0%,100%_0%,75%_100%,0%_100%)];
+
+  @apply before:shadow-primary-three before:absolute before:-bottom-1 before:left-0 before:h-0 before:w-full before:origin-left before:scale-0 before:duration-300;
+}
