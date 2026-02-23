@@ -20,7 +20,7 @@
 }
 
 .navigation__link-list--mobile {
-  @apply flex flex-col gap-6 md:flex;
+  @apply flex flex-col items-stretch gap-6;
 }
 
 .navigation__link-item--mobile {
@@ -29,7 +29,7 @@
 }
 
 .navigation__link-cta--mobile {
-  @apply mt-6 w-full! [&_.button]:w-full!;
+  @apply mt-6 w-full! [&_.button\_\_control]:w-full!;
 }
 
 .navigation__mobile-menu-button {
