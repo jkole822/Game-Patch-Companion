@@ -130,7 +130,7 @@
 }
 
 .text-field-label {
-  @apply inline-block w-fit pl-7 text-xs font-bold duration-300;
+  @apply font-display inline-block w-fit pl-7 text-xs font-bold duration-300;
   @apply group-hover:text-primary-light;
 }
 

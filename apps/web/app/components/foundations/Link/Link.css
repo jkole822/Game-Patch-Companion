@@ -1,7 +1,7 @@
 @reference "../../../globals.css";
 
 .link {
-  @apply relative text-sm font-bold capitalize outline-hidden duration-300;
+  @apply font-display relative text-sm font-bold capitalize outline-hidden duration-300;
   @apply active:text-text!;
   @apply focus-visible:text-primary-light focus-visible:before:scale-100 focus-visible:after:scale-100;
   @apply focus-visible:before:shadow-primary-two focus-visible:after:h-0.5;
