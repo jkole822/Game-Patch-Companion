@@ -18,6 +18,7 @@ export default [
       "**/coverage/**",
       "**/.output/**",
       "**/drizzle/**",
+      "apps/cms/**",
     ],
     plugins: {
       import: importPlugin,
