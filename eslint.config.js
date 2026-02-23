@@ -4,10 +4,6 @@ import importPlugin from "eslint-plugin-import";
 import tseslint from "typescript-eslint";
 
 export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  eslintConfigPrettier,
-
   {
     ignores: [
       "**/node_modules/**",
@@ -20,6 +16,12 @@ export default [
       "**/drizzle/**",
       "apps/cms/**",
     ],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+
+  {
     plugins: {
       import: importPlugin,
     },
