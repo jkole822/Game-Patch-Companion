@@ -20,12 +20,12 @@ const getClassName = (className?: string): string => {
 const Borders = () => {
   return (
     <>
-      <span className="text-field-border text-field-border--top-left"></span>
-      <span className="text-field-border text-field-border--top-right"></span>
-      <span className="text-field-border text-field-border--bottom-left"></span>
-      <span className="text-field-border text-field-border--bottom-right"></span>
-      <span className="text-field-border text-field-border--top"></span>
-      <span className="text-field-border text-field-border--left"></span>
+      <span className="text-field__border text-field__border--top-left"></span>
+      <span className="text-field__border text-field__border--top-right"></span>
+      <span className="text-field__border text-field__border--bottom-left"></span>
+      <span className="text-field__border text-field__border--bottom-right"></span>
+      <span className="text-field__border text-field__border--top"></span>
+      <span className="text-field__border text-field__border--left"></span>
     </>
   );
 };
@@ -33,9 +33,9 @@ const Borders = () => {
 const GlowBorders = () => {
   return (
     <>
-      <span className="text-field-glow-border text-field-glow-border--top"></span>
-      <span className="text-field-glow-border text-field-glow-border--center"></span>
-      <span className="text-field-glow-border text-field-glow-border--bottom"></span>
+      <span className="text-field__glow-border text-field__glow-border--top"></span>
+      <span className="text-field__glow-border text-field__glow-border--center"></span>
+      <span className="text-field__glow-border text-field__glow-border--bottom"></span>
     </>
   );
 };
@@ -44,19 +44,19 @@ const Corners = () => {
   return (
     <>
       <span
-        className="text-field-corner text-field-corner--top-left"
+        className="text-field__corner text-field__corner--top-left"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="text-field-corner text-field-corner--top-right"
+        className="text-field__corner text-field__corner--top-right"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="text-field-corner text-field-corner--bottom-left"
+        className="text-field__corner text-field__corner--bottom-left"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="text-field-corner text-field-corner--bottom-right"
+        className="text-field__corner text-field__corner--bottom-right"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
     </>
@@ -81,17 +81,18 @@ export const TextField = ({
 
   return (
     <div className={getClassName(className)} data-touched={touched}>
-      <label className="text-field-label" htmlFor={id}>
+      <label className="text-field__label" htmlFor={id}>
         {label}
       </label>
       <Corners />
       <Borders />
       <GlowBorders />
       <div
-        className={`relative ${touched ? "has-[.text-field-input:invalid]:[&+.text-field-error]:flex!" : ""}`}
+        className={`text-field__input-wrapper ${touched ? "has-[.js-text-field-input:invalid]:[&+.js-text-field-error]:flex!" : ""}`}
       >
         <input
-          className="text-field-input"
+          autoComplete="off"
+          className="text-field__input js-text-field-input"
           id={id}
           onBlur={() => setTouched(true)}
           onChange={handleChange}
@@ -100,16 +101,16 @@ export const TextField = ({
           {...restProps}
         />
         {type === "email" && (
-          <LucideMail className="text-field-icon pointer-events-none" size={20} />
+          <LucideMail className="text-field__icon pointer-events-none" size={20} />
         )}
         {type === "password" && (
-          <button onClick={() => setShowPassword((prev) => !prev)} className="text-field-icon">
+          <button onClick={() => setShowPassword((prev) => !prev)} className="text-field__icon">
             {showPassword ? <Eye /> : <EyeClosed />}
           </button>
         )}
       </div>
       {Boolean(errorMessage) && (
-        <div className="text-field-error">
+        <div className="text-field__error js-text-field-error">
           <LucideBomb name="error" size={12} />
           <span>{errorMessage}</span>
         </div>

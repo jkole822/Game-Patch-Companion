@@ -6,16 +6,15 @@ import type { ButtonProps } from "./Button.types";
 
 import Spinner from "@/assets/spinner.svg?react";
 import { getClassName } from "@/lib/utils";
-
 import "./Button.css";
 
 const Borders = () => {
   return (
     <>
-      <span className="button-border button-border--top-left"></span>
-      <span className="button-border button-border--top-right"></span>
-      <span className="button-border button-border--bottom-left"></span>
-      <span className="button-border button-border--bottom-right"></span>
+      <span className="button__border button__border--top-left"></span>
+      <span className="button__border button__border--top-right"></span>
+      <span className="button__border button__border--bottom-left"></span>
+      <span className="button__border button__border--bottom-right"></span>
     </>
   );
 };
@@ -23,8 +22,8 @@ const Borders = () => {
 const GlowBorders = () => {
   return (
     <>
-      <span className="button-glow-border button-glow-border--top"></span>
-      <span className="button-glow-border button-glow-border--bottom"></span>
+      <span className="button__glow-border button__glow-border--top"></span>
+      <span className="button__glow-border button__glow-border--bottom"></span>
     </>
   );
 };
@@ -33,19 +32,19 @@ const Corners = () => {
   return (
     <>
       <span
-        className="button-corner button-corner--top-left"
+        className="button__corner button__corner--top-left"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="button-corner button-corner--top-right"
+        className="button__corner button__corner--top-right"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="button-corner button-corner--bottom-left"
+        className="button__corner button__corner--bottom-left"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
       <span
-        className="button-corner button-corner--bottom-right"
+        className="button__corner button__corner--bottom-right"
         style={{ clipPath: CORNERS_CLIP_PATH }}
       ></span>
     </>
@@ -62,7 +61,7 @@ export const Button = (props: ButtonProps) => {
         <Corners />
         <GlowBorders />
         <Link
-          className="button"
+          className="button__control"
           href={href}
           rel={safeRel}
           style={{ clipPath: CLIP_PATH }}
@@ -85,13 +84,13 @@ export const Button = (props: ButtonProps) => {
       <Corners />
       <GlowBorders />
       <button
-        className="button"
+        className="button__control"
         disabled={isDisabled}
         style={{ clipPath: CLIP_PATH }}
         type={type}
         {...restProps}
       >
-        {loading && <Spinner className="button-spinner" />}
+        {loading && <Spinner className="button__spinner" />}
         <Borders />
         {children}
       </button>

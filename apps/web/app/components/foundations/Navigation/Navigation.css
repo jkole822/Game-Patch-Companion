@@ -4,49 +4,49 @@
   @apply border-border sticky top-0 z-50 flex items-center justify-between border-b py-2 backdrop-blur-md;
 }
 
-.navigation-home {
+.navigation__home {
   @apply ring-primary inline-block size-14 rounded-full outline-hidden duration-300;
   @apply active:shadow-none! active:ring-0!;
   @apply focus-visible:shadow-primary-one focus-visible:ring-2;
   @apply hover:shadow-primary-two hover:ring;
 }
 
-.navigation-home-image {
+.navigation__home-image {
   @apply size-full object-contain;
 }
 
-.navigation-link-list {
+.navigation__link-list {
   @apply hidden items-center gap-6 md:flex;
 }
 
-.navigation-link-list-mobile {
+.navigation__link-list--mobile {
   @apply flex flex-col gap-6 md:flex;
 }
 
-.navigation-link-item-mobile {
+.navigation__link-item--mobile {
   @apply relative;
   @apply after:bg-border after:absolute after:-bottom-3 after:left-0 after:h-px after:w-full after:origin-left after:duration-300;
 }
 
-.navigation-link-cta-mobile {
+.navigation__link-cta--mobile {
   @apply mt-6 w-full! [&_.button]:w-full!;
 }
 
-.navigation-mobile-menu-button {
+.navigation__mobile-menu-button {
   @apply ring-primary cursor-pointer rounded-md outline-hidden transition-all duration-300 ease-in-out md:hidden;
   @apply focus:ring-2;
 }
 
-.navigation-mobile-menu-icon {
+.navigation__mobile-menu-icon {
   @apply [&_svg]:h-8 [&_svg]:transition-transform [&_svg]:duration-600 [&_svg]:ease-[cubic-bezier(0.4,0,0.2,1)];
   @apply in-data-[state=open]:[&_svg]:-rotate-45;
   @apply in-data-[state=open]:[&_svg]:-translate-x-[0.25px];
   @apply in-data-[state=open]:[&_svg]:translate-y-[0.75px];
-  @apply in-data-[state=open]:[&_svg_.navigation-mobile-menu-icon-path]:[stroke-dasharray:20_300];
-  @apply in-data-[state=open]:[&_svg_.navigation-mobile-menu-icon-path--top-bottom]:[stroke-dashoffset:-32.42];
+  @apply in-data-[state=open]:[&_svg_.navigation\_\_mobile-menu-icon-path]:[stroke-dasharray:20_300];
+  @apply in-data-[state=open]:[&_svg_.navigation\_\_mobile-menu-icon-path--top-bottom]:[stroke-dashoffset:-32.42];
 }
 
-.navigation-mobile-menu-icon-path {
+.navigation__mobile-menu-icon-path {
   @apply stroke-text fill-none stroke-3 duration-300 ease-in-out;
   @apply [stroke-linecap:round] [stroke-linejoin:round];
   @apply [transition:stroke-dasharray_600ms_cubic-bezier(0.4,0,0.2,1),stroke-dashoffset_600ms_cubic-bezier(0.4,0,0.2,1)];

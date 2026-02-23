@@ -4,47 +4,47 @@
   @apply contents;
 }
 
-.drawer-overlay {
+.drawer__overlay {
   @apply fixed inset-0 z-40 bg-black/60 backdrop-blur-xs;
   @apply data-[state=open]:animate-drawer-overlay-in;
   @apply data-[state=closed]:animate-drawer-overlay-out;
 }
 
-.drawer-content {
+.drawer__content {
   @apply border-border bg-surface fixed top-18 left-0 z-50 flex h-[calc(100dvh-72px)] w-full max-w-sm flex-col border-r border-b shadow-2xl outline-none;
   @apply data-[state=open]:animate-drawer-content-in;
   @apply data-[state=closed]:animate-drawer-content-out;
 }
 
-.drawer-header {
+.drawer__header {
   @apply flex items-start justify-between gap-4 px-4 py-4 sm:px-6;
 }
 
-.drawer-header-copy {
+.drawer__header-copy {
   @apply min-w-0;
 }
 
-.drawer-title {
+.drawer__title {
   @apply font-display text-text text-lg leading-tight font-semibold;
 }
 
-.drawer-description {
+.drawer__description {
   @apply text-text-muted mt-1 text-sm leading-relaxed;
 }
 
-.drawer-close {
+.drawer__close {
   @apply border-border bg-surface-alt text-text-muted inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-colors outline-none;
   @apply hover:text-text hover:border-primary;
   @apply focus-visible:ring-primary focus-visible:text-text focus-visible:ring-2;
 }
 
-.drawer-body {
+.drawer__body {
   @apply border-border flex-1 overflow-y-auto border-t px-5 py-4 md:px-10;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .drawer-overlay,
-  .drawer-content {
+  .drawer__overlay,
+  .drawer__content {
     animation: none !important;
   }
 }

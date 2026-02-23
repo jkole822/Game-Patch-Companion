@@ -30,26 +30,26 @@ export const Drawer = ({
       <div className={getClassName("drawer-root", className)}>
         {Boolean(trigger) && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
         <Dialog.Portal>
-          <Dialog.Overlay className="drawer-overlay" />
-          <Dialog.Content className={getClassName("drawer-content", contentClassName)}>
-            <div className={`drawer-header ${hideHeader ? "sr-only" : ""}`}>
-              <div className="drawer-header-copy">
-                <Dialog.Title className={`drawer-title ${hideTitle ? "sr-only" : ""}`}>
+          <Dialog.Overlay className="drawer__overlay" />
+          <Dialog.Content className={getClassName("drawer__content", contentClassName)}>
+            <div className={`drawer__header ${hideHeader ? "sr-only" : ""}`}>
+              <div className="drawer__header-copy">
+                <Dialog.Title className={`drawer__title ${hideTitle ? "sr-only" : ""}`}>
                   {title}
                 </Dialog.Title>
                 {description && (
                   <Dialog.Description
-                    className={`drawer-description ${hideDescription ? "sr-only" : ""}`}
+                    className={`drawer__description ${hideDescription ? "sr-only" : ""}`}
                   >
                     {description}
                   </Dialog.Description>
                 )}
               </div>
-              <Dialog.Close aria-label={closeLabel} className="drawer-close" type="button">
+              <Dialog.Close aria-label={closeLabel} className="drawer__close" type="button">
                 <X size={18} />
               </Dialog.Close>
             </div>
-            <div className="drawer-body">{children}</div>
+            <div className="drawer__body">{children}</div>
           </Dialog.Content>
         </Dialog.Portal>
       </div>

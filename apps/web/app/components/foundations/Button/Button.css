@@ -1,87 +1,82 @@
 @reference "../../../globals.css";
 
-.button-container {
+.button {
   @apply relative w-fit;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-border]:bg-primary;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top]:shadow-primary-one;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom]:shadow-primary-one;
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--top]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
-  @apply has-[a:focus-visible,button:focus-visible]:[&_.button-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button\_\_border]:bg-primary;
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button\_\_glow-border]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[a:focus-visible,button:focus-visible]:[&_.button\_\_glow-border]:shadow-primary-one;
 }
 
-.button {
+.button__control {
   @apply border-border font-display inline-flex cursor-pointer appearance-none items-center justify-center gap-2;
   @apply relative border px-7 py-1 text-sm font-bold capitalize backdrop-blur-lg duration-300 outline-none;
   @apply disabled:text-text-muted! disabled:border-border! disabled:cursor-not-allowed;
   @apply group-hover:border-primary focus-visible:border-primary;
 }
 
-.button-spinner {
+.button__spinner {
   @apply text-primary size-3.5 animate-spin;
 }
 
-.button-glow-border,
-.button-border,
-.button-corner {
-  pointer-events: none;
+.button__glow-border,
+.button__border,
+.button__corner {
+  @apply pointer-events-none;
 }
 
-.button-border {
+.button__border {
   @apply bg-border absolute h-2.5 w-0.5 duration-300;
   @apply in-data-[disabled=true]:bg-border!;
   @apply group-hover:bg-primary;
 
-  &.button-border--top-left {
+  &.button\_\_border--top-left {
     @apply -top-0.5 left-px rotate-45;
   }
 
-  &.button-border--top-right {
+  &.button\_\_border--top-right {
     @apply -top-0.5 right-px -rotate-45;
   }
 
-  &.button-border--bottom-left {
+  &.button\_\_border--bottom-left {
     @apply -bottom-0.5 left-px -rotate-45;
   }
 
-  &.button-border--bottom-right {
+  &.button\_\_border--bottom-right {
     @apply right-px -bottom-0.5 rotate-45;
   }
 }
 
-.button-corner {
+.button__corner {
   @apply bg-border absolute size-1.5;
 
-  &.button-corner--top-left {
+  &.button__corner--top-left {
     @apply top-0 left-0;
   }
 
-  &.button-corner--top-right {
+  &.button__corner--top-right {
     @apply top-0 right-0 rotate-90;
   }
 
-  &.button-corner--bottom-left {
+  &.button__corner--bottom-left {
     @apply bottom-0 left-0 rotate-270;
   }
 
-  &.button-corner--bottom-right {
+  &.button__corner--bottom-right {
     @apply right-0 bottom-0 rotate-180;
   }
 }
 
-.button-glow-border {
-  @apply absolute left-1/2 z-1 h-px -translate-x-1/2 rounded-full bg-transparent duration-300;
+.button__glow-border {
+  @apply absolute left-1/2 z-1 h-px w-[calc(100%-16px)] -translate-x-1/2 rounded-full bg-transparent duration-300;
   @apply in-data-[disabled=true]:bg-none! in-data-[disabled=true]:shadow-none!;
+  @apply group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply group-hover:shadow-primary-two;
 
-  &.button-glow-border--top {
+  &.button__glow-border--top {
     @apply top-0;
   }
 
-  &.button-glow-border--bottom {
+  &.button__glow-border--bottom {
     @apply bottom-0;
-  }
-
-  &.button-glow-border--top,
-  &.button-glow-border--bottom {
-    @apply group-hover:shadow-primary-two w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
   }
 }

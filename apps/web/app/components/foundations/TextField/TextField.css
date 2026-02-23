@@ -4,141 +4,145 @@
   @apply relative mb-6 backdrop-blur-lg;
 
   /* Label & Icon Focus */
-  @apply has-[input:focus-visible]:[&_.text-field-label]:text-primary-light;
-  @apply has-[input:focus-visible]:[&_.text-field-icon]:text-primary-light;
+  @apply has-[input:focus-visible]:[&_.text-field\_\_label]:text-primary-light;
+  @apply has-[input:focus-visible]:[&_.text-field\_\_icon]:text-primary-light;
 
   /* Border Focus */
-  @apply has-[input:focus-visible]:[&_.text-field-border]:bg-primary;
-  @apply has-[input:focus-visible]:[&_.text-field-border--top-left]:bg-[--alpha(var(--color-white)/75%)];
-  @apply has-[input:focus-visible]:[&_.text-field-border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
-  @apply has-[input:focus-visible]:[&_.text-field-border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_border]:bg-primary;
+  @apply has-[input:focus-visible]:[&_.text-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
 
   /* Glow Border Focus */
-  @apply has-[input:focus-visible]:[&_.text-field-glow-border--top]:shadow-primary-one has-[input:focus-visible]:[&_.text-field-glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
-  @apply has-[input:focus-visible]:[&_.text-field-glow-border--center]:shadow-primary-one has-[input:focus-visible]:[&_.text-field-glow-border--center]:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_100%)];
-  @apply has-[input:focus-visible]:[&_.text-field-glow-border--bottom]:shadow-primary-one has-[input:focus-visible]:[&_.text-field-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_glow-border--top]:shadow-primary-one has-[input:focus-visible]:[&_.text-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_glow-border--center]:shadow-primary-one has-[input:focus-visible]:[&_.text-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply has-[input:focus-visible]:[&_.text-field\_\_glow-border--bottom]:shadow-primary-one has-[input:focus-visible]:[&_.text-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
 
   /* Invalid Label & Icon Focus */
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-label]:text-danger-light;
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-icon]:text-danger-light;
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_label]:text-danger-light;
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_icon]:text-danger-light;
 
   /* Invalid Border Focus */
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-border]:bg-danger;
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-border--top-left]:bg-[--alpha(var(--color-white)/75%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_border]:bg-danger;
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
 
   /* Invalid Glow Border Focus */
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
-  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--top]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--center]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--bottom]:shadow-danger-two data-[touched=true]:has-[input:focus-visible:invalid]:[&_.text-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
 
   /* Invalid Label Hover */
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-label]:text-danger-light;
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-icon]:text-danger-light;
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_label]:text-danger-light;
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_icon]:text-danger-light;
 
   /* Invalid Border Hover */
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-border]:bg-danger;
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-border--top-left]:bg-[--alpha(var(--color-white)/75%)];
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_border]:bg-danger;
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
 
   /* Invalid Glow Border Hover */
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-glow-border]:shadow-danger-two;
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
-  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field-glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_glow-border]:shadow-danger-two;
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply data-[touched=true]:has-[input:invalid]:hover:[&_.text-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
 }
 
-.text-field-input {
+.text-field__input-wrapper {
+  @apply relative;
+}
+
+.text-field__input {
   @apply border-border relative inline-flex cursor-pointer appearance-none;
   @apply w-full border px-7 py-1 font-bold capitalize outline-none;
   @apply group-hover:border-primary focus-visible:border-primary;
   @apply in-data-[touched=true]:invalid:group-hover:border-danger in-data-[touched=true]:invalid:focus-visible:border-danger;
 }
 
-.text-field-glow-border,
-.text-field-border,
-.text-field-corner {
+.text-field__glow-border,
+.text-field__border,
+.text-field__corner {
   pointer-events: none;
 }
 
-.text-field-border {
+.text-field__border {
   @apply bg-border absolute h-2.5 w-px;
   @apply group-hover:bg-primary;
 
-  &.text-field-border--top-left {
+  &.text-field__border--top-left {
     @apply -top-px left-[3.5px] z-2 rotate-45 group-hover:bg-[--alpha(var(--color-white)/75%)];
   }
 
-  &.text-field-border--top-right {
+  &.text-field__border--top-right {
     @apply top-1/2 right-[3.5px] z-2 -translate-y-[calc(50%+1px)] -rotate-45 group-hover:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
   }
 
-  &.text-field-border--bottom-left {
+  &.text-field__border--bottom-left {
     @apply -bottom-px left-[3.5px] -rotate-45;
   }
 
-  &.text-field-border--bottom-right {
+  &.text-field__border--bottom-right {
     @apply right-[3.5px] -bottom-px rotate-45;
   }
 
-  &.text-field-border--left {
+  &.text-field__border--left {
     @apply top-[7.5px] left-0 h-6.5 group-hover:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
   }
 
-  &.text-field-border--top {
+  &.text-field__border--top {
     @apply top-0 left-[7.5px] h-px w-2/5;
   }
 }
 
-.text-field-corner {
+.text-field__corner {
   @apply bg-border absolute size-1.5;
 
-  &.text-field-corner--top-left {
+  &.text-field__corner--top-left {
     @apply top-0 left-0;
   }
 
-  &.text-field-corner--top-right {
+  &.text-field__corner--top-right {
     @apply top-1/2 right-0 -translate-y-[calc(50%+2px)] rotate-90;
   }
 
-  &.text-field-corner--bottom-left {
+  &.text-field__corner--bottom-left {
     @apply bottom-0 left-0 rotate-270;
   }
 
-  &.text-field-corner--bottom-right {
+  &.text-field__corner--bottom-right {
     @apply right-0 bottom-0 rotate-180;
   }
 }
 
-.text-field-glow-border {
+.text-field__glow-border {
   @apply absolute left-1/2 z-1 h-px -translate-x-1/2 bg-transparent;
   @apply group-hover:shadow-primary-two;
 
-  &.text-field-glow-border--top {
+  &.text-field__glow-border--top {
     @apply top-0 left-[7.5px] w-2/5 translate-x-0 group-hover:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
   }
 
-  &.text-field-glow-border--center {
+  &.text-field__glow-border--center {
     @apply top-1/2 w-[calc(100%-28px)] -translate-x-[calc(50%-6.5px)] -translate-y-[calc(50%+4.5px)] group-hover:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_100%)];
   }
 
-  &.text-field-glow-border--bottom {
+  &.text-field__glow-border--bottom {
     @apply bottom-0 w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
   }
 }
 
-.text-field-label {
+.text-field__label {
   @apply font-display inline-block w-fit pl-7 text-xs font-bold duration-300;
   @apply group-hover:text-primary-light;
 }
 
-.text-field-icon {
+.text-field__icon {
   @apply absolute top-1/2 right-7 -translate-y-1/2 outline-hidden duration-300;
   @apply hover:text-primary focus-visible:text-primary;
 }
 
-.text-field-error {
+.text-field__error {
   @apply text-danger absolute -bottom-5 left-0 hidden items-center gap-1 text-xs font-bold;
 }
