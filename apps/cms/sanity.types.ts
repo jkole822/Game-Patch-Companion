@@ -26,16 +26,16 @@ export type SiteSettings = {
 
 export type Navigation = {
   _type: 'navigation'
-  cta?: NavLink
+  cta?: Link
   links?: Array<
     {
       _key: string
-    } & NavLink
+    } & Link
   >
 }
 
-export type NavLink = {
-  _type: 'navLink'
+export type Link = {
+  _type: 'link'
   label?: string
   href?: string
 }
@@ -54,6 +54,9 @@ export type LandingPage = {
   _updatedAt: string
   _rev: string
   title?: string
+  heading?: string
+  subheading?: string
+  cta?: Link
   featureCards?: Array<
     {
       _key: string
@@ -184,7 +187,7 @@ export type Slug = {
 export type AllSanitySchemaTypes =
   | SiteSettings
   | Navigation
-  | NavLink
+  | Link
   | FeatureCard
   | LandingPage
   | SanityImagePaletteSwatch

@@ -76,7 +76,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "navLink"
+            "name": "link"
           },
           "optional": true
         },
@@ -96,7 +96,7 @@
               },
               "rest": {
                 "type": "inline",
-                "name": "navLink"
+                "name": "link"
               }
             }
           },
@@ -106,7 +106,7 @@
     }
   },
   {
-    "name": "navLink",
+    "name": "link",
     "type": "type",
     "value": {
       "type": "object",
@@ -115,7 +115,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "navLink"
+            "value": "link"
           }
         },
         "label": {
@@ -211,6 +211,28 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "heading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "subheading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "cta": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "link"
         },
         "optional": true
       },

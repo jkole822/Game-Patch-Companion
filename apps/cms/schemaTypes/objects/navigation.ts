@@ -6,12 +6,12 @@ export const navigation = {
     {
       name: 'cta',
       title: 'CTA',
-      type: 'navLink',
+      type: 'link',
     },
     {
       name: 'links',
       type: 'array',
-      of: [{type: 'navLink'}],
+      of: [{type: 'link'}],
       validation: (Rule: any) => Rule.required().min(1),
     },
   ],

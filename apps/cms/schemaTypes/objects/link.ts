@@ -1,6 +1,6 @@
-export const navLink = {
-  name: 'navLink',
-  title: 'Nav Link',
+export const link = {
+  name: 'link',
+  title: 'Link',
   type: 'object',
   fields: [
     {name: 'label', type: 'string', validation: (Rule: any) => Rule.required()},

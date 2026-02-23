@@ -4,6 +4,9 @@ export const landingPage = {
   type: 'document',
   fields: [
     {name: 'title', type: 'string'},
+    {name: 'heading', type: 'string'},
+    {name: 'subheading', type: 'string'},
+    {name: 'cta', type: 'link'},
     {
       name: 'featureCards',
       type: 'array',

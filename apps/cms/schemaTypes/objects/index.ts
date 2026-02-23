@@ -1,3 +1,3 @@
 export * from './featureCard'
-export * from './navLink'
+export * from './link'
 export * from './navigation'
