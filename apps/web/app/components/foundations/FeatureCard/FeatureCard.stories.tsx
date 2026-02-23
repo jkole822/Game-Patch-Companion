@@ -1,5 +1,3 @@
-import { Binoculars, Eye, Gamepad2 } from "lucide-react";
-
 import { FeatureCard } from "./FeatureCard";
 
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
@@ -11,7 +9,7 @@ const meta = {
     title: "Watch Any Update",
     description:
       "Get alerts for your classes, dungeons, legendaries, and anything else in your watchlists.",
-    icon: <Eye size={22} strokeWidth={2.2} />,
+    icon: "Eye",
   },
   argTypes: {
     icon: {
@@ -49,18 +47,18 @@ export const ThreeUp: Story = {
         title: "Watch Any Update",
         description:
           "Get alerts for your classes, dungeons, legendaries, and anything else in your watchlists.",
-        icon: <Eye size={22} strokeWidth={2.2} />,
+        icon: "Eye",
       },
       {
         title: "Exacts, Synonyms or Fuzzy",
         description: "Define keywords, but match updates even when the terms change.",
-        icon: <Binoculars size={22} strokeWidth={2.2} />,
+        icon: "Binoculars",
       },
       {
         title: "Retail, Classic & More",
         description:
           "Supports Retail, Wrath Classic, Season of Discovery, Burning Crusade, Diablo IV, and more.",
-        icon: <Gamepad2 size={22} strokeWidth={2.2} />,
+        icon: "Gamepad2",
       },
     ];
 
