@@ -4,10 +4,9 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useState } from "react";
 
-import type { NavigationProps } from "./Navigation.types";
-
 import { Button, Drawer, Link } from "@/components";
 
+import type { NavigationProps } from "./Navigation.types";
 import "./Navigation.css";
 
 export const Navigation = ({ cta, links }: NavigationProps) => {

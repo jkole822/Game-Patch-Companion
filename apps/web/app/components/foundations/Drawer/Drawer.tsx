@@ -3,10 +3,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
-import type { DrawerProps } from "./Drawer.types";
-
 import { getClassName } from "@/lib/utils";
 
+import type { DrawerProps } from "./Drawer.types";
 import "./Drawer.css";
 
 export const Drawer = ({

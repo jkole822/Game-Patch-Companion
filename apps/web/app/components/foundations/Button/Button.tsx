@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constants";
-
-import type { ButtonProps } from "./Button.types";
-
 import Spinner from "@/assets/spinner.svg?react";
 import { getClassName } from "@/lib/utils";
 
+import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constants";
+
+import type { ButtonProps } from "./Button.types";
 import "./Button.css";
 
 const Borders = () => {

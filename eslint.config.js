@@ -11,6 +11,9 @@ const baseConfig = {
     react,
     "react-hooks": reactHooks,
   },
+  settings: {
+    "import/internal-regex": "^@/",
+  },
   rules: {
     /* TypeScript */
     "@typescript-eslint/no-unused-vars": [

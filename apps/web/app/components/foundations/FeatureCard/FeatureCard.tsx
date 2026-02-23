@@ -1,9 +1,8 @@
 import * as Icons from "lucide-react";
 
-import type { FeatureCardProps } from "./FeatureCard.types";
-
 import { getClassName } from "@/lib/utils";
 
+import type { FeatureCardProps } from "./FeatureCard.types";
 import "./FeatureCard.css";
 
 export const FeatureCard = ({ className, description, icon, title }: FeatureCardProps) => {

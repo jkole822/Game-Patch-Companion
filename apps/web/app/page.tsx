@@ -1,7 +1,7 @@
-import type { LandingPage, SiteSettings } from "@cms/sanity.types";
-
 import { FeatureCard, Navigation } from "@/components";
 import { sanity } from "@/lib/utils";
+
+import type { LandingPage, SiteSettings } from "@cms/sanity.types";
 
 const landingPageQuery = `*[_type == "landingPage"][0] {
   bottomText,

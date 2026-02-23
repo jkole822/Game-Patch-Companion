@@ -1,9 +1,8 @@
 import NextLink from "next/link";
 
-import type { AnchorHTMLAttributes } from "react";
-
 import { getClassName } from "@/lib/utils";
 
+import type { AnchorHTMLAttributes } from "react";
 import "./Link.css";
 
 export const Link = ({
