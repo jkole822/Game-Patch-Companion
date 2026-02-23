@@ -13,6 +13,12 @@ import "./Navigation.css";
 export const Navigation = ({ cta, links }: NavigationProps) => {
   const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false);
 
+  const filteredLinks =
+    links?.filter(
+      (link): link is { href: string; label: string } =>
+        typeof link.href !== "undefined" && typeof link.label !== "undefined",
+    ) || [];
+
   return (
     <nav className="navigation page-margins">
       <NextLink className="navigation__home" href="/" title="Home">
@@ -26,7 +32,7 @@ export const Navigation = ({ cta, links }: NavigationProps) => {
         />
       </NextLink>
       <ul className="navigation__link-list">
-        {links.map(({ label, href }) => (
+        {filteredLinks.map(({ label, href }) => (
           <li key={label}>
             <Link href={href}>{label}</Link>
           </li>
@@ -57,7 +63,7 @@ export const Navigation = ({ cta, links }: NavigationProps) => {
         }
       >
         <ul className="navigation__link-list navigation__link-list--mobile">
-          {links.map(({ label, href }) => (
+          {filteredLinks.map(({ label, href }) => (
             <li className="navigation__link-item navigation__link-item--mobile" key={label}>
               <Link href={href}>{label}</Link>
             </li>

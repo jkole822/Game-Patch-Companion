@@ -6,14 +6,17 @@ export const featureCard = {
     {
       name: 'title',
       type: 'string',
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'description',
       type: 'string',
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'icon',
       type: 'string',
+      validation: (Rule: any) => Rule.required(),
     },
   ],
 }

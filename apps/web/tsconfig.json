@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -20,7 +21,16 @@
     ],
     "baseUrl": "./app",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@api-jobs": ["../../../apps/api/src/jobs/index.ts"],
+      "@api-jobs/*": ["../../../apps/api/src/jobs/*"],
+      "@api-modules": ["../../../apps/api/src/modules/index.ts"],
+      "@api-modules/*": ["../../../apps/api/src/modules/*"],
+      "@api-utils": ["../../../apps/api/src/utils/index.ts"],
+      "@api-utils/*": ["../../../apps/api/src/utils/*"],
+      "@cms/*": ["../../../apps/cms/*"],
+      "@db/*": ["../../../packages/db/*"],
+      "@shared/*": ["../../../packages/shared/*"]
     }
   },
   "include": [

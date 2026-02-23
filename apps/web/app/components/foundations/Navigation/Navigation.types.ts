@@ -1,4 +1,6 @@
+type Link = { label?: string; href?: string };
+
 export interface NavigationProps {
-  cta?: { label: string; href: string };
-  links: { label: string; href: string }[];
+  cta?: Link;
+  links?: Link[];
 }

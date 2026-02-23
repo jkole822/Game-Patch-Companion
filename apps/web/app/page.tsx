@@ -1,45 +1,41 @@
-import { Binoculars, Eye, Gamepad2 } from "lucide-react";
+import type { LandingPage, SiteSettings } from "@cms/sanity.types";
 
-import { FeatureCard } from "@/components";
+import { FeatureCard, Navigation } from "@/components";
+import { sanity } from "@/lib/utils";
 
-const features = [
-  {
-    title: "Watch Any Update",
-    description:
-      "Get alerts for your classes, dungeons, legendaries, and anything else in your watchlists.",
-    icon: <Eye size={22} strokeWidth={2.2} />,
-  },
-  {
-    title: "Exacts, Synonyms or Fuzzy",
-    description: "Define keywords, but match updates even when the terms change.",
-    icon: <Binoculars size={22} strokeWidth={2.2} />,
-  },
-  {
-    title: "Retail, Classic & More",
-    description:
-      "Supports Retail, Wrath Classic, Season of Discovery, Burning Crusade, Diablo IV, and more.",
-    icon: <Gamepad2 size={22} strokeWidth={2.2} />,
-  },
-];
+const landingPageQuery = `*[_type == "landingPage"][0] {
+  bottomText,
+  featureCards
+}`;
 
-export default function Home() {
+const siteSettingsQuery = `*[_type == "siteSettings"][0] {
+  navLoggedIn,
+  navLoggedOut
+}`;
+
+export default async function Home() {
+  const landingPage: LandingPage = await sanity.fetch(landingPageQuery);
+  const siteSettingsResults: SiteSettings = await sanity.fetch(siteSettingsQuery);
+  const navLoggedIn = siteSettingsResults?.navLoggedIn;
+
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(108,71,255,0.2),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(69,88,255,0.16),transparent_45%),linear-gradient(180deg,#06070f_0%,#090c18_45%,#070811_100%)]">
-      <div className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(255,255,255,0.12)_0.6px,transparent_0.6px)] [background-size:16px_16px] opacity-25" />
-
-      <section className="page-margins relative mx-auto flex min-h-screen max-w-[1400px] items-center py-16">
-        <div className="w-full space-y-8">
-          <div className="grid gap-5 lg:grid-cols-3">
-            {features.map((feature) => (
+    <main
+      className="relative min-h-screen overflow-hidden"
+      style={{ backgroundImage: "url(/gpc-landing-background.png)" }}
+    >
+      {navLoggedIn && <Navigation {...navLoggedIn} />}
+      <div className="page-margins">
+        <section className="flex w-full flex-col items-center gap-8">
+          <div className="grid w-full gap-5 lg:grid-cols-3">
+            {landingPage?.featureCards?.map((feature) => (
               <FeatureCard key={feature.title} {...feature} />
             ))}
           </div>
-
           <p className="font-display text-center text-2xl tracking-wide text-white/90 sm:text-3xl">
-            Secure. Fast. Built for you.
+            {landingPage?.bottomText ?? ""}
           </p>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
