@@ -1,88 +1,45 @@
-"use client";
+import { Binoculars, Eye, Gamepad2 } from "lucide-react";
 
-import { useState } from "react";
+import { FeatureCard } from "@/components";
 
-import type { FormEvent } from "react";
+const features = [
+  {
+    title: "Watch Any Update",
+    description:
+      "Get alerts for your classes, dungeons, legendaries, and anything else in your watchlists.",
+    icon: <Eye size={22} strokeWidth={2.2} />,
+  },
+  {
+    title: "Exacts, Synonyms or Fuzzy",
+    description: "Define keywords, but match updates even when the terms change.",
+    icon: <Binoculars size={22} strokeWidth={2.2} />,
+  },
+  {
+    title: "Retail, Classic & More",
+    description:
+      "Supports Retail, Wrath Classic, Season of Discovery, Burning Crusade, Diablo IV, and more.",
+    icon: <Gamepad2 size={22} strokeWidth={2.2} />,
+  },
+];
 
 export default function Home() {
-  const [email, setEmail] = useState("test@example.com");
-  const [password, setPassword] = useState("password123");
-  const [result, setResult] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsLoading(true);
-    setResult("");
-
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-      const text = await response.text();
-
-      setResult(
-        JSON.stringify(
-          {
-            status: response.status,
-            ok: response.ok,
-            body: text ? JSON.parse(text) : null,
-          },
-          null,
-          2,
-        ),
-      );
-    } catch (error) {
-      setResult(
-        JSON.stringify(
-          { error: error instanceof Error ? error.message : "Unknown error" },
-          null,
-          2,
-        ),
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-4 p-6">
-      <h1 className="text-2xl font-semibold">Auth Route Tester</h1>
-      <p className="text-sm opacity-80">Testing: POST /api/auth/register</p>
+    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(108,71,255,0.2),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(69,88,255,0.16),transparent_45%),linear-gradient(180deg,#06070f_0%,#090c18_45%,#070811_100%)]">
+      <div className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(255,255,255,0.12)_0.6px,transparent_0.6px)] [background-size:16px_16px] opacity-25" />
 
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-        <input
-          className="rounded border px-3 py-2"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          className="rounded border px-3 py-2"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Password"
-          minLength={8}
-          required
-        />
-        <button
-          className="rounded bg-black px-4 py-2 text-white disabled:opacity-60"
-          type="submit"
-          disabled={isLoading}
-        >
-          {isLoading ? "Sending..." : "Send Request"}
-        </button>
-      </form>
+      <section className="page-margins relative mx-auto flex min-h-screen max-w-[1400px] items-center py-16">
+        <div className="w-full space-y-8">
+          <div className="grid gap-5 lg:grid-cols-3">
+            {features.map((feature) => (
+              <FeatureCard key={feature.title} {...feature} />
+            ))}
+          </div>
 
-      <pre className="overflow-auto rounded border p-3 text-xs whitespace-pre-wrap">
-        {result || "Response will appear here."}
-      </pre>
+          <p className="font-display text-center text-2xl tracking-wide text-white/90 sm:text-3xl">
+            Secure. Fast. Built for you.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

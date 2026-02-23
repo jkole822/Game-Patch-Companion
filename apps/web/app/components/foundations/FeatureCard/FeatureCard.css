@@ -1,0 +1,58 @@
+@reference "../../../globals.css";
+
+.feature-card {
+  @apply relative overflow-hidden border p-6 backdrop-blur-sm;
+  @apply border-white/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)];
+  @apply bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))];
+}
+
+.feature-card__glow,
+.feature-card__corner {
+  pointer-events: none;
+}
+
+.feature-card__glow {
+  @apply absolute inset-0 opacity-80 transition-opacity duration-300;
+  @apply group-hover:opacity-100;
+  @apply bg-[radial-gradient(circle_at_20%_15%,rgba(167,139,250,0.14),transparent_45%),radial-gradient(circle_at_80%_100%,rgba(99,102,241,0.1),transparent_45%)];
+}
+
+.feature-card__corner {
+  @apply absolute h-4 w-4 border-white/25;
+
+  &.feature-card__corner--top-left {
+    @apply top-0 left-0 border-t border-l;
+  }
+
+  &.feature-card__corner--top-right {
+    @apply top-0 right-0 border-t border-r;
+  }
+
+  &.feature-card__corner--bottom-left {
+    @apply bottom-0 left-0 border-b border-l;
+  }
+
+  &.feature-card__corner--bottom-right {
+    @apply right-0 bottom-0 border-r border-b;
+  }
+}
+
+.feature-card__content {
+  @apply relative flex items-start gap-4;
+}
+
+.feature-card__icon {
+  @apply text-primary-light mt-0.5;
+}
+
+.feature-card__text {
+  @apply space-y-3;
+}
+
+.feature-card__title {
+  @apply font-display text-xl font-semibold tracking-wide;
+}
+
+.feature-card__description {
+  @apply text-text/75 max-w-prose text-base leading-relaxed;
+}
