@@ -42,5 +42,9 @@ body {
 }
 
 .page-margins {
-  @apply relative mx-auto w-full overflow-hidden px-5 md:px-10 lg:px-20;
+  @apply relative mx-auto box-border w-full overflow-hidden px-5 md:px-10 lg:px-20;
+}
+
+.hs-1 {
+  @apply font-display text-4xl font-bold capitalize sm:text-6xl;
 }
