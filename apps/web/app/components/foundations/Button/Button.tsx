@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import Spinner from "@/assets/spinner.svg?react";
 import { getClassName } from "@/lib/utils";
 
 import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constants";
+import { ButtonSpinner } from "./ButtonSpinner";
 
 import type { ButtonProps } from "./Button.types";
 import "./Button.css";
@@ -90,7 +90,7 @@ export const Button = (props: ButtonProps) => {
         type={type}
         {...restProps}
       >
-        {loading && <Spinner className="button__spinner" />}
+        {loading && <ButtonSpinner className="button__spinner" />}
         <Borders />
         {children}
       </button>

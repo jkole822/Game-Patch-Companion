@@ -2,7 +2,6 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { mergeConfig } from "vite";
-import svgr from "vite-plugin-svgr";
 
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 
@@ -41,11 +40,6 @@ const config: StorybookConfig = {
         },
         dedupe: ["react", "react-dom"],
       },
-      plugins: [
-        svgr({
-          include: "**/*.svg?react",
-        }),
-      ],
     });
   },
 };

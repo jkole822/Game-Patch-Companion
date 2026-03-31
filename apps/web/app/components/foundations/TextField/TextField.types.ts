@@ -1,8 +1,23 @@
 import type { InputHTMLAttributes } from "react";
 
-export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface BaseTextFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "defaultValue" | "onChange" | "value"
+> {
   errorMessage?: string;
   label: string;
+}
+
+interface ControlledTextFieldProps extends BaseTextFieldProps {
+  defaultValue?: never;
   onChange: (value: string) => void;
   value: string;
 }
+
+interface UncontrolledTextFieldProps extends BaseTextFieldProps {
+  defaultValue?: string;
+  onChange?: never;
+  value?: never;
+}
+
+export type TextFieldProps = ControlledTextFieldProps | UncontrolledTextFieldProps;

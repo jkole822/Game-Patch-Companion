@@ -1,0 +1,58 @@
+@reference "../../../globals.css";
+
+.gpc-container {
+  @apply relative inline-grid;
+}
+
+.gpc-container__surface,
+.gpc-container__content {
+  grid-area: 1 / 1;
+}
+
+.gpc-container__surface {
+  @apply border-border bg-background/50 relative border backdrop-blur-lg;
+}
+
+.gpc-container__content {
+  @apply relative z-1 appearance-none p-10;
+}
+
+.gpc-container__border {
+  @apply bg-border absolute h-2.5 w-0.5 duration-300;
+
+  &.gpc-container\_\_border--top-left {
+    @apply -top-0.5 left-px rotate-45;
+  }
+
+  &.gpc-container\_\_border--top-right {
+    @apply -top-0.5 right-px -rotate-45;
+  }
+
+  &.gpc-container\_\_border--bottom-left {
+    @apply -bottom-0.5 left-px -rotate-45;
+  }
+
+  &.gpc-container\_\_border--bottom-right {
+    @apply right-px -bottom-0.5 rotate-45;
+  }
+}
+
+.gpc-container__corner {
+  @apply bg-border absolute size-1.5;
+
+  &.gpc-container__corner--top-left {
+    @apply top-0 left-0;
+  }
+
+  &.gpc-container__corner--top-right {
+    @apply top-0 right-0 rotate-90;
+  }
+
+  &.gpc-container__corner--bottom-left {
+    @apply bottom-0 left-0 rotate-270;
+  }
+
+  &.gpc-container__corner--bottom-right {
+    @apply right-0 bottom-0 rotate-180;
+  }
+}

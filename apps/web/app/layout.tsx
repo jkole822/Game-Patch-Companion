@@ -1,7 +1,24 @@
+import { unstable_cache } from "next/cache";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { cookies } from "next/headers";
 
+import { Navigation } from "@/components";
+import { sanity } from "@/lib/utils";
+
+import type { SiteSettings } from "@cms/sanity.types";
 import type { Metadata } from "next";
 import "./globals.css";
+
+const siteSettingsQuery = `*[_type == "siteSettings"][0] {
+  navLoggedIn,
+  navLoggedOut
+}`;
+
+const getSiteSettings = unstable_cache(
+  async (): Promise<SiteSettings> => sanity.fetch(siteSettingsQuery),
+  ["site-settings-navigation"],
+  { revalidate: 300 },
+);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,16 +43,24 @@ export const metadata: Metadata = {
   description: "A tool for tracking game patch releases and their content changes.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const isLoggedIn = Boolean(cookieStore.get("auth_token")?.value);
+  const siteSettingsResults = await getSiteSettings();
+  const navLoggedIn = siteSettingsResults?.navLoggedIn;
+  const navLoggedOut = siteSettingsResults?.navLoggedOut;
+  const navigation = isLoggedIn ? navLoggedIn : navLoggedOut;
+
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} antialiased`}
       >
+        {navigation && <Navigation {...navigation} />}
         {children}
       </body>
     </html>
