@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { cookies } from "next/headers";
 
@@ -12,6 +13,12 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   navLoggedIn,
   navLoggedOut
 }`;
+
+const getSiteSettings = unstable_cache(
+  async (): Promise<SiteSettings> => sanity.fetch(siteSettingsQuery),
+  ["site-settings-navigation"],
+  { revalidate: 300 },
+);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,7 +50,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const isLoggedIn = Boolean(cookieStore.get("auth_token")?.value);
-  const siteSettingsResults: SiteSettings = await sanity.fetch(siteSettingsQuery);
+  const siteSettingsResults = await getSiteSettings();
   const navLoggedIn = siteSettingsResults?.navLoggedIn;
   const navLoggedOut = siteSettingsResults?.navLoggedOut;
   const navigation = isLoggedIn ? navLoggedIn : navLoggedOut;
