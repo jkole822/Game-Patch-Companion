@@ -56,7 +56,7 @@
 
 .text-field__input {
   @apply border-border relative inline-flex cursor-pointer appearance-none;
-  @apply w-full border px-7 py-1 font-bold capitalize outline-none;
+  @apply w-full border px-7 py-1 font-bold outline-none;
   @apply group-hover:border-primary focus-visible:border-primary;
   @apply in-data-[touched=true]:invalid:group-hover:border-danger in-data-[touched=true]:invalid:focus-visible:border-danger;
 }

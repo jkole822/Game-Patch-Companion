@@ -1,7 +1,7 @@
 "use client";
 
 import { LucideBomb, LucideMail, Eye, EyeClosed } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useId, useState } from "react";
 
 import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./TextField.constants";
 
@@ -69,14 +69,16 @@ export const TextField = ({
   label,
   onChange,
   type,
+  id: providedId,
   ...restProps
 }: TextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
-  const id = useMemo(() => crypto.randomUUID(), []);
+  const generatedId = useId();
+  const id = providedId ?? generatedId;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
+    onChange?.(event.target.value);
   };
 
   return (
@@ -104,7 +106,11 @@ export const TextField = ({
           <LucideMail className="text-field__icon pointer-events-none" size={20} />
         )}
         {type === "password" && (
-          <button onClick={() => setShowPassword((prev) => !prev)} className="text-field__icon">
+          <button
+            className="text-field__icon"
+            onClick={() => setShowPassword((prev) => !prev)}
+            type="button"
+          >
             {showPassword ? <Eye /> : <EyeClosed />}
           </button>
         )}
