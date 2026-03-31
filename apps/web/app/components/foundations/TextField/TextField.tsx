@@ -78,7 +78,7 @@ export const TextField = ({
   const id = providedId ?? generatedId;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event.target.value);
+    onChange?.(event.currentTarget.value);
   };
 
   return (
@@ -107,6 +107,8 @@ export const TextField = ({
         )}
         {type === "password" && (
           <button
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
             className="text-field__icon"
             onClick={() => setShowPassword((prev) => !prev)}
             type="button"

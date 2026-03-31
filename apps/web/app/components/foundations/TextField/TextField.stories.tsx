@@ -30,10 +30,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render(args) {
     const [value, setValue] = useState("");
+    const { defaultValue: _defaultValue, onChange: _onChange, value: _value, ...restArgs } = args;
 
     return (
       <div>
-        <TextField {...args} onChange={setValue} value={value} />
+        <TextField {...restArgs} onChange={setValue} value={value} />
         <div>Value: {value}</div>
       </div>
     );

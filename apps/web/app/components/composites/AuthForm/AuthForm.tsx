@@ -31,26 +31,13 @@ export const AuthForm = ({ action, className, title, variant }: AuthFormProps) =
         </p>
       )}
       <form action={formAction} className="flex w-full flex-col gap-4">
-        <TextField
-          autoComplete="email"
-          label="Email"
-          name="email"
-          onChange={() => {}}
-          type="email"
-        />
-        <TextField
-          autoComplete="new-password"
-          label="Password"
-          name="password"
-          onChange={() => {}}
-          type="password"
-        />
+        <TextField autoComplete="email" label="Email" name="email" type="email" />
+        <TextField autoComplete="new-password" label="Password" name="password" type="password" />
         {isRegistering && (
           <TextField
             autoComplete="new-password"
             label="Confirm Password"
             name="confirmPassword"
-            onChange={() => {}}
             type="password"
           />
         )}
