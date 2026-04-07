@@ -3,7 +3,7 @@
 import { Bomb } from "lucide-react";
 import { useActionState } from "react";
 
-import { Button, Container, TextField } from "@/components";
+import { Button, Container, Link, TextField } from "@/components";
 import { getClassName } from "@/lib/utils";
 
 import type { AuthFormActionState, AuthFormProps } from "./AuthForm.types";
@@ -14,6 +14,10 @@ export const AuthForm = ({ action, className, title, variant }: AuthFormProps) =
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
 
   const isRegistering = variant === "register";
+  const submitLabel = isRegistering ? "Register" : "Login";
+  const alternateHref = isRegistering ? "/login" : "/register";
+  const alternateLabel = isRegistering ? "Log in" : "Register";
+  const alternatePrompt = isRegistering ? "Already have an account?" : "Need an account?";
 
   return (
     <Container
@@ -42,9 +46,12 @@ export const AuthForm = ({ action, className, title, variant }: AuthFormProps) =
           />
         )}
         <Button loading={pending} type="submit">
-          Submit
+          {submitLabel}
         </Button>
       </form>
+      <p className="text-center text-sm text-white/85">
+        {alternatePrompt} <Link href={alternateHref}>{alternateLabel}</Link>
+      </p>
     </Container>
   );
 };

@@ -9,7 +9,7 @@ import { Button, Drawer, Link } from "@/components";
 import type { NavigationProps } from "./Navigation.types";
 import "./Navigation.css";
 
-export const Navigation = ({ cta, links }: NavigationProps) => {
+export const Navigation = ({ cta, links, logoutAction }: NavigationProps) => {
   const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false);
 
   const filteredLinks =
@@ -39,6 +39,13 @@ export const Navigation = ({ cta, links }: NavigationProps) => {
         {cta && (
           <li>
             <Button href={cta.href}>{cta.label}</Button>
+          </li>
+        )}
+        {logoutAction && (
+          <li>
+            <form action={logoutAction}>
+              <Button type="submit">Log out</Button>
+            </form>
           </li>
         )}
       </ul>
@@ -72,6 +79,15 @@ export const Navigation = ({ cta, links }: NavigationProps) => {
               <Button className="navigation__link-cta navigation__link-cta--mobile" href={cta.href}>
                 {cta.label}
               </Button>
+            </li>
+          )}
+          {logoutAction && (
+            <li>
+              <form action={logoutAction}>
+                <Button className="navigation__link-cta navigation__link-cta--mobile" type="submit">
+                  Log out
+                </Button>
+              </form>
             </li>
           )}
         </ul>

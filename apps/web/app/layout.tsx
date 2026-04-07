@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { cookies } from "next/headers";
 
+import { logoutAction } from "@/actions/logout";
 import { Navigation } from "@/components";
 import { sanity } from "@/lib/utils";
 
@@ -60,7 +61,9 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        {navigation && <Navigation {...navigation} />}
+        {navigation && (
+          <Navigation {...navigation} logoutAction={isLoggedIn ? logoutAction : undefined} />
+        )}
         {children}
       </body>
     </html>

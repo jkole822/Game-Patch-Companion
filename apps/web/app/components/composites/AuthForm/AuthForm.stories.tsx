@@ -11,7 +11,7 @@ const meta = {
   args: {
     action: mockAction,
     title: "Sign In",
-    variant: "register",
+    variant: "login",
   },
   argTypes: {
     action: { control: false },
