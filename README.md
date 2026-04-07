@@ -11,7 +11,7 @@ bun install
 Before running the app, add both required environment files:
 
 - Create a root `.env` file at `/Users/kole/Code/Clients/Game-Patch-Companion/.env`
-- Create a CMS `.env.local` file at `/Users/kole/Code/Clients/Game-Patch-Companion/apps/cms/.env.local`
+- Create a web `.env.local` file at `/Users/kole/Code/Clients/Game-Patch-Companion/apps/web/.env.local`
 
 ## Local Postgres (Docker)
 
