@@ -259,18 +259,69 @@ describe("auth route handlers", () => {
         userId,
       });
     });
+
+    it("logs and still returns success when email delivery fails", async () => {
+      const loggedErrors: Array<{ error: unknown; message: string }> = [];
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ id: crypto.randomUUID() }],
+            }),
+          }),
+        }),
+        insert: () => ({
+          values: async () => undefined,
+        }),
+      };
+
+      const response = await forgotPassword({
+        db: dbMock as unknown as AppDb,
+        email: "user@example.com",
+        logError: (message, error) => {
+          loggedErrors.push({ error, message });
+        },
+        sendResetEmail: async () => {
+          throw new Error("email failed");
+        },
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "If an account exists for that email, a reset link will be sent.",
+        },
+        ok: true,
+      });
+      expect(loggedErrors).toHaveLength(1);
+      expect(loggedErrors[0]?.message).toBe("Failed to create or send password reset email.");
+    });
   });
 
   describe("resetPassword", () => {
     it("returns INVALID_RESET_TOKEN when the token is missing or expired", async () => {
       const dbMock = {
-        select: () => ({
-          from: () => ({
-            where: () => ({
-              limit: async () => [],
+        transaction: async (
+          callback: (tx: {
+            update: () => {
+              set: (value: Record<string, unknown>) => {
+                where: (condition?: unknown) => {
+                  returning: (
+                    shape: Record<string, unknown>,
+                  ) => Promise<Array<Record<string, unknown>>>;
+                };
+              };
+            };
+          }) => Promise<unknown>,
+        ) =>
+          callback({
+            update: () => ({
+              set: (_value: Record<string, unknown>) => ({
+                where: () => ({
+                  returning: async () => [],
+                }),
+              }),
             }),
           }),
-        }),
       };
 
       const response = await resetPassword({
@@ -293,21 +344,48 @@ describe("auth route handlers", () => {
       const tokenId = crypto.randomUUID();
       const userId = crypto.randomUUID();
       const dbMock = {
-        select: () => ({
-          from: () => ({
-            where: () => ({
-              limit: async () => [{ id: tokenId, userId }],
+        transaction: async (
+          callback: (tx: {
+            update: () => {
+              set: (value: Record<string, unknown>) => {
+                where: (
+                  condition?: unknown,
+                ) =>
+                  | Promise<undefined>
+                  | {
+                      returning: (
+                        shape: Record<string, unknown>,
+                      ) => Promise<Array<Record<string, unknown>>>;
+                    };
+              };
+            };
+          }) => Promise<unknown>,
+        ) =>
+          callback({
+            update: () => ({
+              set: (value: Record<string, unknown>) => {
+                updates.push(value);
+
+                if ("passwordHash" in value) {
+                  return {
+                    where: async () => undefined,
+                  };
+                }
+
+                if (updates.length === 1) {
+                  return {
+                    where: () => ({
+                      returning: async () => [{ id: tokenId, userId }],
+                    }),
+                  };
+                }
+
+                return {
+                  where: async () => undefined,
+                };
+              },
             }),
           }),
-        }),
-        update: () => ({
-          set: (value: Record<string, unknown>) => {
-            updates.push(value);
-            return {
-              where: async () => undefined,
-            };
-          },
-        }),
       };
 
       const response = await resetPassword({
@@ -322,9 +400,12 @@ describe("auth route handlers", () => {
         },
         ok: true,
       });
-      expect(updates).toHaveLength(2);
-      expect(typeof updates[0]?.passwordHash).toBe("string");
-      expect(updates[1]).toMatchObject({
+      expect(updates).toHaveLength(3);
+      expect(updates[0]).toMatchObject({
+        usedAt: expect.any(Date),
+      });
+      expect(typeof updates[1]?.passwordHash).toBe("string");
+      expect(updates[2]).toMatchObject({
         usedAt: expect.any(Date),
       });
     });

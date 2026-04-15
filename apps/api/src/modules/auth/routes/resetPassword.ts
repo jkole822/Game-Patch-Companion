@@ -1,6 +1,6 @@
 import { passwordResetTokens, users } from "@db/schema";
 import { resetPasswordConflictSchema, resetPasswordResponseSchema } from "@shared/schemas";
-import { and, eq, gt, isNull, sql } from "drizzle-orm";
+import { and, eq, gt, isNull, ne, sql } from "drizzle-orm";
 
 import { hashResetToken } from "./forgotPassword";
 
@@ -23,22 +23,57 @@ export const resetPassword = async ({
 }: ResetPasswordInput & {
   db: AppDb;
 }): Promise<ResetPasswordResult> => {
-  const [resetToken] = await db
-    .select({
-      id: passwordResetTokens.id,
-      userId: passwordResetTokens.userId,
-    })
-    .from(passwordResetTokens)
-    .where(
-      and(
-        eq(passwordResetTokens.tokenHash, hashResetToken(token)),
-        isNull(passwordResetTokens.usedAt),
-        gt(passwordResetTokens.expiresAt, new Date()),
-      ),
-    )
-    .limit(1);
+  const passwordHash = await Bun.password.hash(password);
+  const now = new Date();
+  const tokenHash = hashResetToken(token);
 
-  if (!resetToken) {
+  const claimedToken = await db.transaction(async (tx) => {
+    const [currentToken] = await tx
+      .update(passwordResetTokens)
+      .set({
+        usedAt: now,
+      })
+      .where(
+        and(
+          eq(passwordResetTokens.tokenHash, tokenHash),
+          isNull(passwordResetTokens.usedAt),
+          gt(passwordResetTokens.expiresAt, now),
+        ),
+      )
+      .returning({
+        id: passwordResetTokens.id,
+        userId: passwordResetTokens.userId,
+      });
+
+    if (!currentToken) {
+      return null;
+    }
+
+    await tx
+      .update(users)
+      .set({
+        passwordHash,
+        tokenVersion: sql`${users.tokenVersion} + 1`,
+      })
+      .where(eq(users.id, currentToken.userId));
+
+    await tx
+      .update(passwordResetTokens)
+      .set({
+        usedAt: now,
+      })
+      .where(
+        and(
+          eq(passwordResetTokens.userId, currentToken.userId),
+          isNull(passwordResetTokens.usedAt),
+          ne(passwordResetTokens.id, currentToken.id),
+        ),
+      );
+
+    return currentToken;
+  });
+
+  if (!claimedToken) {
     return {
       ok: false,
       error: resetPasswordConflictSchema.parse({
@@ -47,23 +82,6 @@ export const resetPassword = async ({
       }),
     };
   }
-
-  const passwordHash = await Bun.password.hash(password);
-
-  await db
-    .update(users)
-    .set({
-      passwordHash,
-      tokenVersion: sql`${users.tokenVersion} + 1`,
-    })
-    .where(eq(users.id, resetToken.userId));
-
-  await db
-    .update(passwordResetTokens)
-    .set({
-      usedAt: new Date(),
-    })
-    .where(eq(passwordResetTokens.id, resetToken.id));
 
   return {
     ok: true,
