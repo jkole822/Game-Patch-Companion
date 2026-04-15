@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { deleteUser, login, logout, register } from ".";
+import { deleteUser, forgotPassword, login, logout, register, resetPassword } from ".";
 
 import type { AppDb } from "@api-utils";
 
@@ -188,6 +188,144 @@ describe("auth route handlers", () => {
           message: "Logged out successfully.",
         },
         ok: true,
+      });
+    });
+  });
+
+  describe("forgotPassword", () => {
+    it("returns a success message even when the user does not exist", async () => {
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [],
+            }),
+          }),
+        }),
+      };
+
+      const response = await forgotPassword({
+        db: dbMock as unknown as AppDb,
+        email: "missing@example.com",
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "If an account exists for that email, a reset link will be sent.",
+        },
+        ok: true,
+      });
+    });
+
+    it("creates a reset token when the user exists", async () => {
+      const insertValues: Array<Record<string, unknown>> = [];
+      const sentEmails: Array<{ email: string; token: string }> = [];
+      const userId = crypto.randomUUID();
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ id: userId }],
+            }),
+          }),
+        }),
+        insert: () => ({
+          values: async (value: Record<string, unknown>) => {
+            insertValues.push(value);
+            return undefined;
+          },
+        }),
+      };
+
+      const response = await forgotPassword({
+        createToken: () => "known-reset-token",
+        db: dbMock as unknown as AppDb,
+        email: "user@example.com",
+        sendResetEmail: async (payload) => {
+          sentEmails.push(payload);
+        },
+      });
+
+      expect(response.ok).toBe(true);
+      expect(insertValues).toHaveLength(1);
+      expect(sentEmails).toEqual([
+        {
+          email: "user@example.com",
+          token: "known-reset-token",
+        },
+      ]);
+      expect(insertValues[0]).toMatchObject({
+        tokenHash: expect.any(String),
+        userId,
+      });
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("returns INVALID_RESET_TOKEN when the token is missing or expired", async () => {
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [],
+            }),
+          }),
+        }),
+      };
+
+      const response = await resetPassword({
+        db: dbMock as unknown as AppDb,
+        password: "password123",
+        token: "missing-token",
+      });
+
+      expect(response).toEqual({
+        error: {
+          error: "INVALID_RESET_TOKEN",
+          message: "This reset link is invalid or has expired.",
+        },
+        ok: false,
+      });
+    });
+
+    it("updates the password, invalidates sessions, and marks the token used", async () => {
+      const updates: Array<Record<string, unknown>> = [];
+      const tokenId = crypto.randomUUID();
+      const userId = crypto.randomUUID();
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ id: tokenId, userId }],
+            }),
+          }),
+        }),
+        update: () => ({
+          set: (value: Record<string, unknown>) => {
+            updates.push(value);
+            return {
+              where: async () => undefined,
+            };
+          },
+        }),
+      };
+
+      const response = await resetPassword({
+        db: dbMock as unknown as AppDb,
+        password: "new-password123",
+        token: "valid-token",
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "Password reset successfully.",
+        },
+        ok: true,
+      });
+      expect(updates).toHaveLength(2);
+      expect(typeof updates[0]?.passwordHash).toBe("string");
+      expect(updates[1]).toMatchObject({
+        usedAt: expect.any(Date),
       });
     });
   });

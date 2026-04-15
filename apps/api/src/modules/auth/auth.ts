@@ -2,18 +2,23 @@ import { authGuard, dbPlugin, jwtPlugin, mapRouteResult } from "@api-utils";
 import {
   deleteUserConflictSchema,
   deleteUserResponseSchema,
+  forgotPasswordResponseSchema,
   loginConflictSchema,
   loginResponseSchema,
   loginSchema,
   logoutResponseSchema,
+  forgotPasswordSchema,
   registerConflictSchema,
   registerResponseSchema,
   registerSchema,
+  resetPasswordConflictSchema,
+  resetPasswordResponseSchema,
+  resetPasswordSchema,
   unauthorizedConflictSchema,
 } from "@shared/schemas";
 import { Elysia } from "elysia";
 
-import { deleteUser, login, logout, register } from "./routes";
+import { deleteUser, forgotPassword, login, logout, register, resetPassword } from "./routes";
 
 const AuthProtectedRoutes = new Elysia()
   .use(dbPlugin)
@@ -102,6 +107,44 @@ export const AuthModule = new Elysia({ prefix: "/auth" })
       response: {
         200: loginResponseSchema,
         400: loginConflictSchema,
+      },
+    },
+  )
+  .post(
+    "/forgot-password",
+    async ({ body, db }) => {
+      const response = await forgotPassword({
+        db,
+        ...body,
+      });
+
+      return response.data;
+    },
+    {
+      body: forgotPasswordSchema,
+      response: {
+        200: forgotPasswordResponseSchema,
+      },
+    },
+  )
+  .post(
+    "/reset-password",
+    async ({ body, status, db }) => {
+      const response = await resetPassword({
+        db,
+        ...body,
+      });
+
+      return mapRouteResult(response, {
+        onError: (error) => status(400, error),
+        onSuccess: (data) => data,
+      });
+    },
+    {
+      body: resetPasswordSchema,
+      response: {
+        200: resetPasswordResponseSchema,
+        400: resetPasswordConflictSchema,
       },
     },
   )

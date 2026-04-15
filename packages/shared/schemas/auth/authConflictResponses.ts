@@ -24,3 +24,8 @@ export const deleteUserConflictSchema = z.object({
   error: z.literal("USER_NOT_FOUND"),
   message: z.string(),
 });
+
+export const resetPasswordConflictSchema = z.object({
+  error: z.literal("INVALID_RESET_TOKEN"),
+  message: z.string(),
+});
