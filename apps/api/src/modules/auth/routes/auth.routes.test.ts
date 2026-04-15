@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { deleteUser, login, logout, register } from ".";
+import { deleteUser, forgotPassword, login, logout, register, resetPassword } from ".";
 
 import type { AppDb } from "@api-utils";
 
@@ -188,6 +188,225 @@ describe("auth route handlers", () => {
           message: "Logged out successfully.",
         },
         ok: true,
+      });
+    });
+  });
+
+  describe("forgotPassword", () => {
+    it("returns a success message even when the user does not exist", async () => {
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [],
+            }),
+          }),
+        }),
+      };
+
+      const response = await forgotPassword({
+        db: dbMock as unknown as AppDb,
+        email: "missing@example.com",
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "If an account exists for that email, a reset link will be sent.",
+        },
+        ok: true,
+      });
+    });
+
+    it("creates a reset token when the user exists", async () => {
+      const insertValues: Array<Record<string, unknown>> = [];
+      const sentEmails: Array<{ email: string; token: string }> = [];
+      const userId = crypto.randomUUID();
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ id: userId }],
+            }),
+          }),
+        }),
+        insert: () => ({
+          values: async (value: Record<string, unknown>) => {
+            insertValues.push(value);
+            return undefined;
+          },
+        }),
+      };
+
+      const response = await forgotPassword({
+        createToken: () => "known-reset-token",
+        db: dbMock as unknown as AppDb,
+        email: "user@example.com",
+        sendResetEmail: async (payload) => {
+          sentEmails.push(payload);
+        },
+      });
+
+      expect(response.ok).toBe(true);
+      expect(insertValues).toHaveLength(1);
+      expect(sentEmails).toEqual([
+        {
+          email: "user@example.com",
+          token: "known-reset-token",
+        },
+      ]);
+      expect(insertValues[0]).toMatchObject({
+        tokenHash: expect.any(String),
+        userId,
+      });
+    });
+
+    it("logs and still returns success when email delivery fails", async () => {
+      const loggedErrors: Array<{ error: unknown; message: string }> = [];
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ id: crypto.randomUUID() }],
+            }),
+          }),
+        }),
+        insert: () => ({
+          values: async () => undefined,
+        }),
+      };
+
+      const response = await forgotPassword({
+        db: dbMock as unknown as AppDb,
+        email: "user@example.com",
+        logError: (message, error) => {
+          loggedErrors.push({ error, message });
+        },
+        sendResetEmail: async () => {
+          throw new Error("email failed");
+        },
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "If an account exists for that email, a reset link will be sent.",
+        },
+        ok: true,
+      });
+      expect(loggedErrors).toHaveLength(1);
+      expect(loggedErrors[0]?.message).toBe("Failed to create or send password reset email.");
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("returns INVALID_RESET_TOKEN when the token is missing or expired", async () => {
+      const dbMock = {
+        transaction: async (
+          callback: (tx: {
+            update: () => {
+              set: (value: Record<string, unknown>) => {
+                where: (condition?: unknown) => {
+                  returning: (
+                    shape: Record<string, unknown>,
+                  ) => Promise<Array<Record<string, unknown>>>;
+                };
+              };
+            };
+          }) => Promise<unknown>,
+        ) =>
+          callback({
+            update: () => ({
+              set: (_value: Record<string, unknown>) => ({
+                where: () => ({
+                  returning: async () => [],
+                }),
+              }),
+            }),
+          }),
+      };
+
+      const response = await resetPassword({
+        db: dbMock as unknown as AppDb,
+        password: "password123",
+        token: "missing-token",
+      });
+
+      expect(response).toEqual({
+        error: {
+          error: "INVALID_RESET_TOKEN",
+          message: "This reset link is invalid or has expired.",
+        },
+        ok: false,
+      });
+    });
+
+    it("updates the password, invalidates sessions, and marks the token used", async () => {
+      const updates: Array<Record<string, unknown>> = [];
+      const tokenId = crypto.randomUUID();
+      const userId = crypto.randomUUID();
+      const dbMock = {
+        transaction: async (
+          callback: (tx: {
+            update: () => {
+              set: (value: Record<string, unknown>) => {
+                where: (
+                  condition?: unknown,
+                ) =>
+                  | Promise<undefined>
+                  | {
+                      returning: (
+                        shape: Record<string, unknown>,
+                      ) => Promise<Array<Record<string, unknown>>>;
+                    };
+              };
+            };
+          }) => Promise<unknown>,
+        ) =>
+          callback({
+            update: () => ({
+              set: (value: Record<string, unknown>) => {
+                updates.push(value);
+
+                if ("passwordHash" in value) {
+                  return {
+                    where: async () => undefined,
+                  };
+                }
+
+                if (updates.length === 1) {
+                  return {
+                    where: () => ({
+                      returning: async () => [{ id: tokenId, userId }],
+                    }),
+                  };
+                }
+
+                return {
+                  where: async () => undefined,
+                };
+              },
+            }),
+          }),
+      };
+
+      const response = await resetPassword({
+        db: dbMock as unknown as AppDb,
+        password: "new-password123",
+        token: "valid-token",
+      });
+
+      expect(response).toEqual({
+        data: {
+          message: "Password reset successfully.",
+        },
+        ok: true,
+      });
+      expect(updates).toHaveLength(3);
+      expect(updates[0]).toMatchObject({
+        usedAt: expect.any(Date),
+      });
+      expect(typeof updates[1]?.passwordHash).toBe("string");
+      expect(updates[2]).toMatchObject({
+        usedAt: expect.any(Date),
       });
     });
   });

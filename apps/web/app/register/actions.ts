@@ -3,14 +3,12 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getApiBaseUrl } from "@/lib/utils";
+
 import type { AuthFormActionState } from "@/components/composites/AuthForm/AuthForm.types";
 
 const INITIAL_STATE: AuthFormActionState = {
   error: null,
-};
-
-const getApiBaseUrl = (): string => {
-  return process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 };
 
 export const registerAction = async (

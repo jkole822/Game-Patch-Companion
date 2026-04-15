@@ -15,3 +15,5 @@ export const registerResponseSchema = z.object({
 
 export const logoutResponseSchema = MessageSchema;
 export const deleteUserResponseSchema = MessageSchema;
+export const forgotPasswordResponseSchema = MessageSchema;
+export const resetPasswordResponseSchema = MessageSchema;
