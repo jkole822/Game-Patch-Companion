@@ -1,6 +1,6 @@
 import { patchEntries, patchEntryDiffs, sources, watchlistMatches } from "@db/schema";
 import { sourcesResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, gt } from "drizzle-orm";
 
 import { assignGames, ingestLoop } from "./utils";
 import { fetchPatchEntryContent } from "./utils/fetchPatchEntryContent";
@@ -25,6 +25,7 @@ export type IngestJobResult =
   | {
       status: "skipped";
       reason: "ALREADY_RUNNING";
+      activeJob: ContentSyncJobName;
       message: string;
     };
 
@@ -43,11 +44,15 @@ export type IngestResyncJobResult =
   | {
       status: "skipped";
       reason: "ALREADY_RUNNING";
+      activeJob: ContentSyncJobName;
       message: string;
     };
 
 type EnabledSource = z.infer<typeof sourceResponseSchema>;
-type ActiveContentSyncJob = "ingest" | "resync" | null;
+export type ContentSyncJobName = "ingest" | "resync";
+type ActiveContentSyncJob = ContentSyncJobName | null;
+
+const RESYNC_BATCH_SIZE = 100;
 
 let activeContentSyncJob: ActiveContentSyncJob = null;
 
@@ -55,11 +60,12 @@ const sha256 = (value: string): string =>
   new Bun.CryptoHasher("sha256").update(value).digest("hex");
 
 const acquireContentSyncJob = (
-  job: Exclude<ActiveContentSyncJob, null>,
-): { ok: true } | { ok: false; message: string } => {
+  job: ContentSyncJobName,
+): { ok: true } | { ok: false; activeJob: ContentSyncJobName; message: string } => {
   if (activeContentSyncJob) {
     return {
       ok: false,
+      activeJob: activeContentSyncJob,
       message: `${activeContentSyncJob} job is already running.`,
     };
   }
@@ -98,6 +104,7 @@ export const runIngestJob = async ({ db }: { db: AppDb }): Promise<IngestJobResu
     return {
       status: "skipped",
       reason: "ALREADY_RUNNING",
+      activeJob: lock.activeJob,
       message: lock.message,
     };
   }
@@ -133,6 +140,7 @@ export const runIngestResyncJob = async ({ db }: { db: AppDb }): Promise<IngestR
     return {
       status: "skipped",
       reason: "ALREADY_RUNNING",
+      activeJob: lock.activeJob,
       message: lock.message,
     };
   }
@@ -152,83 +160,108 @@ export const runIngestResyncJob = async ({ db }: { db: AppDb }): Promise<IngestR
         continue;
       }
 
-      const existingEntries = await db
-        .select({
-          checksum: patchEntries.checksum,
-          content: patchEntries.content,
-          createdAt: patchEntries.createdAt,
-          gameId: patchEntries.gameId,
-          id: patchEntries.id,
-          publishedAt: patchEntries.publishedAt,
-          raw: patchEntries.raw,
-          sourceId: patchEntries.sourceId,
-          title: patchEntries.title,
-          url: patchEntries.url,
-        })
-        .from(patchEntries)
-        .where(eq(patchEntries.sourceId, source.id));
+      let cursorId: string | undefined;
 
-      for (const entry of existingEntries) {
-        checkedEntries += 1;
+      while (true) {
+        const existingEntries = await db
+          .select({
+            checksum: patchEntries.checksum,
+            content: patchEntries.content,
+            createdAt: patchEntries.createdAt,
+            gameId: patchEntries.gameId,
+            id: patchEntries.id,
+            publishedAt: patchEntries.publishedAt,
+            raw: patchEntries.raw,
+            sourceId: patchEntries.sourceId,
+            title: patchEntries.title,
+            url: patchEntries.url,
+          })
+          .from(patchEntries)
+          .where(
+            and(
+              eq(patchEntries.sourceId, source.id),
+              cursorId ? gt(patchEntries.id, cursorId) : undefined,
+            ),
+          )
+          .orderBy(asc(patchEntries.id))
+          .limit(RESYNC_BATCH_SIZE);
 
-        try {
-          const next = await fetchPatchEntryContent({
-            config: source.config,
-            url: entry.url,
-          });
+        if (existingEntries.length === 0) {
+          break;
+        }
 
-          const nextChecksum = sha256(next.content);
-          const hasChanged =
-            nextChecksum !== entry.checksum ||
-            next.content !== entry.content ||
-            next.raw !== entry.raw ||
-            next.publishedAt?.getTime() !== entry.publishedAt?.getTime();
+        cursorId = existingEntries.at(-1)?.id;
 
-          if (!hasChanged) {
-            continue;
-          }
+        for (const entry of existingEntries) {
+          checkedEntries += 1;
 
-          const [updatedEntry] = await db
-            .update(patchEntries)
-            .set({
-              checksum: nextChecksum,
-              content: next.content,
-              fetchedAt: new Date(),
-              publishedAt: next.publishedAt,
-              raw: next.raw,
-            })
-            .where(eq(patchEntries.id, entry.id))
-            .returning({
-              content: patchEntries.content,
-              gameId: patchEntries.gameId,
-              id: patchEntries.id,
-              sourceId: patchEntries.sourceId,
-              url: patchEntries.url,
+          try {
+            const next = await fetchPatchEntryContent({
+              config: source.config,
+              url: entry.url,
             });
 
-          if (!updatedEntry) {
-            continue;
+            const nextChecksum = sha256(next.content);
+            const hasChanged =
+              nextChecksum !== entry.checksum ||
+              next.content !== entry.content ||
+              next.raw !== entry.raw ||
+              next.publishedAt?.getTime() !== entry.publishedAt?.getTime();
+
+            if (!hasChanged) {
+              continue;
+            }
+
+            const wasUpdated = await db.transaction(async (tx) => {
+              const [updatedEntry] = await tx
+                .update(patchEntries)
+                .set({
+                  checksum: nextChecksum,
+                  content: next.content,
+                  fetchedAt: new Date(),
+                  publishedAt: next.publishedAt,
+                  raw: next.raw,
+                })
+                .where(eq(patchEntries.id, entry.id))
+                .returning({
+                  content: patchEntries.content,
+                  gameId: patchEntries.gameId,
+                  id: patchEntries.id,
+                  sourceId: patchEntries.sourceId,
+                  url: patchEntries.url,
+                });
+
+              if (!updatedEntry) {
+                return false;
+              }
+
+              await tx
+                .delete(patchEntryDiffs)
+                .where(eq(patchEntryDiffs.patchEntryId, updatedEntry.id));
+              await tx
+                .delete(watchlistMatches)
+                .where(eq(watchlistMatches.patchEntryId, updatedEntry.id));
+
+              await processNewPatchEntry({
+                db: tx as unknown as AppDb,
+                newPatchEntry: updatedEntry,
+                previousContent: entry.content,
+                sourceConfig: source.config,
+              });
+
+              return true;
+            });
+
+            if (wasUpdated) {
+              updatedEntries += 1;
+            }
+          } catch (error) {
+            failedEntries += 1;
+            console.error(
+              `[ingest-resync] entry failed patchEntryId=${entry.id} sourceId=${entry.sourceId} url=${entry.url}`,
+              error,
+            );
           }
-
-          await db.delete(patchEntryDiffs).where(eq(patchEntryDiffs.patchEntryId, updatedEntry.id));
-          await db
-            .delete(watchlistMatches)
-            .where(eq(watchlistMatches.patchEntryId, updatedEntry.id));
-
-          await processNewPatchEntry({
-            db,
-            newPatchEntry: updatedEntry,
-            previousContent: entry.content,
-            sourceConfig: source.config,
-          });
-
-          updatedEntries += 1;
-        } catch (error) {
-          failedEntries += 1;
-          console.error(
-            `[ingest-resync] entry failed patchEntryId=${entry.id} sourceId=${entry.sourceId} url=${entry.url}`,
-            error,
-          );
         }
       }
 
