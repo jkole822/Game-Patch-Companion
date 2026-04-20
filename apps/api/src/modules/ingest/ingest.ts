@@ -1,10 +1,14 @@
-import { runIngestJob } from "@api-jobs";
 import { authGuard, dbPlugin } from "@api-utils";
-import { users } from "@db/schema";
-import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
-import { ingestAlreadyRunningConflictSchema, ingestRunResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
+import {
+  contentSyncAlreadyRunningConflictSchema,
+  rolePermissionConflictSchema,
+  unauthorizedConflictSchema,
+  ingestResyncRunResponseSchema,
+  ingestRunResponseSchema,
+} from "@shared/schemas";
 import { Elysia } from "elysia";
+
+import { runIngest, runIngestResync } from "./routes";
 
 export const IngestModule = new Elysia({ prefix: "/ingest" })
   .use(dbPlugin)
@@ -12,46 +16,48 @@ export const IngestModule = new Elysia({ prefix: "/ingest" })
   .post(
     "/run",
     async ({ status, db, user }) => {
-      if (!user) {
-        throw new Error("Guarded route missing authenticated user.");
+      const result = await runIngest({ db, user });
+
+      if (!result.ok) {
+        if (result.status === 403) {
+          return status(403, result.error);
+        }
+
+        return status(409, result.error);
       }
 
-      const [authUser] = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
-
-      if (!authUser) {
-        throw new Error("User not found");
-      }
-
-      if (authUser.role !== "admin") {
-        return status(
-          403,
-          rolePermissionConflictSchema.parse({
-            error: "NO_PERMISSION_FOR_ROLE",
-            message: "You do not have permission to run ingest jobs.",
-          }),
-        );
-      }
-
-      const result = await runIngestJob({ db });
-
-      if (result.status === "skipped") {
-        return status(
-          409,
-          ingestAlreadyRunningConflictSchema.parse({
-            error: "INGEST_ALREADY_RUNNING",
-            message: result.message,
-          }),
-        );
-      }
-
-      return status(200, ingestRunResponseSchema.parse(result));
+      return status(200, result.data);
     },
     {
       response: {
         200: ingestRunResponseSchema,
         401: unauthorizedConflictSchema,
         403: rolePermissionConflictSchema,
-        409: ingestAlreadyRunningConflictSchema,
+        409: contentSyncAlreadyRunningConflictSchema,
+      },
+    },
+  )
+  .post(
+    "/resync",
+    async ({ status, db, user }) => {
+      const result = await runIngestResync({ db, user });
+
+      if (!result.ok) {
+        if (result.status === 403) {
+          return status(403, result.error);
+        }
+
+        return status(409, result.error);
+      }
+
+      return status(200, result.data);
+    },
+    {
+      response: {
+        200: ingestResyncRunResponseSchema,
+        401: unauthorizedConflictSchema,
+        403: rolePermissionConflictSchema,
+        409: contentSyncAlreadyRunningConflictSchema,
       },
     },
   );

@@ -1,4 +1,4 @@
-import { startIngestScheduler } from "@api-jobs";
+import { startIngestResyncScheduler, startIngestScheduler } from "@api-jobs";
 import {
   AuthModule,
   GamesModule,
@@ -24,6 +24,11 @@ const parsePositiveInt = (value: string | undefined, fallback: number): number =
 
 const isIngestJobEnabled = process.env.INGEST_JOB_ENABLED !== "false";
 const ingestIntervalMs = parsePositiveInt(process.env.INGEST_INTERVAL_MS, 5 * 60 * 1000);
+const isIngestResyncJobEnabled = process.env.INGEST_RESYNC_JOB_ENABLED !== "false";
+const ingestResyncIntervalMs = parsePositiveInt(
+  process.env.INGEST_RESYNC_INTERVAL_MS,
+  60 * 60 * 1000,
+);
 
 const app = new Elysia()
   .use(
@@ -50,4 +55,12 @@ if (isIngestJobEnabled) {
   });
 }
 
-console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+if (isIngestResyncJobEnabled) {
+  startIngestResyncScheduler({
+    db,
+    intervalMs: ingestResyncIntervalMs,
+    runOnStartup: false,
+  });
+}
+
+console.warn(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

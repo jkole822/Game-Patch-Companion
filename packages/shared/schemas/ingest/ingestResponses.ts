@@ -22,3 +22,15 @@ export const ingestRunResponseSchema = z.object({
   startedAt: z.iso.datetime(),
   status: z.literal("completed"),
 });
+
+export const ingestResyncRunResponseSchema = z.object({
+  assignGames: assignGamesRunResponseSchema,
+  checkedEntries: NonNegativeInt,
+  durationMs: NonNegativeInt,
+  failedEntries: NonNegativeInt,
+  finishedAt: z.iso.datetime(),
+  processedSources: NonNegativeInt,
+  startedAt: z.iso.datetime(),
+  status: z.literal("completed"),
+  updatedEntries: NonNegativeInt,
+});

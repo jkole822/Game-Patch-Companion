@@ -20,27 +20,34 @@ type PatchEntryResponse = z.infer<typeof createPatchEntryResponseSchema>;
 export async function processNewPatchEntry({
   db,
   newPatchEntry,
+  previousContent,
   sourceConfig,
 }: {
   db: AppDb;
   newPatchEntry: PatchEntryResponse;
+  previousContent?: string;
   sourceConfig?: Record<string, unknown>;
 }) {
   try {
-    const [prev] = await db
-      .select()
-      .from(patchEntries)
-      .where(
-        and(
-          eq(patchEntries.sourceId, newPatchEntry.sourceId),
-          eq(patchEntries.url, newPatchEntry.url),
-          ne(patchEntries.id, newPatchEntry.id),
-        ),
-      )
-      .orderBy(desc(patchEntries.createdAt))
-      .limit(1);
+    let prevContent = previousContent;
 
-    const prevContent = prev?.content ?? "";
+    if (typeof prevContent !== "string") {
+      const [prev] = await db
+        .select()
+        .from(patchEntries)
+        .where(
+          and(
+            eq(patchEntries.sourceId, newPatchEntry.sourceId),
+            eq(patchEntries.url, newPatchEntry.url),
+            ne(patchEntries.id, newPatchEntry.id),
+          ),
+        )
+        .orderBy(desc(patchEntries.createdAt))
+        .limit(1);
+
+      prevContent = prev?.content ?? "";
+    }
+
     const nextContent = newPatchEntry.content;
     const diff =
       sourceConfig?.structureMode === "nestedLists"
