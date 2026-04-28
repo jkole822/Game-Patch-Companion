@@ -1,9 +1,7 @@
 "use server";
 
-import { sourceInsertInputSchema } from "@shared/schemas";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 import { getApiBaseUrl } from "@/lib/utils";
 
@@ -23,7 +21,7 @@ const getOptionalString = (formData: FormData, key: string) => {
   return value.length > 0 ? value : undefined;
 };
 
-const parseGenericConfig = (value: string) => {
+const parseGenericConfig = (value: string): Record<string, unknown> => {
   if (!value) {
     return {};
   }
@@ -34,23 +32,7 @@ const parseGenericConfig = (value: string) => {
     throw new Error("Config JSON must be an object.");
   }
 
-  return parsed;
-};
-
-const getValidationMessage = (error: unknown) => {
-  if (error instanceof z.ZodError) {
-    return error.issues[0]?.message ?? "Please check the source fields and try again.";
-  }
-
-  if (error instanceof SyntaxError) {
-    return "Config JSON is not valid.";
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return "Please check the source fields and try again.";
+  return parsed as Record<string, unknown>;
 };
 
 export const createSourceAction = async (
@@ -72,43 +54,58 @@ export const createSourceAction = async (
     name: getString(formData, "name"),
   };
 
-  let body: z.infer<typeof sourceInsertInputSchema>;
-
-  try {
-    if (type === "html") {
-      body = sourceInsertInputSchema.parse({
-        ...baseFields,
-        config: {
-          contentFormat: getString(formData, "contentFormat"),
-          contentSelector: getString(formData, "contentSelector"),
-          entrySelector: getString(formData, "entrySelector"),
-          excludeTitleRegex: getOptionalString(formData, "excludeTitleRegex"),
-          includeTitleRegex: getOptionalString(formData, "includeTitleRegex"),
-          linkSelector: getString(formData, "linkSelector") || "a",
-          listPath: getString(formData, "listPath"),
-          publishedAtAttribute: getString(formData, "publishedAtAttribute") || "datetime",
-          publishedAtRegex: getOptionalString(formData, "publishedAtRegex"),
-          publishedAtSelector: getString(formData, "publishedAtSelector") || "time[datetime]",
-          region: getOptionalString(formData, "region"),
-          structureMode: getOptionalString(formData, "structureMode"),
-          titleSelector: getString(formData, "titleSelector"),
-          versionRegex: getOptionalString(formData, "versionRegex"),
-        },
-        type,
-      });
-    } else {
-      body = sourceInsertInputSchema.parse({
-        ...baseFields,
-        config: parseGenericConfig(getString(formData, "configJson")),
-        type,
-      });
-    }
-  } catch (error) {
+  if (!baseFields.baseUrl || !baseFields.key || !baseFields.name) {
     return {
-      error: getValidationMessage(error),
+      error: "Please check the source fields and try again.",
       success: null,
     };
   }
+
+  if (type !== "html" && type !== "rss" && type !== "api") {
+    return {
+      error: "Please choose a valid source type.",
+      success: null,
+    };
+  }
+
+  let config: Record<string, unknown>;
+
+  if (type === "html") {
+    config = {
+      contentFormat: getString(formData, "contentFormat"),
+      contentSelector: getString(formData, "contentSelector"),
+      entrySelector: getString(formData, "entrySelector"),
+      excludeTitleRegex: getOptionalString(formData, "excludeTitleRegex"),
+      includeTitleRegex: getOptionalString(formData, "includeTitleRegex"),
+      linkSelector: getString(formData, "linkSelector") || "a",
+      listPath: getString(formData, "listPath"),
+      publishedAtAttribute: getString(formData, "publishedAtAttribute") || "datetime",
+      publishedAtRegex: getOptionalString(formData, "publishedAtRegex"),
+      publishedAtSelector: getString(formData, "publishedAtSelector") || "time[datetime]",
+      region: getOptionalString(formData, "region"),
+      structureMode: getOptionalString(formData, "structureMode"),
+      titleSelector: getString(formData, "titleSelector"),
+      versionRegex: getOptionalString(formData, "versionRegex"),
+    };
+  } else {
+    try {
+      config = parseGenericConfig(getString(formData, "configJson"));
+    } catch (error) {
+      return {
+        error:
+          error instanceof SyntaxError
+            ? "Config JSON is not valid."
+            : "Config JSON must be an object.",
+        success: null,
+      };
+    }
+  }
+
+  const body = {
+    ...baseFields,
+    config,
+    type,
+  };
 
   try {
     const response = await fetch(`${getApiBaseUrl()}/sources/create`, {

@@ -24,34 +24,41 @@ export const resetPasswordAction = async (
     return { error: "This reset link is missing a token.", success: null };
   }
 
-  if (typeof password !== "string" || typeof confirmPassword !== "string") {
-    return { error: "Please provide your new password.", success: null };
-  }
-
   if (password !== confirmPassword) {
     return { error: "Passwords do not match.", success: null };
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/auth/reset-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ password, token }),
-    cache: "no-store",
-  });
+  if (typeof password !== "string" || typeof confirmPassword !== "string") {
+    return { error: "Please provide your new password.", success: null };
+  }
 
-  const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password, token }),
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
+    const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+
+    if (!response.ok) {
+      return {
+        error: payload?.message ?? "Unable to reset your password right now.",
+        success: null,
+      };
+    }
+
     return {
-      error: payload?.message ?? "Unable to reset your password right now.",
+      error: null,
+      success: payload?.message ?? "Password reset successfully.",
+    };
+  } catch {
+    return {
+      error: "Unable to reset your password right now.",
       success: null,
     };
   }
-
-  return {
-    error: null,
-    success: payload?.message ?? "Password reset successfully.",
-  };
 };
