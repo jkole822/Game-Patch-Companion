@@ -110,35 +110,42 @@ export const createSourceAction = async (
     };
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/sources/create`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/sources/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
 
-  const payload = (await response.json().catch(() => null)) as {
-    key?: string;
-    message?: string;
-    name?: string;
-  } | null;
+    const payload = (await response.json().catch(() => null)) as {
+      key?: string;
+      message?: string;
+      name?: string;
+    } | null;
 
-  if (response.status === 401) {
-    redirect("/login");
-  }
+    if (response.status === 401) {
+      redirect("/login");
+    }
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return {
+        error: payload?.message ?? "Unable to create the source right now.",
+        success: null,
+      };
+    }
+
     return {
-      error: payload?.message ?? "Unable to create the source right now.",
+      error: null,
+      success: `Created ${payload?.name ?? body.name}.`,
+    };
+  } catch {
+    return {
+      error: "Unable to create the source right now.",
       success: null,
     };
   }
-
-  return {
-    error: null,
-    success: `Created ${payload?.name ?? body.name}.`,
-  };
 };
