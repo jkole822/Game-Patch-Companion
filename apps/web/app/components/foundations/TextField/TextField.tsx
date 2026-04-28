@@ -79,11 +79,16 @@ export const TextField = ({
   const [nativeErrorMessage, setNativeErrorMessage] = useState("");
   const generatedId = useId();
   const id = providedId ?? generatedId;
+  const isExternalErrorVisible = Boolean(errorMessage);
+  const isNativeErrorVisible = touched && Boolean(nativeErrorMessage);
+  const isErrorVisible = isExternalErrorVisible || isNativeErrorVisible;
   const resolvedErrorMessage = errorMessage ?? nativeErrorMessage;
-  const errorMessageId = resolvedErrorMessage ? `${id}-error` : undefined;
+  const errorMessageId = isErrorVisible ? `${id}-error` : undefined;
   const describedBy = [ariaDescribedBy, errorMessageId].filter(Boolean).join(" ");
 
   const getNativeValidationMessage = (input: HTMLInputElement) => {
+    input.setCustomValidity("");
+
     const { validity } = input;
 
     if (validity.valid) {
@@ -160,7 +165,7 @@ export const TextField = ({
         <input
           aria-describedby={describedBy || undefined}
           aria-errormessage={errorMessageId}
-          aria-invalid={resolvedErrorMessage ? true : undefined}
+          aria-invalid={isErrorVisible ? true : undefined}
           autoComplete="off"
           className="text-field__input js-text-field-input"
           id={id}
@@ -192,10 +197,10 @@ export const TextField = ({
           </button>
         )}
       </div>
-      {Boolean(resolvedErrorMessage) && (
+      {isErrorVisible && (
         <div
           aria-live="polite"
-          className="text-field__error js-text-field-error"
+          className={`text-field__error js-text-field-error ${isExternalErrorVisible ? "flex!" : ""}`}
           id={errorMessageId}
         >
           <LucideBomb name="error" size={12} />
