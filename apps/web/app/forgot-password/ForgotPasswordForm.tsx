@@ -6,16 +6,13 @@ import { useActionState } from "react";
 import { Button, Container, Link, TextField } from "@/components";
 
 import { forgotPasswordAction } from "./actions";
-
-import type { ForgotPasswordActionState } from "./actions";
-
-const INITIAL_STATE: ForgotPasswordActionState = {
-  error: null,
-  success: null,
-};
+import { INITIAL_FORGOT_PASSWORD_STATE } from "./types";
 
 export const ForgotPasswordForm = () => {
-  const [state, formAction, pending] = useActionState(forgotPasswordAction, INITIAL_STATE);
+  const [state, formAction, pending] = useActionState(
+    forgotPasswordAction,
+    INITIAL_FORGOT_PASSWORD_STATE,
+  );
 
   return (
     <Container className="w-full" contentClassName="flex flex-col gap-15">

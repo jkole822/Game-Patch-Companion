@@ -2,18 +2,12 @@
 
 import { getApiBaseUrl } from "@/lib/utils";
 
-export interface ForgotPasswordActionState {
-  error: string | null;
-  success: string | null;
-}
+import { INITIAL_FORGOT_PASSWORD_STATE } from "./types";
 
-const INITIAL_STATE: ForgotPasswordActionState = {
-  error: null,
-  success: null,
-};
+import type { ForgotPasswordActionState } from "./types";
 
 export const forgotPasswordAction = async (
-  _: ForgotPasswordActionState = INITIAL_STATE,
+  _: ForgotPasswordActionState = INITIAL_FORGOT_PASSWORD_STATE,
   formData: FormData,
 ): Promise<ForgotPasswordActionState> => {
   const email = formData.get("email");
