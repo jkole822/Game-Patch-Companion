@@ -16,26 +16,33 @@ export const forgotPasswordAction = async (
     return { error: "Please provide your email address.", success: null };
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/auth/forgot-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+      cache: "no-store",
+    });
 
-  const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+    const payload = (await response.json().catch(() => null)) as { message?: string } | null;
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return {
+        error: payload?.message ?? "Unable to start the reset process right now.",
+        success: null,
+      };
+    }
+
     return {
-      error: payload?.message ?? "Unable to start the reset process right now.",
+      error: null,
+      success: payload?.message ?? "If an account exists, a reset link will be sent.",
+    };
+  } catch {
+    return {
+      error: "Unable to start the reset process right now.",
       success: null,
     };
   }
-
-  return {
-    error: null,
-    success: payload?.message ?? "If an account exists, a reset link will be sent.",
-  };
 };

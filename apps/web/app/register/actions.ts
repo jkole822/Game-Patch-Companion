@@ -27,34 +27,45 @@ export const registerAction = async (
     return { error: "Passwords do not match." };
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-    cache: "no-store",
-  });
-
-  const payload = (await response.json().catch(() => null)) as {
+  let payload: {
     message?: string;
     token?: string;
   } | null;
 
-  if (!response.ok || !payload?.token) {
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+      cache: "no-store",
+    });
+
+    payload = (await response.json().catch(() => null)) as {
+      message?: string;
+      token?: string;
+    } | null;
+
+    if (!response.ok || !payload?.token) {
+      return {
+        error: payload?.message ?? "Unable to create your account right now.",
+      };
+    }
+
+    const cookieStore = await cookies();
+
+    cookieStore.set("auth_token", payload.token, {
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+  } catch {
     return {
-      error: payload?.message ?? "Unable to create your account right now.",
+      error: "Unable to create your account right now.",
     };
   }
-
-  const cookieStore = await cookies();
-
-  cookieStore.set("auth_token", payload.token, {
-    httpOnly: true,
-    path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
 
   redirect("/dashboard");
 };
