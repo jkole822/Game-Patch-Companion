@@ -1,0 +1,34 @@
+@reference "../../../globals.css";
+
+.checkbox {
+  @apply relative mb-6;
+}
+
+.checkbox__label {
+  @apply border-border bg-background/45 text-text flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-semibold backdrop-blur-lg transition;
+  @apply hover:border-primary hover:text-primary-light;
+  @apply has-[input:focus-visible]:border-primary has-[input:focus-visible]:text-primary-light;
+}
+
+.checkbox__control {
+  @apply relative inline-flex shrink-0;
+}
+
+.checkbox__input {
+  @apply border-border bg-background/70 text-primary focus-visible:border-primary focus-visible:ring-primary/30 size-4 appearance-none rounded-[0.2rem] border transition outline-none;
+  @apply checked:border-primary checked:bg-primary;
+  @apply disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.checkbox__indicator {
+  @apply pointer-events-none absolute inset-0 flex items-center justify-center text-black opacity-0 transition;
+  @apply peer-checked:opacity-100;
+}
+
+.checkbox__icon {
+  @apply size-3.5;
+}
+
+.checkbox__error {
+  @apply text-danger absolute -bottom-5 left-0 flex items-center gap-1 text-xs font-bold;
+}

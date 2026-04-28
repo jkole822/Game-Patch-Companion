@@ -1,0 +1,151 @@
+@reference "../../../globals.css";
+
+.select-field {
+  @apply relative mb-6 backdrop-blur-lg;
+
+  /* Label & Icon Focus */
+  @apply has-[select:focus-visible]:[&_.select-field\_\_label]:text-primary-light;
+  @apply has-[select:focus-visible]:[&_.select-field\_\_icon]:text-primary-light;
+
+  /* Border Focus */
+  @apply has-[select:focus-visible]:[&_.select-field\_\_border]:bg-primary;
+  @apply has-[select:focus-visible]:[&_.select-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply has-[select:focus-visible]:[&_.select-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+  @apply has-[select:focus-visible]:[&_.select-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+
+  /* Glow Border Focus */
+  @apply has-[select:focus-visible]:[&_.select-field\_\_glow-border--top]:shadow-primary-one has-[select:focus-visible]:[&_.select-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
+  @apply has-[select:focus-visible]:[&_.select-field\_\_glow-border--center]:shadow-primary-one has-[select:focus-visible]:[&_.select-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply has-[select:focus-visible]:[&_.select-field\_\_glow-border--bottom]:shadow-primary-one has-[select:focus-visible]:[&_.select-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+
+  /* Invalid Label & Icon Focus */
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_label]:text-danger-light;
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_icon]:text-danger-light;
+
+  /* Invalid Border Focus */
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_border]:bg-danger;
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+
+  /* Invalid Glow Border Focus */
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--top]:shadow-danger-two data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--center]:shadow-danger-two data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--bottom]:shadow-danger-two data-[touched=true]:has-[select:focus-visible:invalid]:[&_.select-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
+
+  /* Invalid Label Hover */
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_label]:text-danger-light;
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_icon]:text-danger-light;
+
+  /* Invalid Border Hover */
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_border]:bg-danger;
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_border--top-left]:bg-[--alpha(var(--color-white)/75%)];
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_border--top-right]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_border--left]:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_100%)];
+
+  /* Invalid Glow Border Hover */
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_glow-border]:shadow-danger-two;
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_glow-border--top]:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-danger)_33%,transparent_100%)];
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_glow-border--center]:bg-[linear-gradient(to_right,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_100%)];
+  @apply data-[touched=true]:has-[select:invalid]:hover:[&_.select-field\_\_glow-border--bottom]:bg-[linear-gradient(to_left,var(--color-danger)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-danger)_100%)];
+}
+
+.select-field__select-wrapper {
+  @apply relative;
+}
+
+.select-field__select {
+  @apply border-border relative inline-flex cursor-pointer appearance-none bg-transparent;
+  @apply w-full border px-7 py-1 pr-14 font-bold outline-none;
+  @apply group-hover:border-primary focus-visible:border-primary;
+  @apply in-data-[touched=true]:invalid:group-hover:border-danger in-data-[touched=true]:invalid:focus-visible:border-danger;
+}
+
+.select-field__select option {
+  @apply bg-background text-text;
+}
+
+.select-field__glow-border,
+.select-field__border,
+.select-field__corner {
+  pointer-events: none;
+}
+
+.select-field__border {
+  @apply bg-border absolute h-2.5 w-px;
+  @apply group-hover:bg-primary;
+
+  &.select-field__border--top-left {
+    @apply -top-px left-[3.5px] z-2 rotate-45 group-hover:bg-[--alpha(var(--color-white)/75%)];
+  }
+
+  &.select-field__border--top-right {
+    @apply top-1/2 right-[3.5px] z-2 -translate-y-[calc(50%+1px)] -rotate-45 group-hover:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+  }
+
+  &.select-field__border--bottom-left {
+    @apply -bottom-px left-[3.5px] -rotate-45;
+  }
+
+  &.select-field__border--bottom-right {
+    @apply right-[3.5px] -bottom-px rotate-45;
+  }
+
+  &.select-field__border--left {
+    @apply top-[7.5px] left-0 h-6.5 group-hover:bg-[linear-gradient(to_bottom,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_100%)];
+  }
+
+  &.select-field__border--top {
+    @apply top-0 left-[7.5px] h-px w-2/5;
+  }
+}
+
+.select-field__corner {
+  @apply bg-border absolute size-1.5;
+
+  &.select-field__corner--top-left {
+    @apply top-0 left-0;
+  }
+
+  &.select-field__corner--top-right {
+    @apply top-1/2 right-0 -translate-y-[calc(50%+2px)] rotate-90;
+  }
+
+  &.select-field__corner--bottom-left {
+    @apply bottom-0 left-0 rotate-270;
+  }
+
+  &.select-field__corner--bottom-right {
+    @apply right-0 bottom-0 rotate-180;
+  }
+}
+
+.select-field__glow-border {
+  @apply absolute left-1/2 z-1 h-px -translate-x-1/2 bg-transparent;
+  @apply group-hover:shadow-primary-two;
+
+  &.select-field__glow-border--top {
+    @apply top-0 left-[7.5px] w-2/5 translate-x-0 group-hover:bg-[linear-gradient(to_right,--alpha(var(--color-white)/75%)_0%,var(--color-primary)_33%,transparent_100%)];
+  }
+
+  &.select-field__glow-border--center {
+    @apply top-1/2 w-[calc(100%-28px)] -translate-x-[calc(50%-6.5px)] -translate-y-[calc(50%+4.5px)] group-hover:bg-[linear-gradient(to_right,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_100%)];
+  }
+
+  &.select-field__glow-border--bottom {
+    @apply bottom-0 w-[calc(100%-16px)] group-hover:bg-[linear-gradient(to_left,var(--color-primary)_0%,--alpha(var(--color-white)/75%)_50%,var(--color-primary)_100%)];
+  }
+}
+
+.select-field__label {
+  @apply font-display inline-block w-fit pl-7 text-xs font-bold duration-300;
+  @apply group-hover:text-primary-light;
+}
+
+.select-field__icon {
+  @apply pointer-events-none absolute top-1/2 right-7 -translate-y-1/2 outline-hidden duration-300;
+}
+
+.select-field__error {
+  @apply text-danger absolute -bottom-5 left-0 hidden items-center gap-1 text-xs font-bold;
+}

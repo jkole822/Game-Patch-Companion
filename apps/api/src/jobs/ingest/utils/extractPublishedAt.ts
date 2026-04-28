@@ -1,5 +1,6 @@
 import type { HtmlSourceConfig } from "@api-jobs/ingest/ingest.types";
 import type * as cheerio from "cheerio";
+import type { AnyNode } from "domhandler";
 
 export const extractPublishedAt = ({
   $,
@@ -14,6 +15,42 @@ export const extractPublishedAt = ({
     return Number.isNaN(date.getTime()) ? null : date;
   };
 
+  const parseEpoch = (value: string | undefined): Date | null => {
+    if (!value || !/^\d{9,13}$/.test(value)) {
+      return null;
+    }
+
+    const asNumber = Number(value);
+    if (Number.isNaN(asNumber)) {
+      return null;
+    }
+
+    const milliseconds = value.length >= 13 ? asNumber : asNumber * 1000;
+    const date = new Date(milliseconds);
+
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const extractEpochFromNode = (node: cheerio.Cheerio<AnyNode>): Date | null => {
+    const attrEpoch =
+      parseEpoch(node.attr("data-epoch")) ||
+      parseEpoch(node.attr("data-timestamp")) ||
+      parseEpoch(node.attr("data-unix"));
+
+    if (attrEpoch) {
+      return attrEpoch;
+    }
+
+    const scriptText = node
+      .find("script")
+      .toArray()
+      .map((scriptNode) => $(scriptNode).text())
+      .join(" ");
+    const scriptEpoch = scriptText.match(/ldst_strftime(?:_dynamic_[a-z]+)?\((\d{9,13})\b/i)?.[1];
+
+    return parseEpoch(scriptEpoch);
+  };
+
   const selectorNode = $(config.publishedAtSelector).first();
   const selectorValue =
     selectorNode.attr(config.publishedAtAttribute) || selectorNode.text().trim() || undefined;
@@ -26,8 +63,14 @@ export const extractPublishedAt = ({
     if (fromRegex) return fromRegex;
   }
 
+  const fromSelectorEpoch = extractEpochFromNode(selectorNode);
+  if (fromSelectorEpoch) return fromSelectorEpoch;
+
   const fromTime = parseDate($("time[datetime]").first().attr("datetime"));
   if (fromTime) return fromTime;
+
+  const fromTimeEpoch = extractEpochFromNode($("time").first());
+  if (fromTimeEpoch) return fromTimeEpoch;
 
   const fromMeta =
     parseDate($('meta[property="article:published_time"]').attr("content")) ||
