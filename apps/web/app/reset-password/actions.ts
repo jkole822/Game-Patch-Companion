@@ -24,12 +24,12 @@ export const resetPasswordAction = async (
     return { error: "This reset link is missing a token.", success: null };
   }
 
-  if (password !== confirmPassword) {
-    return { error: "Passwords do not match.", success: null };
-  }
-
   if (typeof password !== "string" || typeof confirmPassword !== "string") {
     return { error: "Please provide your new password.", success: null };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "Passwords do not match.", success: null };
   }
 
   try {
