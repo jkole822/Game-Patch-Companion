@@ -78,8 +78,11 @@ export const SelectField = ({
   const [nativeErrorMessage, setNativeErrorMessage] = useState("");
   const generatedId = useId();
   const id = providedId ?? generatedId;
+  const isExternalErrorVisible = Boolean(errorMessage);
+  const isNativeErrorVisible = touched && Boolean(nativeErrorMessage);
+  const isErrorVisible = isExternalErrorVisible || isNativeErrorVisible;
   const resolvedErrorMessage = errorMessage ?? nativeErrorMessage;
-  const errorMessageId = resolvedErrorMessage ? `${id}-error` : undefined;
+  const errorMessageId = isErrorVisible ? `${id}-error` : undefined;
   const describedBy = [ariaDescribedBy, errorMessageId].filter(Boolean).join(" ");
 
   const updateNativeErrorMessage = (select: HTMLSelectElement) => {
@@ -115,7 +118,7 @@ export const SelectField = ({
         <select
           aria-describedby={describedBy || undefined}
           aria-errormessage={errorMessageId}
-          aria-invalid={resolvedErrorMessage ? true : undefined}
+          aria-invalid={isErrorVisible ? true : undefined}
           className="select-field__select js-select-field-select"
           id={id}
           onBlur={(event) => {
@@ -134,10 +137,10 @@ export const SelectField = ({
         </select>
         <ChevronDown className="select-field__icon" size={20} />
       </div>
-      {Boolean(resolvedErrorMessage) && (
+      {isErrorVisible && (
         <div
           aria-live="polite"
-          className="select-field__error js-select-field-error"
+          className={`select-field__error js-select-field-error ${isExternalErrorVisible ? "flex!" : ""}`}
           id={errorMessageId}
         >
           <LucideBomb name="error" size={12} />
