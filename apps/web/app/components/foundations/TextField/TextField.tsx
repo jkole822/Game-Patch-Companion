@@ -69,16 +69,81 @@ export const TextField = ({
   label,
   onChange,
   type,
+  validationMessages,
   id: providedId,
+  "aria-describedby": ariaDescribedBy,
   ...restProps
 }: TextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [nativeErrorMessage, setNativeErrorMessage] = useState("");
   const generatedId = useId();
   const id = providedId ?? generatedId;
+  const resolvedErrorMessage = errorMessage ?? nativeErrorMessage;
+  const errorMessageId = resolvedErrorMessage ? `${id}-error` : undefined;
+  const describedBy = [ariaDescribedBy, errorMessageId].filter(Boolean).join(" ");
+
+  const getNativeValidationMessage = (input: HTMLInputElement) => {
+    const { validity } = input;
+
+    if (validity.valid) {
+      return "";
+    }
+
+    if (validity.valueMissing) {
+      return validationMessages?.valueMissing ?? `${label} is required.`;
+    }
+
+    if (validity.typeMismatch) {
+      return validationMessages?.typeMismatch ?? `Enter a valid ${label.toLowerCase()}.`;
+    }
+
+    if (validity.patternMismatch) {
+      return validationMessages?.patternMismatch ?? `${label} format is invalid.`;
+    }
+
+    if (validity.tooLong) {
+      return validationMessages?.tooLong ?? `${label} is too long.`;
+    }
+
+    if (validity.tooShort) {
+      return validationMessages?.tooShort ?? `${label} is too short.`;
+    }
+
+    if (validity.rangeOverflow) {
+      return validationMessages?.rangeOverflow ?? `${label} is too high.`;
+    }
+
+    if (validity.rangeUnderflow) {
+      return validationMessages?.rangeUnderflow ?? `${label} is too low.`;
+    }
+
+    if (validity.stepMismatch) {
+      return validationMessages?.stepMismatch ?? `${label} is not valid.`;
+    }
+
+    if (validity.badInput) {
+      return validationMessages?.badInput ?? `${label} is not valid.`;
+    }
+
+    return input.validationMessage;
+  };
+
+  const updateNativeErrorMessage = (input: HTMLInputElement) => {
+    const message = getNativeValidationMessage(input);
+
+    input.setCustomValidity(message);
+    setNativeErrorMessage(message);
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event.currentTarget.value);
+    const input = event.target as HTMLInputElement;
+
+    if (touched || nativeErrorMessage) {
+      updateNativeErrorMessage(input);
+    }
+
+    onChange?.(input.value);
   };
 
   return (
@@ -93,11 +158,21 @@ export const TextField = ({
         className={`text-field__input-wrapper ${touched ? "has-[.js-text-field-input:invalid]:[&+.js-text-field-error]:flex!" : ""}`}
       >
         <input
+          aria-describedby={describedBy || undefined}
+          aria-errormessage={errorMessageId}
+          aria-invalid={resolvedErrorMessage ? true : undefined}
           autoComplete="off"
           className="text-field__input js-text-field-input"
           id={id}
-          onBlur={() => setTouched(true)}
+          onBlur={(event) => {
+            setTouched(true);
+            updateNativeErrorMessage(event.target);
+          }}
           onChange={handleChange}
+          onInvalid={(event) => {
+            setTouched(true);
+            updateNativeErrorMessage(event.currentTarget);
+          }}
           style={{ clipPath: CLIP_PATH }}
           type={type === "password" && showPassword ? "text" : type}
           {...restProps}
@@ -117,10 +192,14 @@ export const TextField = ({
           </button>
         )}
       </div>
-      {Boolean(errorMessage) && (
-        <div className="text-field__error js-text-field-error">
+      {Boolean(resolvedErrorMessage) && (
+        <div
+          aria-live="polite"
+          className="text-field__error js-text-field-error"
+          id={errorMessageId}
+        >
           <LucideBomb name="error" size={12} />
-          <span>{errorMessage}</span>
+          <span>{resolvedErrorMessage}</span>
         </div>
       )}
     </div>
