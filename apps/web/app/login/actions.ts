@@ -22,6 +22,11 @@ export const loginAction = async (
     return { error: "Please provide an email and password." };
   }
 
+  let payload: {
+    message?: string;
+    token?: string;
+  } | null;
+
   try {
     const response = await fetch(`${getApiBaseUrl()}/auth/login`, {
       method: "POST",
@@ -32,7 +37,7 @@ export const loginAction = async (
       cache: "no-store",
     });
 
-    const payload = (await response.json().catch(() => null)) as {
+    payload = (await response.json().catch(() => null)) as {
       message?: string;
       token?: string;
     } | null;
@@ -51,11 +56,11 @@ export const loginAction = async (
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
-
-    redirect("/dashboard");
   } catch {
     return {
       error: "Unable to log you in right now.",
     };
   }
+
+  redirect("/dashboard");
 };
