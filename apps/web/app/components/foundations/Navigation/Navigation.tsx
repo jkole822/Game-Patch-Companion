@@ -43,7 +43,7 @@ export const Navigation = ({ cta, links, logoutAction }: NavigationProps) => {
         )}
         {logoutAction && (
           <li>
-            <form action={logoutAction}>
+            <form action={logoutAction} method="post">
               <Button type="submit">Log out</Button>
             </form>
           </li>
@@ -83,7 +83,7 @@ export const Navigation = ({ cta, links, logoutAction }: NavigationProps) => {
           )}
           {logoutAction && (
             <li>
-              <form action={logoutAction}>
+              <form action={logoutAction} method="post">
                 <Button className="navigation__link-cta navigation__link-cta--mobile" type="submit">
                   Log out
                 </Button>

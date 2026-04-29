@@ -1,15 +1,7 @@
-export interface AuthFormActionState {
-  error: string | null;
-}
-
-export type AuthFormAction = (
-  state: AuthFormActionState,
-  formData: FormData,
-) => Promise<AuthFormActionState>;
-
 export interface AuthFormProps {
-  action: AuthFormAction;
+  action: string;
   className?: string;
+  error?: string | null;
   title: string;
   variant?: "login" | "register";
 }

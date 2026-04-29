@@ -3,15 +3,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Container } from "@/components";
+import { hasAuthCookie } from "@/lib/auth";
 
 import { SOURCE_CREATE_FIELD_GUIDE, SOURCE_CREATE_FIELD_GUIDE_GROUPS } from "./fieldGuide";
 import { SourceCreateForm } from "./SourceCreateForm";
 
 export default async function CreateSourcePage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
 
-  if (!token) {
+  if (!hasAuthCookie(cookieStore)) {
     redirect("/login");
   }
 

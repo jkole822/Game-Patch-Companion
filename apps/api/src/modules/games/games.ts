@@ -1,4 +1,4 @@
-import { authGuard, dbPlugin } from "@api-utils";
+import { authContext, authGuard, dbPlugin } from "@api-utils";
 import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
 import {
   gameConflictSchema,
@@ -18,6 +18,7 @@ import { createGame, deleteGame, findManyGames, findOneGame, updateGame } from "
 
 export const GamesModule = new Elysia({ prefix: "/games" })
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
   .get(
     "/find-many",

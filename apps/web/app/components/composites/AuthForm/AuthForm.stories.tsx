@@ -1,20 +1,16 @@
 import { AuthForm } from "./AuthForm";
 
-import type { AuthFormAction } from "./AuthForm.types";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-
-const mockAction: AuthFormAction = async () => ({ error: null });
 
 const meta = {
   title: "Composites/AuthForm",
   component: AuthForm,
   args: {
-    action: mockAction,
+    action: "/api/auth/login",
     title: "Sign In",
     variant: "login",
   },
   argTypes: {
-    action: { control: false },
     variant: {
       control: "select",
       options: ["register", "login"],

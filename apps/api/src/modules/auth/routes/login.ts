@@ -9,8 +9,12 @@ import type { z } from "zod";
 type LoginInput = z.infer<typeof loginSchema>;
 type LoginSuccess = z.infer<typeof loginResponseSchema>;
 type LoginConflict = z.infer<typeof loginConflictSchema>;
+type LoginPayload = {
+  authToken: string;
+  response: LoginSuccess;
+};
 
-type LoginResult = { ok: true; data: LoginSuccess } | { ok: false; error: LoginConflict };
+type LoginResult = { ok: true; data: LoginPayload } | { ok: false; error: LoginConflict };
 
 const INVALID_CREDENTIALS_ERROR: LoginConflict = {
   error: "INVALID_CREDENTIALS",
@@ -48,8 +52,11 @@ export const login = async ({
 
   return {
     ok: true,
-    data: loginResponseSchema.parse({
-      token,
-    }),
+    data: {
+      authToken: token,
+      response: loginResponseSchema.parse({
+        message: "Logged in successfully.",
+      }),
+    },
   };
 };

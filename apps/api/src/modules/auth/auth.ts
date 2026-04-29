@@ -1,4 +1,12 @@
-import { authGuard, dbPlugin, jwtPlugin, mapRouteResult } from "@api-utils";
+import {
+  authContext,
+  authGuard,
+  createAuthCookieHeader,
+  createClearedAuthCookieHeader,
+  dbPlugin,
+  jwtPlugin,
+  mapRouteResult,
+} from "@api-utils";
 import {
   deleteUserConflictSchema,
   deleteUserResponseSchema,
@@ -22,24 +30,8 @@ import { deleteUser, forgotPassword, login, logout, register, resetPassword } fr
 
 const AuthProtectedRoutes = new Elysia()
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
-  .post(
-    "/logout",
-    async ({ db, user }) => {
-      if (!user) {
-        throw new Error("Guarded route missing authenticated user.");
-      }
-
-      const response = await logout({ db, userId: user.id });
-      return response.data;
-    },
-    {
-      response: {
-        200: logoutResponseSchema,
-        401: unauthorizedConflictSchema,
-      },
-    },
-  )
   .delete(
     "/user",
     async ({ status, db, user }) => {
@@ -66,9 +58,29 @@ const AuthProtectedRoutes = new Elysia()
 export const AuthModule = new Elysia({ prefix: "/auth" })
   .use(dbPlugin)
   .use(jwtPlugin)
+  .use(authContext)
+  .post(
+    "/logout",
+    async ({ db, set, user }) => {
+      if (user) {
+        await logout({ db, userId: user.id });
+      }
+
+      set.headers["set-cookie"] = createClearedAuthCookieHeader();
+
+      return logoutResponseSchema.parse({
+        message: "Logged out successfully.",
+      });
+    },
+    {
+      response: {
+        200: logoutResponseSchema,
+      },
+    },
+  )
   .post(
     "/register",
-    async ({ body, status, db, jwt }) => {
+    async ({ body, set, status, db, jwt }) => {
       const response = await register({
         db,
         ...body,
@@ -77,7 +89,10 @@ export const AuthModule = new Elysia({ prefix: "/auth" })
 
       return mapRouteResult(response, {
         onError: (error) => status(400, error),
-        onSuccess: (data) => status(201, data),
+        onSuccess: ({ authToken, response }) => {
+          set.headers["set-cookie"] = createAuthCookieHeader(authToken);
+          return status(201, response);
+        },
       });
     },
     {
@@ -90,7 +105,7 @@ export const AuthModule = new Elysia({ prefix: "/auth" })
   )
   .post(
     "/login",
-    async ({ body, status, db, jwt }) => {
+    async ({ body, set, status, db, jwt }) => {
       const response = await login({
         db,
         ...body,
@@ -99,7 +114,10 @@ export const AuthModule = new Elysia({ prefix: "/auth" })
 
       return mapRouteResult(response, {
         onError: (error) => status(400, error),
-        onSuccess: (data) => data,
+        onSuccess: ({ authToken, response }) => {
+          set.headers["set-cookie"] = createAuthCookieHeader(authToken);
+          return response;
+        },
       });
     },
     {

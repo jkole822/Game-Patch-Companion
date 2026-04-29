@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Button, Container } from "@/components";
+import { getAuthCookieHeader } from "@/lib/auth";
 
 import {
   DashboardStatGrid,
@@ -23,18 +24,18 @@ import type { DashboardStat } from "./dashboard.types";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
+  const authCookieHeader = getAuthCookieHeader(cookieStore);
 
-  if (!token) {
+  if (!authCookieHeader) {
     redirect("/login");
   }
 
   const [gamesResult, watchlistsResult, watchlistItemsResult, patchEntriesResult] =
     await Promise.all([
-      fetchDashboardResource("/games/find-many", token, EMPTY_GAMES),
-      fetchDashboardResource("/watchlists/find-many", token, EMPTY_WATCHLISTS),
-      fetchDashboardResource("/watchlist-items/find-many", token, EMPTY_WATCHLIST_ITEMS),
-      fetchDashboardResource("/patch-entries/find-many", token, EMPTY_PATCH_ENTRIES),
+      fetchDashboardResource("/games/find-many", authCookieHeader, EMPTY_GAMES),
+      fetchDashboardResource("/watchlists/find-many", authCookieHeader, EMPTY_WATCHLISTS),
+      fetchDashboardResource("/watchlist-items/find-many", authCookieHeader, EMPTY_WATCHLIST_ITEMS),
+      fetchDashboardResource("/patch-entries/find-many", authCookieHeader, EMPTY_PATCH_ENTRIES),
     ]);
 
   if (
