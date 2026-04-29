@@ -5,6 +5,10 @@
   --animate-drawer-content-in: drawer-content-in 450ms cubic-bezier(0.65, 0, 0.35, 1);
   --animate-drawer-overlay-out: drawer-overlay-out 550ms ease-in;
   --animate-drawer-overlay-in: drawer-overlay-in 450ms ease-out;
+  --animate-modal-content-out: modal-content-out 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-modal-content-in: modal-content-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-modal-overlay-out: modal-overlay-out 250ms ease-in;
+  --animate-modal-overlay-in: modal-overlay-in 220ms ease-out;
 
   --color-background: oklch(0.1665 0.018 278);
   --color-surface: oklch(0.2073 0.028 280); /* cards */

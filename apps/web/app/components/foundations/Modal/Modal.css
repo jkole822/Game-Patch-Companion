@@ -1,0 +1,94 @@
+@reference "../../../globals.css";
+
+.modal-root {
+  @apply contents;
+}
+
+.modal__overlay {
+  @apply fixed inset-0 z-40 bg-black/70 backdrop-blur-sm;
+  @apply data-[state=open]:animate-modal-overlay-in;
+  @apply data-[state=closed]:animate-modal-overlay-out;
+}
+
+.modal__content {
+  @apply border-border bg-surface fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border shadow-2xl outline-none;
+  @apply data-[state=open]:animate-modal-content-in;
+  @apply data-[state=closed]:animate-modal-content-out;
+}
+
+.modal__header {
+  @apply border-border flex items-start justify-between gap-4 border-b px-5 py-4 sm:px-6;
+}
+
+.modal__header-copy {
+  @apply min-w-0;
+}
+
+.modal__title {
+  @apply font-display text-text text-xl leading-tight font-semibold;
+}
+
+.modal__description {
+  @apply text-text-muted mt-1 text-sm leading-relaxed;
+}
+
+.modal__close {
+  @apply border-border bg-surface-alt text-text-muted inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-colors outline-none;
+  @apply hover:text-text hover:border-primary;
+  @apply focus-visible:ring-primary focus-visible:text-text focus-visible:ring-2;
+}
+
+.modal__body {
+  @apply overflow-y-auto px-5 py-5 sm:px-6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal__overlay,
+  .modal__content {
+    animation: none !important;
+  }
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-overlay-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-content-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-content-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
