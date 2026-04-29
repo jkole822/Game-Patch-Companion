@@ -1,18 +1,11 @@
-"use client";
-
 import { Bomb } from "lucide-react";
-import { useActionState } from "react";
 
 import { Button, Container, Link, TextField } from "@/components";
 import { getClassName } from "@/lib/utils";
 
-import type { AuthFormActionState, AuthFormProps } from "./AuthForm.types";
+import type { AuthFormProps } from "./AuthForm.types";
 
-const INITIAL_STATE: AuthFormActionState = { error: null };
-
-export const AuthForm = ({ action, className, title, variant }: AuthFormProps) => {
-  const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
-
+export const AuthForm = ({ action, className, error, title, variant }: AuthFormProps) => {
   const isRegistering = variant === "register";
   const submitLabel = isRegistering ? "Register" : "Login";
   const alternateHref = isRegistering ? "/login" : "/register";
@@ -25,16 +18,16 @@ export const AuthForm = ({ action, className, title, variant }: AuthFormProps) =
       contentClassName="flex flex-col gap-15"
     >
       <h1 className="hs-1 text-center">{title}</h1>
-      {state.error && (
+      {error && (
         <p className="text-danger flex items-center gap-2 border px-2 py-1 text-sm">
           <Bomb size={14} />
           <span className="flex gap-1">
             <strong>Error:</strong>
-            <span>{state.error}</span>
+            <span>{error}</span>
           </span>
         </p>
       )}
-      <form action={formAction} className="flex w-full flex-col gap-4">
+      <form action={action} className="flex w-full flex-col gap-4" method="post">
         <TextField autoComplete="email" label="Email" name="email" type="email" />
         <TextField autoComplete="new-password" label="Password" name="password" type="password" />
         {!isRegistering && (
@@ -50,9 +43,7 @@ export const AuthForm = ({ action, className, title, variant }: AuthFormProps) =
             type="password"
           />
         )}
-        <Button loading={pending} type="submit">
-          {submitLabel}
-        </Button>
+        <Button type="submit">{submitLabel}</Button>
       </form>
       <p className="text-center text-sm text-white/85">
         {alternatePrompt} <Link href={alternateHref}>{alternateLabel}</Link>

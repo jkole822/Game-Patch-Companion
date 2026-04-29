@@ -2,8 +2,8 @@ import { unstable_cache } from "next/cache";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { cookies } from "next/headers";
 
-import { logoutAction } from "@/actions/logout";
 import { Navigation } from "@/components";
+import { hasAuthCookie } from "@/lib/auth";
 import { sanity } from "@/lib/utils";
 
 import type { SiteSettings } from "@cms/sanity.types";
@@ -50,7 +50,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const isLoggedIn = Boolean(cookieStore.get("auth_token")?.value);
+  const isLoggedIn = hasAuthCookie(cookieStore);
   const siteSettingsResults = await getSiteSettings();
   const navLoggedIn = siteSettingsResults?.navLoggedIn;
   const navLoggedOut = siteSettingsResults?.navLoggedOut;
@@ -62,7 +62,7 @@ export default async function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} antialiased`}
       >
         {navigation && (
-          <Navigation {...navigation} logoutAction={isLoggedIn ? logoutAction : undefined} />
+          <Navigation {...navigation} logoutAction={isLoggedIn ? "/api/auth/logout" : undefined} />
         )}
         {children}
       </body>

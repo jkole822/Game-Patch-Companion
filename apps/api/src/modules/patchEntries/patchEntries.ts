@@ -1,4 +1,4 @@
-import { authGuard, dbPlugin } from "@api-utils";
+import { authContext, authGuard, dbPlugin } from "@api-utils";
 import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
 import {
   patchEntriesResponseSchema,
@@ -21,6 +21,7 @@ import {
 
 export const PatchEntriesModule = new Elysia({ prefix: "/patch-entries" })
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
   .get(
     "/find-many",

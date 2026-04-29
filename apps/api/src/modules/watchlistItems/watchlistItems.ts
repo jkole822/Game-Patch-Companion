@@ -1,4 +1,4 @@
-import { authGuard, dbPlugin } from "@api-utils";
+import { authContext, authGuard, dbPlugin } from "@api-utils";
 import {
   unauthorizedConflictSchema,
   watchlistItemConflictSchema,
@@ -25,6 +25,7 @@ import {
 
 export const WatchlistItemsModule = new Elysia({ prefix: "/watchlist-items" })
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
   .get(
     "/find-many",

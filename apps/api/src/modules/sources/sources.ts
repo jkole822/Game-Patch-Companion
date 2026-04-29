@@ -1,4 +1,4 @@
-import { authGuard, dbPlugin } from "@api-utils";
+import { authContext, authGuard, dbPlugin } from "@api-utils";
 import { rolePermissionConflictSchema, unauthorizedConflictSchema } from "@shared/schemas";
 import {
   sourceDeleteResponseSchema,
@@ -18,6 +18,7 @@ import { createSource, deleteSource, findManySources, findOneSource, updateSourc
 
 export const SourcesModule = new Elysia({ prefix: "/sources" })
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
   .get(
     "/find-many",

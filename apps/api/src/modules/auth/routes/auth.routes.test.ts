@@ -6,7 +6,7 @@ import type { AppDb } from "@api-utils";
 
 describe("auth route handlers", () => {
   describe("register", () => {
-    it("returns created user data with token", async () => {
+    it("returns created user data and auth token", async () => {
       const createdAt = new Date();
       const email = `register-${crypto.randomUUID()}@example.com`;
       const id = crypto.randomUUID();
@@ -32,10 +32,13 @@ describe("auth route handlers", () => {
       }
 
       expect(response.data).toEqual({
-        createdAt: createdAt.toISOString(),
-        email,
-        id,
-        token: `token-${id}-${tokenVersion}`,
+        authToken: `token-${id}-${tokenVersion}`,
+        response: {
+          createdAt: createdAt.toISOString(),
+          email,
+          id,
+          message: "Account created successfully.",
+        },
       });
     });
 
@@ -131,7 +134,7 @@ describe("auth route handlers", () => {
       });
     });
 
-    it("returns token when credentials are valid", async () => {
+    it("returns auth token when credentials are valid", async () => {
       const id = crypto.randomUUID();
       const tokenVersion = 3;
       const password = "correct-password";
@@ -161,7 +164,10 @@ describe("auth route handlers", () => {
 
       expect(response).toEqual({
         data: {
-          token: `token-${id}-${tokenVersion}`,
+          authToken: `token-${id}-${tokenVersion}`,
+          response: {
+            message: "Logged in successfully.",
+          },
         },
         ok: true,
       });
@@ -348,9 +354,7 @@ describe("auth route handlers", () => {
           callback: (tx: {
             update: () => {
               set: (value: Record<string, unknown>) => {
-                where: (
-                  condition?: unknown,
-                ) =>
+                where: (condition?: unknown) =>
                   | Promise<undefined>
                   | {
                       returning: (

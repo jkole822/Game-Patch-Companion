@@ -1,4 +1,4 @@
-import { authGuard, dbPlugin } from "@api-utils";
+import { authContext, authGuard, dbPlugin } from "@api-utils";
 import {
   contentSyncAlreadyRunningConflictSchema,
   rolePermissionConflictSchema,
@@ -12,6 +12,7 @@ import { runIngest, runIngestResync } from "./routes";
 
 export const IngestModule = new Elysia({ prefix: "/ingest" })
   .use(dbPlugin)
+  .use(authContext)
   .use(authGuard)
   .post(
     "/run",

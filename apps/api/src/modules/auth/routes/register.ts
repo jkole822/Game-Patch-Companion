@@ -8,8 +8,12 @@ import type { z } from "zod";
 type RegisterInput = z.infer<typeof registerSchema>;
 type RegisterSuccess = z.infer<typeof registerResponseSchema>;
 type RegisterConflict = z.infer<typeof registerConflictSchema>;
+type RegisterPayload = {
+  authToken: string;
+  response: RegisterSuccess;
+};
 
-type RegisterResult = { ok: true; data: RegisterSuccess } | { ok: false; error: RegisterConflict };
+type RegisterResult = { ok: true; data: RegisterPayload } | { ok: false; error: RegisterConflict };
 
 export const register = async ({
   db,
@@ -46,12 +50,15 @@ export const register = async ({
 
     return {
       ok: true,
-      data: registerResponseSchema.parse({
-        id: createdUser.id,
-        email: createdUser.email,
-        createdAt: createdUser.createdAt.toISOString(),
-        token,
-      }),
+      data: {
+        authToken: token,
+        response: registerResponseSchema.parse({
+          id: createdUser.id,
+          email: createdUser.email,
+          createdAt: createdUser.createdAt.toISOString(),
+          message: "Account created successfully.",
+        }),
+      },
     };
   } catch (error) {
     if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {

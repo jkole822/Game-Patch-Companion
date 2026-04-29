@@ -3,6 +3,7 @@ import { unauthorizedConflictSchema } from "@shared/schemas";
 import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 
+import { getAuthTokenFromCookieHeader } from "./authCookie";
 import { dbPlugin } from "./db";
 import { jwtPlugin } from "./jwt";
 
@@ -13,18 +14,15 @@ export type JwtUser = {
 
 const BEARER_PREFIX = "Bearer ";
 
-export const authGuard = new Elysia({ name: "auth-guard" })
+export const authContext = new Elysia({ name: "auth-context" })
   .use(dbPlugin)
   .use(jwtPlugin)
   .decorate("user", null as JwtUser | null)
   .derive({ as: "scoped" }, async ({ headers, jwt, db }) => {
     const authorizationHeader = headers.authorization;
-
-    if (!authorizationHeader?.startsWith(BEARER_PREFIX)) {
-      return { user: null as JwtUser | null };
-    }
-
-    const token = authorizationHeader.slice(BEARER_PREFIX.length).trim();
+    const token = authorizationHeader?.startsWith(BEARER_PREFIX)
+      ? authorizationHeader.slice(BEARER_PREFIX.length).trim()
+      : getAuthTokenFromCookieHeader(headers.cookie);
 
     if (!token) {
       return { user: null as JwtUser | null };
@@ -61,14 +59,17 @@ export const authGuard = new Elysia({ name: "auth-guard" })
         tokenVersion: payload.tokenVersion,
       } as JwtUser,
     };
-  })
+  });
+
+export const authGuard = new Elysia({ name: "auth-guard" })
+  .use(authContext)
   .onBeforeHandle({ as: "scoped" }, ({ status, user }) => {
     if (!user) {
       return status(
         401,
         unauthorizedConflictSchema.parse({
           error: "UNAUTHORIZED",
-          message: "Missing or invalid token.",
+          message: "Missing or invalid authentication.",
         }),
       );
     }

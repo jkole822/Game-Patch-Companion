@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getAuthCookieHeader } from "@/lib/auth";
 import { getApiBaseUrl } from "@/lib/utils";
 
 import { INITIAL_CREATE_SOURCE_STATE } from "./types";
@@ -40,9 +41,9 @@ export const createSourceAction = async (
   formData: FormData,
 ): Promise<CreateSourceActionState> => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
+  const authCookieHeader = getAuthCookieHeader(cookieStore);
 
-  if (!token) {
+  if (!authCookieHeader) {
     redirect("/login");
   }
 
@@ -118,7 +119,7 @@ export const createSourceAction = async (
     response = await fetch(`${getApiBaseUrl()}/sources/create`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Cookie: authCookieHeader,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),

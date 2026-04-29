@@ -21,13 +21,13 @@ const DASHBOARD_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 
 export const fetchDashboardResource = async <T>(
   path: string,
-  token: string,
+  cookieHeader: string,
   fallback: T,
 ): Promise<FetchResult<T>> => {
   try {
     const response = await fetch(`${getApiBaseUrl()}${path}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader,
       },
       cache: "no-store",
     });
