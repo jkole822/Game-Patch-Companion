@@ -1,4 +1,4 @@
-export const SOURCE_CREATE_FIELD_GUIDE = {
+export const SOURCE_FIELD_GUIDE = {
   name: {
     fieldLabel: "Name",
     id: "source-field-guide-name",
@@ -101,7 +101,7 @@ export const SOURCE_CREATE_FIELD_GUIDE = {
   },
 } as const;
 
-export const SOURCE_CREATE_FIELD_GUIDE_GROUPS = [
+export const SOURCE_FIELD_GUIDE_GROUPS = [
   {
     title: "Basics",
     fields: ["name", "key", "baseUrl", "type", "isEnabled"] as const,
