@@ -6,40 +6,15 @@ import { redirect } from "next/navigation";
 import { getAuthCookieHeader } from "@/lib/auth";
 import { getApiBaseUrl } from "@/lib/utils";
 
-import { INITIAL_CREATE_SOURCE_STATE } from "./types";
+import { INITIAL_SOURCE_ACTION_STATE } from "../_components/sourceForm.types";
+import { buildSourcePayload } from "../_components/sourceForm.utils";
 
-import type { CreateSourceActionState } from "./types";
-
-const getString = (formData: FormData, key: string) => {
-  const value = formData.get(key);
-
-  return typeof value === "string" ? value.trim() : "";
-};
-
-const getOptionalString = (formData: FormData, key: string) => {
-  const value = getString(formData, key);
-
-  return value.length > 0 ? value : undefined;
-};
-
-const parseGenericConfig = (value: string): Record<string, unknown> => {
-  if (!value) {
-    return {};
-  }
-
-  const parsed = JSON.parse(value) as unknown;
-
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new Error("Config JSON must be an object.");
-  }
-
-  return parsed as Record<string, unknown>;
-};
+import type { SourceActionState } from "../_components/sourceForm.types";
 
 export const createSourceAction = async (
-  _: CreateSourceActionState = INITIAL_CREATE_SOURCE_STATE,
+  _: SourceActionState = INITIAL_SOURCE_ACTION_STATE,
   formData: FormData,
-): Promise<CreateSourceActionState> => {
+): Promise<SourceActionState> => {
   const cookieStore = await cookies();
   const authCookieHeader = getAuthCookieHeader(cookieStore);
 
@@ -47,69 +22,17 @@ export const createSourceAction = async (
     redirect("/login");
   }
 
-  const type = getString(formData, "type");
-  const baseFields = {
-    baseUrl: getString(formData, "baseUrl"),
-    isEnabled: formData.get("isEnabled") === "on",
-    key: getString(formData, "key"),
-    name: getString(formData, "name"),
-  };
+  const { error, payload: requestBody } = buildSourcePayload(formData);
 
-  if (!baseFields.baseUrl || !baseFields.key || !baseFields.name) {
+  if (error || !requestBody) {
     return {
-      error: "Please check the source fields and try again.",
+      error: error ?? "Please check the source fields and try again.",
       success: null,
     };
   }
-
-  if (type !== "html" && type !== "rss" && type !== "api") {
-    return {
-      error: "Please choose a valid source type.",
-      success: null,
-    };
-  }
-
-  let config: Record<string, unknown>;
-
-  if (type === "html") {
-    config = {
-      contentFormat: getString(formData, "contentFormat"),
-      contentSelector: getString(formData, "contentSelector"),
-      entrySelector: getString(formData, "entrySelector"),
-      excludeTitleRegex: getOptionalString(formData, "excludeTitleRegex"),
-      includeTitleRegex: getOptionalString(formData, "includeTitleRegex"),
-      linkSelector: getString(formData, "linkSelector") || "a",
-      listPath: getString(formData, "listPath"),
-      publishedAtAttribute: getString(formData, "publishedAtAttribute") || "datetime",
-      publishedAtRegex: getOptionalString(formData, "publishedAtRegex"),
-      publishedAtSelector: getString(formData, "publishedAtSelector") || "time[datetime]",
-      region: getOptionalString(formData, "region"),
-      structureMode: getOptionalString(formData, "structureMode"),
-      titleSelector: getString(formData, "titleSelector"),
-      versionRegex: getOptionalString(formData, "versionRegex"),
-    };
-  } else {
-    try {
-      config = parseGenericConfig(getString(formData, "configJson"));
-    } catch (error) {
-      return {
-        error:
-          error instanceof SyntaxError
-            ? "Config JSON is not valid."
-            : "Config JSON must be an object.",
-        success: null,
-      };
-    }
-  }
-
-  const body = {
-    ...baseFields,
-    config,
-    type,
-  };
 
   let response: Response;
-  let payload: {
+  let responsePayload: {
     key?: string;
     message?: string;
     name?: string;
@@ -122,11 +45,11 @@ export const createSourceAction = async (
         Cookie: authCookieHeader,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(requestBody),
       cache: "no-store",
     });
 
-    payload = (await response.json().catch(() => null)) as {
+    responsePayload = (await response.json().catch(() => null)) as {
       key?: string;
       message?: string;
       name?: string;
@@ -144,13 +67,13 @@ export const createSourceAction = async (
 
   if (!response.ok) {
     return {
-      error: payload?.message ?? "Unable to create the source right now.",
+      error: responsePayload?.message ?? "Unable to create the source right now.",
       success: null,
     };
   }
 
   return {
     error: null,
-    success: `Created ${payload?.name ?? body.name}.`,
+    success: `Created ${responsePayload?.name ?? requestBody.name}.`,
   };
 };

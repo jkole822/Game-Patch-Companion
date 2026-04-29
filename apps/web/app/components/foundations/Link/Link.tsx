@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 
-import { getClassName } from "@/lib/utils";
+import { getClassName, getSafeRel } from "@/lib/utils";
 
 import type { AnchorHTMLAttributes } from "react";
 import "./Link.css";
@@ -12,7 +12,7 @@ export const Link = ({
   target,
   ...restProps
 }: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string }) => {
-  const safeRel = target === "_blank" && !rel ? "noopener noreferrer" : rel;
+  const safeRel = getSafeRel(target, rel);
 
   return (
     <NextLink
