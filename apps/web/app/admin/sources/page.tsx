@@ -261,7 +261,7 @@ export default async function SourcesPage() {
 
                     <div className="mt-5 flex flex-wrap gap-3">
                       <Button href={`/admin/sources/${source.id}/edit`}>Edit source</Button>
-                      <Link href={source.baseUrl} rel="noreferrer" target="_blank">
+                      <Link href={source.baseUrl} target="_blank">
                         <span className="inline-flex items-center gap-2">
                           <Globe className="size-4" />
                           Open origin

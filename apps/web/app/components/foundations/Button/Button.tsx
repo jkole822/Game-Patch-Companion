@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { getClassName } from "@/lib/utils";
+import { getClassName, getSafeRel } from "@/lib/utils";
 
 import { BASE_CLASS_NAME, CLIP_PATH, CORNERS_CLIP_PATH } from "./Button.constants";
 import { ButtonSpinner } from "./ButtonSpinner";
@@ -54,7 +54,7 @@ const Corners = () => {
 export const Button = (props: ButtonProps) => {
   if ("href" in props && typeof props.href === "string") {
     const { children, className, href, rel, target, ...restProps } = props;
-    const safeRel = target === "_blank" && !rel ? "noopener noreferrer" : rel;
+    const safeRel = getSafeRel(target, rel);
 
     return (
       <div className={getClassName(BASE_CLASS_NAME, className)}>

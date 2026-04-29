@@ -44,7 +44,7 @@ export const PatchFeedSection = ({ gameTitleById, patchEntries }: PatchFeedSecti
               </div>
               <p className="text-text-muted mt-4 text-sm leading-7">{getSnippet(entry.content)}</p>
               <div className="mt-5">
-                <Button href={entry.url} rel="noreferrer" target="_blank">
+                <Button href={entry.url} target="_blank">
                   Open source patch note
                 </Button>
               </div>
