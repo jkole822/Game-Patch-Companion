@@ -120,10 +120,11 @@ export default async function SourcesPage() {
       icon={ShieldCheck}
       leftPanelContent={<SourceStatGrid stats={stats} />}
       partialData={partialData}
+      resourceLabelPlural="sources"
+      resourceLabelSingular="source"
       rightPanelEyebrow="Source workflow"
       rightPanelTitle="Admin actions"
       rightPanelContent={<SourceFeatureGrid features={features} />}
-      resourceName="source"
       title="Sources"
     >
       <section>

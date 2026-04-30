@@ -41,7 +41,8 @@ export const SourceSummaryCards = ({ sources }: SourceSummaryCardProps) => {
             <p className="text-text-muted text-right text-xs tracking-[0.18em] uppercase">
               Created
               <span className="mt-2 block tracking-normal normal-case">
-                {formatDate(source.createdAt)}
+                {formatDate(source.createdAt, { invalidValueFallback: "Date unavailable" }) ??
+                  "Date unavailable"}
               </span>
             </p>
           </div>

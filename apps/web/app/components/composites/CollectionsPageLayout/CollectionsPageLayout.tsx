@@ -15,7 +15,8 @@ export const CollectionsPageLayout = ({
   icon: Icon,
   leftPanelContent,
   partialData,
-  resourceName,
+  resourceLabelPlural,
+  resourceLabelSingular,
   rightPanelContent,
   rightPanelEyebrow,
   rightPanelTitle,
@@ -42,14 +43,14 @@ export const CollectionsPageLayout = ({
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Button href={createHref}>Create {resourceName}</Button>
+                <Button href={createHref}>Create {resourceLabelSingular}</Button>
                 <Button href="/dashboard">Back to dashboard</Button>
               </div>
             </div>
 
             {partialData && (
               <div className="collections-page-layout__warning">
-                Some {resourceName} data could not be loaded, so this view may be incomplete.
+                Some {resourceLabelPlural} data could not be loaded, so this view may be incomplete.
               </div>
             )}
 

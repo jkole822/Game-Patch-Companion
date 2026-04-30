@@ -11,7 +11,8 @@ export interface CollectionsPageLayoutProps {
   icon: LucideIcon;
   leftPanelContent: ReactNode;
   partialData: boolean;
-  resourceName: string;
+  resourceLabelPlural: string;
+  resourceLabelSingular: string;
   rightPanelContent: ReactNode;
   rightPanelEyebrow: string;
   rightPanelTitle: string;
