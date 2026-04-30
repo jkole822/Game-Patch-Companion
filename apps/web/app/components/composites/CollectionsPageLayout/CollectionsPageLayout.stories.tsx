@@ -31,7 +31,7 @@ export const Default: Story = {
     icon: ShieldCheck,
     leftPanelContent: <div>Left Panel Content</div>,
     partialData: true,
-    resourceName: "sources",
+    resourceName: "source",
     rightPanelContent: <div>Right Panel Content</div>,
     rightPanelEyebrow: "Source workflow",
     rightPanelTitle: "Admin actions",
