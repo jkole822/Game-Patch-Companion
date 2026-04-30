@@ -9,7 +9,7 @@ import { SourceForm } from "../../_components/SourceForm";
 
 import { deleteSourceAction, updateSourceAction } from "./actions";
 
-import type { SourceRecord } from "../../_components/sourceForm.types";
+import type { SourceRecord } from "../../_components/SourceForm.types";
 
 const getSource = async (sourceId: string): Promise<SourceRecord> => {
   const cookieStore = await cookies();

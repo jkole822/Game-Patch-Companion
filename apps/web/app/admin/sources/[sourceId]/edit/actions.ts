@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 import { getAuthCookieHeader } from "@/lib/auth";
 import { getApiBaseUrl } from "@/lib/utils";
 
-import { INITIAL_SOURCE_ACTION_STATE } from "../../_components/sourceForm.types";
-import { buildSourcePayload } from "../../_components/sourceForm.utils";
+import { INITIAL_SOURCE_ACTION_STATE } from "../../_components/SourceForm.types";
+import { buildSourcePayload } from "../../_components/SourceForm.utils";
 
-import type { SourceActionState } from "../../_components/sourceForm.types";
+import type { SourceActionState } from "../../_components/SourceForm.types";
 
 export const updateSourceAction = async (
   sourceId: string,

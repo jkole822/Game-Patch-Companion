@@ -5,11 +5,11 @@ import { useActionState, useState } from "react";
 import { Button, Checkbox, FormMessage, SelectField, TextField } from "@/components";
 
 import { SourceDeleteModal } from "./SourceDeleteModal";
-import { SOURCE_FIELD_GUIDE } from "./sourceFieldGuide";
-import { INITIAL_SOURCE_ACTION_STATE } from "./sourceForm.types";
-import { getConfigJsonValue, getInitialSourceType } from "./sourceForm.utils";
+import { SOURCE_FIELD_GUIDE } from "./SourceFieldGuide";
+import { INITIAL_SOURCE_ACTION_STATE } from "./SourceForm.types";
+import { getConfigJsonValue, getInitialSourceType } from "./SourceForm.utils";
 
-import type { SourceActionState, SourceRecord } from "./sourceForm.types";
+import type { SourceActionState, SourceRecord } from "./SourceForm.types";
 
 type SourceFormProps = {
   action: (state: SourceActionState | undefined, formData: FormData) => Promise<SourceActionState>;

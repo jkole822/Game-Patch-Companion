@@ -1,0 +1,35 @@
+@reference "../../../globals.css";
+
+.collections-page-layout__main {
+  @apply relative min-h-screen overflow-hidden;
+}
+
+.collections-page-layout__gradient {
+  @apply absolute inset-0;
+  @apply bg-[radial-gradient(circle_at_top,rgba(145,92,255,0.2),transparent_40%),linear-gradient(180deg,rgba(7,10,18,0.22),rgba(7,10,18,0.84))];
+}
+
+.collections-page-layout__main-content {
+  @apply relative flex flex-col gap-8 pt-8 pb-16 sm:pt-12;
+}
+
+.collections-page-layout__grid {
+  @apply grid gap-6;
+}
+
+.collections-page-layout__left-panel {
+  @apply flex flex-wrap items-start justify-between gap-4;
+}
+
+.collections-page-layout__left-panel-eyebrow {
+  @apply border-primary/35 bg-primary/10 text-primary-light inline-flex;
+  @apply items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold tracking-[0.24em] uppercase;
+}
+
+.collections-page-layout__description {
+  @apply text-text-muted max-w-xl text-base leading-7 sm:text-lg;
+}
+
+.collections-page-layout__warning {
+  @apply border-warning/45 bg-warning/10 text-text rounded-2xl border px-4 py-3 text-sm leading-6;
+}
