@@ -1,10 +1,6 @@
-import type { SourceStat } from "../sources.types";
+import type { StatGridProps } from "./StatGrid.types";
 
-type SourceStatGridProps = {
-  stats: SourceStat[];
-};
-
-export const SourceStatGrid = ({ stats }: SourceStatGridProps) => {
+export const StatGrid = ({ stats }: StatGridProps) => {
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {stats.map(({ description, eyebrow, value }) => (

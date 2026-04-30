@@ -3,20 +3,21 @@ import { Container } from "@/components";
 import type { TopGame } from "../dashboard.types";
 
 type GamesInFocusSectionProps = {
+  embedded?: boolean;
   topGames: TopGame[];
   watchedGamesCount: number;
 };
 
-export const GamesInFocusSection = ({ topGames, watchedGamesCount }: GamesInFocusSectionProps) => {
-  return (
-    <Container className="w-full" contentClassName="space-y-5 p-7 sm:p-8">
-      <div className="space-y-2">
-        <p className="eyebrow">Coverage</p>
-        <h2 className="hs-2">Games in focus</h2>
-        <p className="text-text-muted text-sm leading-6">
-          Your watchlists are currently centered around {watchedGamesCount} tracked games.
-        </p>
-      </div>
+export const GamesInFocusSection = ({
+  embedded = false,
+  topGames,
+  watchedGamesCount,
+}: GamesInFocusSectionProps) => {
+  const content = (
+    <>
+      <p className="text-text-muted text-sm leading-6">
+        Your watchlists are currently centered around {watchedGamesCount} tracked games.
+      </p>
 
       {topGames.length > 0 ? (
         <div className="space-y-3">
@@ -45,6 +46,20 @@ export const GamesInFocusSection = ({ topGames, watchedGamesCount }: GamesInFocu
           coverage is strongest.
         </div>
       )}
+    </>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <Container className="w-full" contentClassName="space-y-5 p-7 sm:p-8">
+      <div className="space-y-2">
+        <p className="eyebrow">Coverage</p>
+        <h2 className="hs-2">Games in focus</h2>
+      </div>
+      {content}
     </Container>
   );
 };

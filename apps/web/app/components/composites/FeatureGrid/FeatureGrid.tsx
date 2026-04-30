@@ -1,10 +1,6 @@
-import type { SourceFeature } from "../sources.types";
+import type { FeatureGridProps } from "./FeatureGrid.types";
 
-type SourceFeatureGridProps = {
-  features: SourceFeature[];
-};
-
-export const SourceFeatureGrid = ({ features }: SourceFeatureGridProps) => {
+export const FeatureGrid = ({ features }: FeatureGridProps) => {
   return (
     <div className="space-y-4">
       {features.map(({ description, icon: Icon, title }) => (

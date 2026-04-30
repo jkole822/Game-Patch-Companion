@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-import { ResourceManagementLayout } from "@/components";
+import { FieldGuidePanel, ResourceManagementLayout } from "@/components";
 import { getAuthCookieHeader, hasAuthCookie } from "@/lib/auth";
 import { getApiBaseUrl } from "@/lib/utils";
 
-import { SourceFieldGuidePanel } from "../../_components/SourceFieldGuidePanel";
+import { SOURCE_FIELD_GUIDE_SECTIONS } from "../../_components/SourceFieldGuide";
 import { SourceForm } from "../../_components/SourceForm";
 
 import { deleteSourceAction, updateSourceAction } from "./actions";
@@ -63,7 +63,7 @@ export default async function EditSourcePage({
       formTitle="Edit ingest source"
       heading="Edit source"
       supportCopy="Source updates and deletions are limited to admin accounts. The API will reject these actions when the signed-in user does not have access."
-      sidebarContent={<SourceFieldGuidePanel />}
+      sidebarContent={<FieldGuidePanel sections={SOURCE_FIELD_GUIDE_SECTIONS} />}
     >
       <SourceForm
         action={updateSourceAction.bind(null, sourceId)}
