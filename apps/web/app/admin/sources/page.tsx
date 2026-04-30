@@ -1,17 +1,21 @@
-import { Activity, Plus, RadioTower, ShieldCheck } from "lucide-react";
+import { Activity, Globe, Plus, RadioTower, ShieldCheck } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { CollectionsPageLayout, Container } from "@/components";
+import {
+  Button,
+  CollectionsPageLayout,
+  Container,
+  FeatureGrid,
+  Link,
+  StatGrid,
+  SummaryCardGrid,
+} from "@/components";
 import { getAuthCookieHeader } from "@/lib/auth";
-import { getApiBaseUrl } from "@/lib/utils";
-
-import { SourceFeatureGrid } from "./_components/SourceFeatureGrid";
-import { SourceStatGrid } from "./_components/SourceStatGrid";
-import { SourceSummaryCards } from "./_components/SourceSummaryCards";
+import { formatDate, getApiBaseUrl } from "@/lib/utils";
 
 import type { SourceRecord } from "./_components/SourceForm.types";
-import type { SourceFeature, SourceStat } from "./sources.types";
+import type { FeatureGridItem, StatGridItem, SummaryCardGridItem } from "@/components";
 
 const EMPTY_SOURCES: SourceRecord[] = [];
 
@@ -72,7 +76,7 @@ export default async function SourcesPage() {
   const enabledCount = sources.filter((source) => source.isEnabled).length;
   const partialData = !sourcesResult.ok;
 
-  const features: SourceFeature[] = [
+  const features: FeatureGridItem[] = [
     {
       icon: Plus,
       description:
@@ -93,7 +97,7 @@ export default async function SourcesPage() {
     },
   ];
 
-  const stats: SourceStat[] = [
+  const stats: StatGridItem[] = [
     {
       description: "Registered source records",
       eyebrow: "Total",
@@ -111,20 +115,82 @@ export default async function SourcesPage() {
     },
   ];
 
+  const sourceCards: SummaryCardGridItem[] = sources.map((source) => ({
+    details: [
+      {
+        label: "Base URL",
+        value: source.baseUrl,
+        valueClassName: "break-all",
+      },
+      ...(source.type === "html"
+        ? [
+            {
+              label: "List path",
+              value: source.config.listPath,
+              valueClassName: "break-all",
+            },
+          ]
+        : []),
+    ],
+    footer: (
+      <>
+        <Button href={`/admin/sources/${source.id}/edit`}>Edit source</Button>
+        <Link href={source.baseUrl} target="_blank">
+          <span className="inline-flex items-center gap-2">
+            <Globe className="size-4" />
+            Open origin
+          </span>
+        </Link>
+      </>
+    ),
+    header: (
+      <>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="eyebrow">{source.type.toUpperCase()}</span>
+          <span
+            className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-[0.18em] uppercase ${
+              source.isEnabled
+                ? "border-success/40 bg-success/10 text-success"
+                : "border-border bg-background/65 text-text-muted"
+            }`}
+          >
+            {source.isEnabled ? "Enabled" : "Disabled"}
+          </span>
+        </div>
+        <h3 className="hs-3">{source.name}</h3>
+        <p className="text-text-muted font-mono text-xs">{source.key}</p>
+      </>
+    ),
+    id: source.id,
+    meta: (
+      <p className="text-text-muted text-right text-xs tracking-[0.18em] uppercase">
+        Created
+        <span className="mt-2 block tracking-normal normal-case">
+          {formatDate(source.createdAt, { invalidValueFallback: "Date unavailable" }) ??
+            "Date unavailable"}
+        </span>
+      </p>
+    ),
+  }));
+
   return (
     <CollectionsPageLayout
-      createHref="/admin/sources/create"
       description="Review ingest sources, check which feeds are active, and jump straight into source configuration updates."
       eyebrow="Admin"
       gridClassName="xl:grid-cols-[1.15fr_0.85fr]"
+      headerActions={
+        <div className="flex flex-wrap gap-3">
+          <Button href="/admin/sources/create">Create source</Button>
+          <Button href="/dashboard">Back to dashboard</Button>
+        </div>
+      }
       icon={ShieldCheck}
-      leftPanelContent={<SourceStatGrid stats={stats} />}
+      leftPanelContent={<StatGrid stats={stats} />}
       partialData={partialData}
       resourceLabelPlural="sources"
-      resourceLabelSingular="source"
       rightPanelEyebrow="Source workflow"
       rightPanelTitle="Admin actions"
-      rightPanelContent={<SourceFeatureGrid features={features} />}
+      rightPanelContent={<FeatureGrid features={features} />}
       title="Sources"
     >
       <section>
@@ -138,7 +204,7 @@ export default async function SourcesPage() {
           </div>
 
           {sources.length > 0 ? (
-            <SourceSummaryCards sources={sources} />
+            <SummaryCardGrid items={sourceCards} />
           ) : (
             <div className="border-border text-text-muted rounded-3xl border border-dashed px-5 py-8 text-sm leading-6">
               No sources have been configured yet. Create your first source to start wiring feeds

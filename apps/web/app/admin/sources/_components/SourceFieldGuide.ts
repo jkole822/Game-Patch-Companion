@@ -130,3 +130,8 @@ export const SOURCE_FIELD_GUIDE_GROUPS = [
     fields: ["configJson"] as const,
   },
 ] as const;
+
+export const SOURCE_FIELD_GUIDE_SECTIONS = SOURCE_FIELD_GUIDE_GROUPS.map((group) => ({
+  entries: group.fields.map((fieldKey) => SOURCE_FIELD_GUIDE[fieldKey]),
+  title: group.title,
+}));

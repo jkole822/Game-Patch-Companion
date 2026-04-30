@@ -1,4 +1,4 @@
-import { Button, Container } from "@/components";
+import { Container } from "@/components";
 import { getClassName } from "@/lib/utils";
 
 import type { CollectionsPageLayoutProps } from "./CollectionsPageLayout.types";
@@ -8,15 +8,14 @@ import "./CollectionsPageLayout.css";
 export const CollectionsPageLayout = ({
   children,
   className,
-  createHref,
   description,
   eyebrow,
   gridClassName,
+  headerActions,
   icon: Icon,
   leftPanelContent,
   partialData,
   resourceLabelPlural,
-  resourceLabelSingular,
   rightPanelContent,
   rightPanelEyebrow,
   rightPanelTitle,
@@ -42,10 +41,7 @@ export const CollectionsPageLayout = ({
                   <p className="collections-page-layout__description">{description}</p>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <Button href={createHref}>Create {resourceLabelSingular}</Button>
-                <Button href="/dashboard">Back to dashboard</Button>
-              </div>
+              {headerActions}
             </div>
 
             {partialData && (
