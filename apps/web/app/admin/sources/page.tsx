@@ -118,6 +118,7 @@ export default async function SourcesPage() {
   const sourceCards: SummaryCardGridItem[] = sources.map((source) => ({
     details: [
       {
+        key: "base-url",
         label: "Base URL",
         value: source.baseUrl,
         valueClassName: "break-all",
@@ -125,6 +126,7 @@ export default async function SourcesPage() {
       ...(source.type === "html"
         ? [
             {
+              key: "list-path",
               label: "List path",
               value: source.config.listPath,
               valueClassName: "break-all",

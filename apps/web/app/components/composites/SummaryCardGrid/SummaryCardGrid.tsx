@@ -15,10 +15,10 @@ export const SummaryCardGrid = ({ items }: SummaryCardGridProps) => {
             {item.meta}
           </div>
 
-          {item.details?.map((detail) => (
+          {item.details?.map((detail, detailIndex) => (
             <div
               className="mt-3 grid items-center gap-3 first:mt-5 sm:grid-cols-[auto_1fr]"
-              key={`${item.id}-${String(detail.label)}`}
+              key={detail.key ?? `${item.id}-detail-${detailIndex}`}
             >
               <div className="text-text-muted text-xs font-semibold tracking-[0.18em] uppercase">
                 {detail.label}

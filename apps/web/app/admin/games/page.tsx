@@ -119,10 +119,12 @@ export default async function GamesPage() {
   const gameCards: SummaryCardGridItem[] = games.map((game) => ({
     details: [
       {
+        key: "canonical-title",
         label: "Canonical title",
         value: game.title,
       },
       {
+        key: "registry-key",
         label: "Registry key",
         value: game.key,
         valueClassName: "font-mono break-all",

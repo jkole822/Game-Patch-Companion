@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 export interface SummaryCardDetail {
+  key?: string;
   label: ReactNode;
   value: ReactNode;
   valueClassName?: string;
