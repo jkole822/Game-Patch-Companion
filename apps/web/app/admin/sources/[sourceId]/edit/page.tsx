@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
+import { ResourceManagementLayout } from "@/components";
 import { getAuthCookieHeader, hasAuthCookie } from "@/lib/auth";
 import { getApiBaseUrl } from "@/lib/utils";
 
-import { SourceAdminPageShell } from "../../_components/SourceAdminPageShell";
+import { SourceFieldGuidePanel } from "../../_components/SourceFieldGuidePanel";
 import { SourceForm } from "../../_components/SourceForm";
 
 import { deleteSourceAction, updateSourceAction } from "./actions";
@@ -56,12 +57,13 @@ export default async function EditSourcePage({
   const source = await getSource(sourceId);
 
   return (
-    <SourceAdminPageShell
+    <ResourceManagementLayout
       description="Update an existing ingest source without rebuilding the entire config from scratch."
       formEyebrow="Source details"
       formTitle="Edit ingest source"
       heading="Edit source"
       supportCopy="Source updates and deletions are limited to admin accounts. The API will reject these actions when the signed-in user does not have access."
+      sidebarContent={<SourceFieldGuidePanel />}
     >
       <SourceForm
         action={updateSourceAction.bind(null, sourceId)}
@@ -70,6 +72,6 @@ export default async function EditSourcePage({
         initialSource={source}
         submitLabel="Save changes"
       />
-    </SourceAdminPageShell>
+    </ResourceManagementLayout>
   );
 }
