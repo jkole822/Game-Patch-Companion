@@ -2,7 +2,7 @@ import { DatabaseZap, ShieldCheck } from "lucide-react";
 
 import { Container } from "@/components";
 
-import { SOURCE_FIELD_GUIDE, SOURCE_FIELD_GUIDE_GROUPS } from "./sourceFieldGuide";
+import { SOURCE_FIELD_GUIDE, SOURCE_FIELD_GUIDE_GROUPS } from "./SourceFieldGuide";
 
 import type { ReactNode } from "react";
 
@@ -57,9 +57,7 @@ export const SourceAdminPageShell = ({
               <div className="mt-5 space-y-5">
                 {SOURCE_FIELD_GUIDE_GROUPS.map((group) => (
                   <section key={group.title} className="space-y-3">
-                    <h3 className="text-primary-light text-xs font-semibold tracking-[0.2em] uppercase">
-                      {group.title}
-                    </h3>
+                    <h3 className="eyebrow">{group.title}</h3>
                     <dl className="space-y-3">
                       {group.fields.map((fieldKey) => {
                         const field = SOURCE_FIELD_GUIDE[fieldKey];
@@ -82,10 +80,8 @@ export const SourceAdminPageShell = ({
 
           <Container className="w-full" contentClassName="space-y-6 p-7 sm:p-8">
             <div className="space-y-2">
-              <p className="text-primary-light text-xs font-semibold tracking-[0.24em] uppercase">
-                {formEyebrow}
-              </p>
-              <h2 className="font-display text-3xl font-semibold text-white">{formTitle}</h2>
+              <p className="eyebrow">{formEyebrow}</p>
+              <h2 className="hs-2">{formTitle}</h2>
             </div>
             {children}
           </Container>

@@ -14,10 +14,6 @@ export const EMPTY_GAMES: Game[] = [];
 export const EMPTY_WATCHLISTS: Watchlist[] = [];
 export const EMPTY_WATCHLIST_ITEMS: WatchlistItem[] = [];
 export const EMPTY_PATCH_ENTRIES: PatchEntry[] = [];
-const DASHBOARD_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
 
 export const fetchDashboardResource = async <T>(
   path: string,
@@ -57,20 +53,6 @@ export const fetchDashboardResource = async <T>(
       ok: false,
     };
   }
-};
-
-export const formatDate = (value: string | null | undefined) => {
-  if (!value) {
-    return "Awaiting published date";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Date unavailable";
-  }
-
-  return DASHBOARD_DATE_FORMATTER.format(date);
 };
 
 const getActivityDate = (entry: PatchEntry) => {

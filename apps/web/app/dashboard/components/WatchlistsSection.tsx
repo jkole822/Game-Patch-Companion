@@ -1,6 +1,5 @@
 import { Container } from "@/components";
-
-import { formatDate } from "../dashboard.utils";
+import { formatDate } from "@/lib/utils";
 
 import type { WatchlistWithItems } from "../dashboard.types";
 
@@ -14,10 +13,8 @@ export const WatchlistsSection = ({ totalKeywords, watchlists }: WatchlistsSecti
     <Container className="w-full" contentClassName="space-y-6 p-7 sm:p-8">
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-2">
-          <p className="text-primary-light text-xs font-semibold tracking-[0.24em] uppercase">
-            Watchlists
-          </p>
-          <h2 className="font-display text-3xl font-semibold text-white">Tracked themes</h2>
+          <p className="eyebrow">Watchlists</p>
+          <h2 className="hs-2">Tracked themes</h2>
         </div>
         <p className="text-text-muted text-sm">{totalKeywords} total keywords</p>
       </div>
@@ -31,10 +28,8 @@ export const WatchlistsSection = ({ totalKeywords, watchlists }: WatchlistsSecti
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-2">
-                  <p className="text-primary-light text-xs font-semibold tracking-[0.22em] uppercase">
-                    {watchlist.gameTitle}
-                  </p>
-                  <h3 className="font-display text-2xl text-white">{watchlist.name}</h3>
+                  <p className="eyebrow">{watchlist.gameTitle}</p>
+                  <h3 className="hs-3">{watchlist.name}</h3>
                 </div>
                 <div className="text-text-muted text-right text-xs tracking-[0.18em] uppercase">
                   <p>{watchlist.items.length} terms</p>

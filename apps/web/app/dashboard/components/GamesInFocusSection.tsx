@@ -11,10 +11,8 @@ export const GamesInFocusSection = ({ topGames, watchedGamesCount }: GamesInFocu
   return (
     <Container className="w-full" contentClassName="space-y-5 p-7 sm:p-8">
       <div className="space-y-2">
-        <p className="text-primary-light text-xs font-semibold tracking-[0.24em] uppercase">
-          Coverage
-        </p>
-        <h2 className="font-display text-3xl font-semibold text-white">Games in focus</h2>
+        <p className="eyebrow">Coverage</p>
+        <h2 className="hs-2">Games in focus</h2>
         <p className="text-text-muted text-sm leading-6">
           Your watchlists are currently centered around {watchedGamesCount} tracked games.
         </p>
@@ -29,7 +27,7 @@ export const GamesInFocusSection = ({ topGames, watchedGamesCount }: GamesInFocu
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-display text-xl text-white">{game.title}</h3>
+                  <h3 className="hs-3">{game.title}</h3>
                   <p className="text-text-muted mt-1 text-sm">
                     {game.watchlists} watchlists tracking {game.trackedKeywords} keywords
                   </p>

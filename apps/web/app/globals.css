@@ -52,3 +52,15 @@ body {
 .hs-1 {
   @apply font-display text-4xl font-bold capitalize sm:text-6xl;
 }
+
+.hs-2 {
+  @apply font-display text-3xl font-semibold text-white;
+}
+
+.hs-3 {
+  @apply font-display text-2xl text-white;
+}
+
+.eyebrow {
+  @apply text-primary-light text-xs font-semibold tracking-[0.24em] uppercase;
+}

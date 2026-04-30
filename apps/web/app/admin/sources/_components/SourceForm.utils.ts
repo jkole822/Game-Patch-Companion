@@ -1,4 +1,4 @@
-import type { SourceRecord } from "./sourceForm.types";
+import type { SourceRecord } from "./SourceForm.types";
 
 export const getString = (formData: FormData, key: string) => {
   const value = formData.get(key);

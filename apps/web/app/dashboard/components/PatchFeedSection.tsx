@@ -1,6 +1,7 @@
 import { Button, Container } from "@/components";
+import { formatDate } from "@/lib/utils";
 
-import { formatDate, getSnippet } from "../dashboard.utils";
+import { getSnippet } from "../dashboard.utils";
 
 import type { PatchEntry } from "../dashboard.types";
 
@@ -14,10 +15,8 @@ export const PatchFeedSection = ({ gameTitleById, patchEntries }: PatchFeedSecti
     <Container className="w-full" contentClassName="space-y-6 p-7 sm:p-8">
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-2">
-          <p className="text-primary-light text-xs font-semibold tracking-[0.24em] uppercase">
-            Patch feed
-          </p>
-          <h2 className="font-display text-3xl font-semibold text-white">Recent activity</h2>
+          <p className="eyebrow">Patch feed</p>
+          <h2 className="hs-2">Recent activity</h2>
         </div>
         <p className="text-text-muted text-sm">{patchEntries.length} newest entries</p>
       </div>
@@ -31,12 +30,12 @@ export const PatchFeedSection = ({ gameTitleById, patchEntries }: PatchFeedSecti
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-2">
-                  <p className="text-primary-light text-xs font-semibold tracking-[0.22em] uppercase">
+                  <p className="eyebrow">
                     {entry.gameId
                       ? (gameTitleById.get(entry.gameId) ?? "Unassigned game")
                       : "General"}
                   </p>
-                  <h3 className="font-display text-2xl text-white">{entry.title}</h3>
+                  <h3 className="hs-3">{entry.title}</h3>
                 </div>
                 <p className="text-text-muted text-right text-xs tracking-[0.18em] uppercase">
                   {formatDate(entry.publishedAt ?? entry.createdAt)}

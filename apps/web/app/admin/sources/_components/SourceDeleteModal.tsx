@@ -4,9 +4,9 @@ import { useActionState } from "react";
 
 import { Button, Modal } from "@/components";
 
-import { INITIAL_SOURCE_ACTION_STATE } from "./sourceForm.types";
+import { INITIAL_SOURCE_ACTION_STATE } from "./SourceForm.types";
 
-import type { SourceActionState } from "./sourceForm.types";
+import type { SourceActionState } from "./SourceForm.types";
 
 type SourceDeleteModalProps = {
   action: (state: SourceActionState | undefined, formData: FormData) => Promise<SourceActionState>;
