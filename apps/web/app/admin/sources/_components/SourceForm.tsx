@@ -10,6 +10,11 @@ import { getConfigJsonValue, getInitialSourceType } from "./SourceForm.utils";
 
 import type { SourceActionState, SourceRecord } from "./SourceForm.types";
 
+const noopSourceAction = async (
+  state: SourceActionState | undefined,
+  _formData: FormData,
+): Promise<SourceActionState> => state ?? INITIAL_SOURCE_ACTION_STATE;
+
 type SourceFormProps = {
   action: (state: SourceActionState | undefined, formData: FormData) => Promise<SourceActionState>;
   cancelHref?: string;
@@ -30,7 +35,7 @@ export const SourceForm = ({
 }: SourceFormProps) => {
   const [state, formAction, pending] = useActionState(action, INITIAL_SOURCE_ACTION_STATE);
   const [deleteState, deleteFormAction, deletePending] = useActionState(
-    deleteAction ?? (async () => INITIAL_SOURCE_ACTION_STATE),
+    deleteAction ?? noopSourceAction,
     INITIAL_SOURCE_ACTION_STATE,
   );
   const [sourceType, setSourceType] = useState(getInitialSourceType(initialSource));
