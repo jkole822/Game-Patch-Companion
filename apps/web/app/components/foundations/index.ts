@@ -3,6 +3,7 @@ export * from "./Checkbox";
 export * from "./Container";
 export * from "./Drawer";
 export * from "./FeatureCard";
+export * from "./FormMessage";
 export * from "./Link";
 export * from "./Modal";
 export * from "./Navigation";

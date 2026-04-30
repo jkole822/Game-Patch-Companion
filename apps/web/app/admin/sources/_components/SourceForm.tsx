@@ -1,9 +1,8 @@
 "use client";
 
-import { Bomb, CheckCircle2 } from "lucide-react";
 import { useActionState, useState } from "react";
 
-import { Button, Checkbox, SelectField, TextField } from "@/components";
+import { Button, Checkbox, FormMessage, SelectField, TextField } from "@/components";
 
 import { SourceDeleteModal } from "./SourceDeleteModal";
 import { SOURCE_FIELD_GUIDE } from "./sourceFieldGuide";
@@ -35,20 +34,7 @@ export const SourceForm = ({
 
   return (
     <form action={formAction} className="space-y-7">
-      {state.error && (
-        <p className="text-danger border-danger/40 bg-danger/10 flex items-center gap-2 border px-3 py-2 text-sm">
-          <Bomb size={14} />
-          <span>{state.error}</span>
-        </p>
-      )}
-
-      {state.success && (
-        <p className="text-success border-success/40 bg-success/10 flex items-center gap-2 border px-3 py-2 text-sm">
-          <CheckCircle2 size={14} />
-          <span>{state.success}</span>
-        </p>
-      )}
-
+      <FormMessage error={state.error} success={state.success} />
       <div className="grid gap-4 md:grid-cols-2">
         <TextField
           aria-describedby={SOURCE_FIELD_GUIDE.name.id}

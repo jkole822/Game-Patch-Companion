@@ -1,6 +1,4 @@
-import { Bomb } from "lucide-react";
-
-import { Button, Container, Link, TextField } from "@/components";
+import { Button, Container, FormMessage, Link, TextField } from "@/components";
 import { getClassName } from "@/lib/utils";
 
 import type { AuthFormProps } from "./AuthForm.types";
@@ -18,15 +16,7 @@ export const AuthForm = ({ action, className, error, title, variant }: AuthFormP
       contentClassName="flex flex-col gap-15"
     >
       <h1 className="hs-1 text-center">{title}</h1>
-      {error && (
-        <p className="text-danger flex items-center gap-2 border px-2 py-1 text-sm">
-          <Bomb size={14} />
-          <span className="flex gap-1">
-            <strong>Error:</strong>
-            <span>{error}</span>
-          </span>
-        </p>
-      )}
+      <FormMessage error={error} />
       <form action={action} className="flex w-full flex-col gap-4" method="post">
         <TextField autoComplete="email" label="Email" name="email" type="email" />
         <TextField autoComplete="new-password" label="Password" name="password" type="password" />
