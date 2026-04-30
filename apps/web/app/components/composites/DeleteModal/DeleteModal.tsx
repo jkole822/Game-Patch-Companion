@@ -2,18 +2,7 @@
 
 import { Button, Modal } from "@/components";
 
-import type { ReactNode } from "react";
-
-type DeleteModalProps = {
-  confirmLabel?: string;
-  description?: string;
-  errorMessage?: ReactNode;
-  formAction: (formData: FormData) => void;
-  itemName: string;
-  pending?: boolean;
-  resourceLabel: string;
-  triggerLabel?: string;
-};
+import type { DeleteModalProps } from "./DeleteModal.types";
 
 export const DeleteModal = ({
   confirmLabel,
