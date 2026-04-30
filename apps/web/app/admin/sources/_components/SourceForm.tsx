@@ -2,9 +2,8 @@
 
 import { useActionState, useState } from "react";
 
-import { Button, Checkbox, FormMessage, SelectField, TextField } from "@/components";
+import { Button, Checkbox, DeleteModal, FormMessage, SelectField, TextField } from "@/components";
 
-import { SourceDeleteModal } from "./SourceDeleteModal";
 import { SOURCE_FIELD_GUIDE } from "./SourceFieldGuide";
 import { INITIAL_SOURCE_ACTION_STATE } from "./SourceForm.types";
 import { getConfigJsonValue, getInitialSourceType } from "./SourceForm.utils";
@@ -30,6 +29,10 @@ export const SourceForm = ({
   submitLabel,
 }: SourceFormProps) => {
   const [state, formAction, pending] = useActionState(action, INITIAL_SOURCE_ACTION_STATE);
+  const [deleteState, deleteFormAction, deletePending] = useActionState(
+    deleteAction ?? (async () => INITIAL_SOURCE_ACTION_STATE),
+    INITIAL_SOURCE_ACTION_STATE,
+  );
   const [sourceType, setSourceType] = useState(getInitialSourceType(initialSource));
 
   return (
@@ -274,7 +277,19 @@ export const SourceForm = ({
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         {deleteAction && initialSource ? (
-          <SourceDeleteModal action={deleteAction} sourceName={initialSource.name} />
+          <DeleteModal
+            errorMessage={
+              deleteState.error ? (
+                <p className="text-danger border-danger/40 bg-danger/10 border px-3 py-2 text-sm">
+                  {deleteState.error}
+                </p>
+              ) : undefined
+            }
+            formAction={deleteFormAction}
+            itemName={initialSource.name}
+            pending={deletePending}
+            resourceLabel="source"
+          />
         ) : (
           <div />
         )}
