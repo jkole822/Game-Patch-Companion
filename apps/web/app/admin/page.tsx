@@ -1,6 +1,45 @@
 import { Boxes, Database, ShieldCheck, Wrench } from "lucide-react";
 
-import { Button, CollectionsPageLayout, Container } from "@/components";
+import { Button, CollectionsPageLayout, Container, FeatureGrid } from "@/components";
+
+import { AdminCardGrid } from "./_components/AdminCardGrid";
+
+import type { AdminCardGridItem } from "./_components/AdminCardGrid.types";
+import type { FeatureGridItem } from "@/components/composites/FeatureGrid";
+
+const adminResourceCards: AdminCardGridItem[] = [
+  {
+    ctaHref: "/admin/games",
+    ctaLabel: "Go to games",
+    description:
+      "Review the canonical title roster, tighten naming, and jump into edits when a game record needs cleanup.",
+    icon: Boxes,
+    title: "Games",
+  },
+  {
+    ctaHref: "/admin/sources",
+    ctaLabel: "Go to sources",
+    description:
+      "Check feed coverage, confirm enabled sources, and move straight into source configuration updates.",
+    icon: Database,
+    title: "Sources",
+  },
+];
+
+const adminWorkflowCards: FeatureGridItem[] = [
+  {
+    description:
+      "Games are the canonical records used across watchlists and patch entries. Sources define where ingest looks for updates.",
+    icon: Wrench,
+    title: "Start from the resource you need to change",
+  },
+  {
+    description:
+      "This hub keeps the global nav tidy while still giving admins a fast path to the tools they use most.",
+    icon: ShieldCheck,
+    title: "Keep admin navigation contained",
+  },
+];
 
 export default function AdminPage() {
   return (
@@ -15,69 +54,12 @@ export default function AdminPage() {
         </div>
       }
       icon={ShieldCheck}
-      leftPanelContent={
-        <div className="grid gap-4 md:grid-cols-2">
-          <Container className="w-full" contentClassName="space-y-4 p-6">
-            <div className="inline-flex size-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-              <Boxes className="text-primary-light size-5" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="hs-2">Games</h2>
-              <p className="text-text-muted text-sm leading-6">
-                Review the canonical title roster, tighten naming, and jump into edits when a game
-                record needs cleanup.
-              </p>
-            </div>
-            <Button href="/admin/games">Go to games</Button>
-          </Container>
-
-          <Container className="w-full" contentClassName="space-y-4 p-6">
-            <div className="inline-flex size-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-              <Database className="text-primary-light size-5" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="hs-2">Sources</h2>
-              <p className="text-text-muted text-sm leading-6">
-                Check feed coverage, confirm enabled sources, and move straight into source
-                configuration updates.
-              </p>
-            </div>
-            <Button href="/admin/sources">Go to sources</Button>
-          </Container>
-        </div>
-      }
+      leftPanelContent={<AdminCardGrid items={adminResourceCards} />}
       partialData={false}
       resourceLabelPlural="admin resources"
       rightPanelEyebrow="Admin workflow"
       rightPanelTitle="How to use this area"
-      rightPanelContent={
-        <div className="space-y-4">
-          <div className="border-border bg-surface/80 rounded-[1.75rem] border px-5 py-5">
-            <div className="flex items-start gap-3">
-              <Wrench className="text-primary-light mt-0.5 size-5" />
-              <div className="space-y-2">
-                <h3 className="hs-3">Start from the resource you need to change</h3>
-                <p className="text-text-muted text-sm leading-6">
-                  Games are the canonical records used across watchlists and patch entries. Sources
-                  define where ingest looks for updates.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-border bg-surface/80 rounded-[1.75rem] border px-5 py-5">
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="text-primary-light mt-0.5 size-5" />
-              <div className="space-y-2">
-                <h3 className="hs-3">Keep admin navigation contained</h3>
-                <p className="text-text-muted text-sm leading-6">
-                  This hub keeps the global nav tidy while still giving admins a fast path to the
-                  tools they use most.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      rightPanelContent={<FeatureGrid features={adminWorkflowCards} />}
       title="Admin"
     >
       <section>
