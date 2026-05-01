@@ -33,20 +33,20 @@ export const getCurrentUser = async (cookieStore: CookieStore): Promise<AuthUser
     return null;
   }
 
-  try {
-    const response = await fetch(`${getApiBaseUrl()}/auth/me`, {
-      headers: {
-        Cookie: authCookieHeader,
-      },
-      cache: "no-store",
-    });
+  const response = await fetch(`${getApiBaseUrl()}/auth/me`, {
+    headers: {
+      Cookie: authCookieHeader,
+    },
+    cache: "no-store",
+  });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    return (await response.json()) as AuthUser;
-  } catch {
+  if (response.status === 401 || response.status === 403) {
     return null;
   }
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch current user: ${response.status} ${response.statusText}`);
+  }
+
+  return (await response.json()) as AuthUser;
 };
