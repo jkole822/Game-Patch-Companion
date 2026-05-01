@@ -1,7 +1,7 @@
+import { eq } from "@db/orm";
 import { sources, users } from "@db/schema";
 import { rolePermissionConflictSchema } from "@shared/schemas";
 import { sourceConflictSchema, sourceResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type { sourceInsertInputSchema } from "@shared/schemas";

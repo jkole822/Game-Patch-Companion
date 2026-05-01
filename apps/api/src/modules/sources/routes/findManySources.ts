@@ -1,6 +1,6 @@
+import { and, eq } from "@db/orm";
 import { sources } from "@db/schema";
 import { sourcesResponseSchema } from "@shared/schemas";
-import { and, eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { sourceQuerySchema } from "@shared/schemas";

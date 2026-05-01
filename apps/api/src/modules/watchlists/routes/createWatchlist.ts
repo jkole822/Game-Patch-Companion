@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { games, watchlists } from "@db/schema";
 import { gameNotFoundConflictSchema, watchlistResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type {

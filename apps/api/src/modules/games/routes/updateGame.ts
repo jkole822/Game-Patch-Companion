@@ -1,3 +1,4 @@
+import { eq } from "@db/orm";
 import { games, users } from "@db/schema";
 import { rolePermissionConflictSchema } from "@shared/schemas";
 import {
@@ -5,7 +6,6 @@ import {
   gameNotFoundConflictSchema,
   gameResponseSchema,
 } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type { gameUpdateInputSchema } from "@shared/schemas";

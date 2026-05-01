@@ -1,6 +1,6 @@
+import { and, eq } from "@db/orm";
 import { games } from "@db/schema";
 import { gamesResponseSchema } from "@shared/schemas";
-import { and, eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { gameQuerySchema } from "@shared/schemas";

@@ -1,3 +1,4 @@
+import { eq } from "@db/orm";
 import { patchEntries, users } from "@db/schema";
 import { rolePermissionConflictSchema } from "@shared/schemas";
 import {
@@ -5,7 +6,6 @@ import {
   patchEntryNotFoundConflictSchema,
   patchEntryResponseSchema,
 } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type { patchEntryUpdateInputSchema } from "@shared/schemas";

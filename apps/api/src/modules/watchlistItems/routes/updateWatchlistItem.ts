@@ -1,3 +1,4 @@
+import { and, eq } from "@db/orm";
 import { watchlistItems, watchlists } from "@db/schema";
 import {
   watchlistItemConflictSchema,
@@ -5,7 +6,6 @@ import {
   watchlistItemResponseSchema,
   watchlistNotFoundConflictSchema,
 } from "@shared/schemas";
-import { and, eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type {

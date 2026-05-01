@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { games } from "@db/schema";
 import { gameNotFoundConflictSchema, gameResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { z } from "zod";

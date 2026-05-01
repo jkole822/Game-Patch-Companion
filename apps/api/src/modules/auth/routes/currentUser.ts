@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { users } from "@db/schema";
 import { currentUserResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb, JwtUser } from "@api-utils";
 import type { z } from "zod";

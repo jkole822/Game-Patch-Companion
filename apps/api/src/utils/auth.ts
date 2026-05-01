@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { users } from "@db/schema";
 import { unauthorizedConflictSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 
 import { getAuthTokenFromCookieHeader } from "./authCookie";
