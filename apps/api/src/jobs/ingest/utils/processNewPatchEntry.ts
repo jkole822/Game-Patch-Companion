@@ -1,3 +1,4 @@
+import { and, desc, eq, inArray, ne } from "@db/orm";
 import {
   patchEntries,
   patchEntryDiffs,
@@ -5,7 +6,6 @@ import {
   watchlistItems,
   watchlistMatches,
 } from "@db/schema";
-import { and, desc, eq, inArray, ne } from "drizzle-orm";
 
 import { computeLineDiff } from "./computeDiffLines";
 import { diffStructuredLines } from "./diffStructuredLines";

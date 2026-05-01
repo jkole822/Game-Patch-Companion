@@ -184,6 +184,7 @@ export default async function SourcesPage() {
         <div className="flex flex-wrap gap-3">
           <Button href="/admin/sources/create">Create source</Button>
           <Button href="/dashboard">Back to dashboard</Button>
+          <Button href="/admin">Back to admin</Button>
         </div>
       }
       icon={ShieldCheck}

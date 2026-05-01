@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { EmailSchema, MessageSchema } from "./authCommon";
+import { EmailSchema, MessageSchema, UserRoleSchema } from "./authCommon";
 
 export const registerResponseSchema = z.object({
   createdAt: z.iso.datetime(),
@@ -14,3 +14,8 @@ export const logoutResponseSchema = MessageSchema;
 export const deleteUserResponseSchema = MessageSchema;
 export const forgotPasswordResponseSchema = MessageSchema;
 export const resetPasswordResponseSchema = MessageSchema;
+export const currentUserResponseSchema = z.object({
+  email: EmailSchema,
+  id: z.uuid(),
+  role: UserRoleSchema,
+});

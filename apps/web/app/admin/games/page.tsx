@@ -159,6 +159,7 @@ export default async function GamesPage() {
         <div className="flex flex-wrap gap-3">
           <Button href="/admin/games/create">Create game</Button>
           <Button href="/dashboard">Back to dashboard</Button>
+          <Button href="/admin">Back to admin</Button>
         </div>
       }
       icon={ShieldCheck}

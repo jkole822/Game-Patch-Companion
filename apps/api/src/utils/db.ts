@@ -1,5 +1,5 @@
+import { drizzle } from "@db/orm";
 import * as schema from "@db/schema";
-import { drizzle } from "drizzle-orm/node-postgres";
 import { Elysia } from "elysia";
 import { Pool } from "pg";
 

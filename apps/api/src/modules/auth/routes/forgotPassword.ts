@@ -1,7 +1,7 @@
 import { sendPasswordResetEmail } from "@api-utils";
+import { eq } from "@db/orm";
 import { passwordResetTokens, users } from "@db/schema";
 import { forgotPasswordResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { forgotPasswordSchema } from "@shared/schemas";

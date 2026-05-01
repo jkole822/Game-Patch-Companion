@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { deleteUser, forgotPassword, login, logout, register, resetPassword } from ".";
+import { currentUser, deleteUser, forgotPassword, login, logout, register, resetPassword } from ".";
 
 import type { AppDb } from "@api-utils";
 
@@ -194,6 +194,35 @@ describe("auth route handlers", () => {
           message: "Logged out successfully.",
         },
         ok: true,
+      });
+    });
+  });
+
+  describe("currentUser", () => {
+    it("returns the authenticated user with role details", async () => {
+      const id = crypto.randomUUID();
+      const dbMock = {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [{ email: "admin@example.com", id, role: "admin" }],
+            }),
+          }),
+        }),
+      };
+
+      const response = await currentUser({
+        db: dbMock as unknown as AppDb,
+        user: {
+          id,
+          tokenVersion: 0,
+        },
+      });
+
+      expect(response).toEqual({
+        email: "admin@example.com",
+        id,
+        role: "admin",
       });
     });
   });

@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { users } from "@db/schema";
 import { deleteUserConflictSchema, deleteUserResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { z } from "zod";

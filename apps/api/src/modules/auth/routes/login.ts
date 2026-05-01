@@ -1,6 +1,6 @@
+import { eq } from "@db/orm";
 import { users } from "@db/schema";
 import { loginResponseSchema } from "@shared/schemas";
-import { eq } from "drizzle-orm";
 
 import type { AppDb } from "@api-utils";
 import type { loginSchema, loginConflictSchema } from "@shared/schemas";
