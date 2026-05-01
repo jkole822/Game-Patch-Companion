@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   const authUser = await getCurrentUser(cookieStore);
   const authCookieHeader = getAuthCookieHeader(cookieStore);
 
-  if (!authCookieHeader) {
+  if (!authUser || !authCookieHeader) {
     redirect("/login");
   }
 
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
       gridClassName="xl:grid-cols-[1.3fr_0.7fr]"
       headerActions={
         <div className="flex flex-wrap gap-3">
-          {authUser?.role === "admin" && <Button href="/admin">Admin</Button>}
+          {authUser.role === "admin" && <Button href="/admin">Admin</Button>}
           <Button href="/dashboard">Refresh feed</Button>
           <Button href="/">View landing page</Button>
         </div>

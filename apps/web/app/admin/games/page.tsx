@@ -10,7 +10,7 @@ import {
   StatGrid,
   SummaryCardGrid,
 } from "@/components";
-import { getAuthCookieHeader, getCurrentUser } from "@/lib/auth";
+import { getAuthCookieHeader } from "@/lib/auth";
 import { formatDate, getApiBaseUrl } from "@/lib/utils";
 
 import type { GameRecord } from "./_components/GameForm.types";
@@ -56,7 +56,6 @@ const fetchGames = async (cookieHeader: string) => {
 
 export default async function GamesPage() {
   const cookieStore = await cookies();
-  const authUser = await getCurrentUser(cookieStore);
   const authCookieHeader = getAuthCookieHeader(cookieStore);
 
   if (!authCookieHeader) {
@@ -160,7 +159,7 @@ export default async function GamesPage() {
         <div className="flex flex-wrap gap-3">
           <Button href="/admin/games/create">Create game</Button>
           <Button href="/dashboard">Back to dashboard</Button>
-          {authUser?.role === "admin" && <Button href="/admin">Back to admin</Button>}
+          <Button href="/admin">Back to admin</Button>
         </div>
       }
       icon={ShieldCheck}
