@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Button, CollectionsPageLayout } from "@/components";
-import { getAuthCookieHeader } from "@/lib/auth";
+import { getAuthCookieHeader, getCurrentUser } from "@/lib/auth";
 
 import {
   DashboardStatGrid,
@@ -24,6 +24,7 @@ import type { DashboardStat } from "./dashboard.types";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
+  const authUser = await getCurrentUser(cookieStore);
   const authCookieHeader = getAuthCookieHeader(cookieStore);
 
   if (!authCookieHeader) {
@@ -86,6 +87,7 @@ export default async function DashboardPage() {
       gridClassName="xl:grid-cols-[1.3fr_0.7fr]"
       headerActions={
         <div className="flex flex-wrap gap-3">
+          {authUser?.role === "admin" && <Button href="/admin">Admin</Button>}
           <Button href="/dashboard">Refresh feed</Button>
           <Button href="/">View landing page</Button>
         </div>

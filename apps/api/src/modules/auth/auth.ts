@@ -8,6 +8,7 @@ import {
   mapRouteResult,
 } from "@api-utils";
 import {
+  currentUserResponseSchema,
   deleteUserConflictSchema,
   deleteUserResponseSchema,
   forgotPasswordResponseSchema,
@@ -26,12 +27,36 @@ import {
 } from "@shared/schemas";
 import { Elysia } from "elysia";
 
-import { deleteUser, forgotPassword, login, logout, register, resetPassword } from "./routes";
+import {
+  currentUser,
+  deleteUser,
+  forgotPassword,
+  login,
+  logout,
+  register,
+  resetPassword,
+} from "./routes";
 
 const AuthProtectedRoutes = new Elysia()
   .use(dbPlugin)
   .use(authContext)
   .use(authGuard)
+  .get(
+    "/me",
+    async ({ db, user }) => {
+      if (!user) {
+        throw new Error("Guarded route missing authenticated user.");
+      }
+
+      return currentUser({ db, user });
+    },
+    {
+      response: {
+        200: currentUserResponseSchema,
+        401: unauthorizedConflictSchema,
+      },
+    },
+  )
   .delete(
     "/user",
     async ({ status, db, user }) => {

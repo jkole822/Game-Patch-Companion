@@ -1,3 +1,4 @@
+export * from "./currentUser";
 export * from "./deleteUser";
 export * from "./forgotPassword";
 export * from "./login";

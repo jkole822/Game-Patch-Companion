@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const UserRoleSchema = z.enum(["user", "admin"]);
+
 export const EmailSchema = z.preprocess(
   (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
   z.email(),

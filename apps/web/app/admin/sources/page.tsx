@@ -11,7 +11,7 @@ import {
   StatGrid,
   SummaryCardGrid,
 } from "@/components";
-import { getAuthCookieHeader } from "@/lib/auth";
+import { getAuthCookieHeader, getCurrentUser } from "@/lib/auth";
 import { formatDate, getApiBaseUrl } from "@/lib/utils";
 
 import type { SourceRecord } from "./_components/SourceForm.types";
@@ -57,6 +57,7 @@ const fetchSources = async (cookieHeader: string) => {
 
 export default async function SourcesPage() {
   const cookieStore = await cookies();
+  const authUser = await getCurrentUser(cookieStore);
   const authCookieHeader = getAuthCookieHeader(cookieStore);
 
   if (!authCookieHeader) {
@@ -184,6 +185,7 @@ export default async function SourcesPage() {
         <div className="flex flex-wrap gap-3">
           <Button href="/admin/sources/create">Create source</Button>
           <Button href="/dashboard">Back to dashboard</Button>
+          {authUser?.role === "admin" && <Button href="/admin">Back to admin</Button>}
         </div>
       }
       icon={ShieldCheck}
