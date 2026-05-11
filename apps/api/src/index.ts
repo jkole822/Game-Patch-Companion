@@ -1,4 +1,3 @@
-import { startIngestResyncScheduler, startIngestScheduler } from "@api-jobs";
 import {
   AuthModule,
   GamesModule,
@@ -9,7 +8,7 @@ import {
   WatchlistMatchesModule,
   WatchlistsModule,
 } from "@api-modules";
-import { db, dbPlugin } from "@api-utils";
+import { dbPlugin } from "@api-utils";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 
@@ -32,13 +31,6 @@ const parseCorsOrigins = (value: string | undefined): string[] => {
 
 const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGINS ?? process.env.APP_URL);
 const port = parsePositiveInt(process.env.PORT, 4000);
-const isIngestJobEnabled = process.env.INGEST_JOB_ENABLED !== "false";
-const ingestIntervalMs = parsePositiveInt(process.env.INGEST_INTERVAL_MS, 5 * 60 * 1000);
-const isIngestResyncJobEnabled = process.env.INGEST_RESYNC_JOB_ENABLED !== "false";
-const ingestResyncIntervalMs = parsePositiveInt(
-  process.env.INGEST_RESYNC_INTERVAL_MS,
-  60 * 60 * 1000,
-);
 
 const app = new Elysia()
   .use(
@@ -57,21 +49,5 @@ const app = new Elysia()
   .use(WatchlistItemsModule)
   .use(WatchlistMatchesModule)
   .listen(port);
-
-if (isIngestJobEnabled) {
-  startIngestScheduler({
-    db,
-    intervalMs: ingestIntervalMs,
-    runOnStartup: true,
-  });
-}
-
-if (isIngestResyncJobEnabled) {
-  startIngestResyncScheduler({
-    db,
-    intervalMs: ingestResyncIntervalMs,
-    runOnStartup: false,
-  });
-}
 
 console.warn(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
