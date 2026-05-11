@@ -1,44 +1,18 @@
+import type {
+  FetchResult,
+  Game,
+  PatchEntry,
+  Watchlist,
+  WatchlistItem,
+  WatchlistMatch,
+} from "@/lib/types";
 import type { LucideIcon } from "lucide-react";
-
-export type Game = {
-  id: string;
-  key: string;
-  title: string;
-};
-
-export type Watchlist = {
-  createdAt: string;
-  gameId: string;
-  id: string;
-  name: string;
-};
-
-export type WatchlistItem = {
-  createdAt: string;
-  id: string;
-  keyword: string;
-  watchlistId: string;
-};
-
-export type PatchEntry = {
-  content: string;
-  createdAt: string;
-  gameId: string | null;
-  id: string;
-  publishedAt: string | null;
-  title: string;
-  url: string;
-};
-
-export type FetchResult<T> = {
-  data: T;
-  ok: boolean;
-  unauthorized?: boolean;
-};
 
 export type WatchlistWithItems = Watchlist & {
   gameTitle: string;
   items: WatchlistItem[];
+  matchCount: number;
+  recentMatchAt: string | null;
 };
 
 export type TopGame = {
@@ -53,3 +27,9 @@ export type DashboardStat = {
   label: string;
   value: number;
 };
+
+export type RecentWatchlistMatch = WatchlistMatch & {
+  gameTitle: string;
+};
+
+export type { FetchResult, Game, PatchEntry, Watchlist, WatchlistItem, WatchlistMatch };

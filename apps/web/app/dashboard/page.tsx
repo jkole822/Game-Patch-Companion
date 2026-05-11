@@ -1,4 +1,4 @@
-import { Bell, FolderKanban, Gamepad2, Radar, Sparkles } from "lucide-react";
+import { BowArrow, Gamepad2, Radar, Scroll, Sparkles, Target } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -16,6 +16,7 @@ import {
   EMPTY_GAMES,
   EMPTY_PATCH_ENTRIES,
   EMPTY_WATCHLIST_ITEMS,
+  EMPTY_WATCHLIST_MATCHES,
   EMPTY_WATCHLISTS,
   fetchDashboardResource,
 } from "./dashboard.utils";
@@ -31,18 +32,29 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const [gamesResult, watchlistsResult, watchlistItemsResult, patchEntriesResult] =
-    await Promise.all([
-      fetchDashboardResource("/games/find-many", authCookieHeader, EMPTY_GAMES),
-      fetchDashboardResource("/watchlists/find-many", authCookieHeader, EMPTY_WATCHLISTS),
-      fetchDashboardResource("/watchlist-items/find-many", authCookieHeader, EMPTY_WATCHLIST_ITEMS),
-      fetchDashboardResource("/patch-entries/find-many", authCookieHeader, EMPTY_PATCH_ENTRIES),
-    ]);
+  const [
+    gamesResult,
+    watchlistsResult,
+    watchlistItemsResult,
+    watchlistMatchesResult,
+    patchEntriesResult,
+  ] = await Promise.all([
+    fetchDashboardResource("/games/find-many", authCookieHeader, EMPTY_GAMES),
+    fetchDashboardResource("/watchlists/find-many", authCookieHeader, EMPTY_WATCHLISTS),
+    fetchDashboardResource("/watchlist-items/find-many", authCookieHeader, EMPTY_WATCHLIST_ITEMS),
+    fetchDashboardResource(
+      "/watchlist-matches/find-many",
+      authCookieHeader,
+      EMPTY_WATCHLIST_MATCHES,
+    ),
+    fetchDashboardResource("/patch-entries/find-many", authCookieHeader, EMPTY_PATCH_ENTRIES),
+  ]);
 
   if (
     gamesResult.unauthorized ||
     watchlistsResult.unauthorized ||
     watchlistItemsResult.unauthorized ||
+    watchlistMatchesResult.unauthorized ||
     patchEntriesResult.unauthorized
   ) {
     redirect("/login");
@@ -52,10 +64,20 @@ export default async function DashboardPage() {
   const watchlists = watchlistsResult.data;
   const watchlistItems = watchlistItemsResult.data;
   const { gameTitleById, recentPatchEntries, topGames, watchedGamesCount, watchlistsWithItems } =
-    buildDashboardViewModel(games, watchlists, watchlistItems, patchEntriesResult.data);
+    buildDashboardViewModel(
+      games,
+      watchlists,
+      watchlistItems,
+      watchlistMatchesResult.data,
+      patchEntriesResult.data,
+    );
 
   const partialData =
-    !gamesResult.ok || !watchlistsResult.ok || !watchlistItemsResult.ok || !patchEntriesResult.ok;
+    !gamesResult.ok ||
+    !watchlistsResult.ok ||
+    !watchlistItemsResult.ok ||
+    !watchlistMatchesResult.ok ||
+    !patchEntriesResult.ok;
 
   const stats: DashboardStat[] = [
     {
@@ -64,14 +86,19 @@ export default async function DashboardPage() {
       value: patchEntriesResult.data.length,
     },
     {
-      icon: FolderKanban,
+      icon: Scroll,
       label: "Watchlists",
       value: watchlists.length,
     },
     {
-      icon: Bell,
+      icon: BowArrow,
       label: "Tracked keywords",
       value: watchlistItems.length,
+    },
+    {
+      icon: Target,
+      label: "Watchlist matches",
+      value: watchlistMatchesResult.data.length,
     },
     {
       icon: Gamepad2,
@@ -88,6 +115,7 @@ export default async function DashboardPage() {
       headerActions={
         <div className="flex flex-wrap gap-3">
           {authUser.role === "admin" && <Button href="/admin">Admin</Button>}
+          <Button href="/watchlists">Manage watchlists</Button>
           <Button href="/dashboard">Refresh feed</Button>
           <Button href="/">View landing page</Button>
         </div>
@@ -104,7 +132,11 @@ export default async function DashboardPage() {
       title="Dashboard"
     >
       <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <WatchlistsSection totalKeywords={watchlistItems.length} watchlists={watchlistsWithItems} />
+        <WatchlistsSection
+          totalKeywords={watchlistItems.length}
+          totalMatches={watchlistMatchesResult.data.length}
+          watchlists={watchlistsWithItems}
+        />
         <PatchFeedSection gameTitleById={gameTitleById} patchEntries={recentPatchEntries} />
       </section>
     </CollectionsPageLayout>

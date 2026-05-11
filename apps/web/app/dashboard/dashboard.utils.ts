@@ -4,15 +4,18 @@ import type {
   FetchResult,
   Game,
   PatchEntry,
+  RecentWatchlistMatch,
   TopGame,
   Watchlist,
   WatchlistItem,
+  WatchlistMatch,
   WatchlistWithItems,
 } from "./dashboard.types";
 
 export const EMPTY_GAMES: Game[] = [];
 export const EMPTY_WATCHLISTS: Watchlist[] = [];
 export const EMPTY_WATCHLIST_ITEMS: WatchlistItem[] = [];
+export const EMPTY_WATCHLIST_MATCHES: WatchlistMatch[] = [];
 export const EMPTY_PATCH_ENTRIES: PatchEntry[] = [];
 
 export const fetchDashboardResource = async <T>(
@@ -57,8 +60,15 @@ export const fetchDashboardResource = async <T>(
 
 const getActivityDate = (entry: PatchEntry) => {
   const value = entry.publishedAt ?? entry.createdAt;
-  const timestamp = new Date(value).getTime();
+  return getTimestamp(value);
+};
 
+const getTimestamp = (value: string | null | undefined) => {
+  if (!value) {
+    return 0;
+  }
+
+  const timestamp = new Date(value).getTime();
   return Number.isNaN(timestamp) ? 0 : timestamp;
 };
 
@@ -76,6 +86,7 @@ export const buildDashboardViewModel = (
   games: Game[],
   watchlists: Watchlist[],
   watchlistItems: WatchlistItem[],
+  watchlistMatches: WatchlistMatch[],
   patchEntries: PatchEntry[],
 ) => {
   const sortedPatchEntries = [...patchEntries].sort((left, right) => {
@@ -84,12 +95,19 @@ export const buildDashboardViewModel = (
 
   const gameTitleById = new Map(games.map((game) => [game.id, game.title]));
   const itemsByWatchlistId = new Map<string, WatchlistItem[]>();
+  const matchesByWatchlistId = new Map<string, WatchlistMatch[]>();
   const watchlistsByGameId = new Map<string, Watchlist[]>();
 
   for (const item of watchlistItems) {
     const existingItems = itemsByWatchlistId.get(item.watchlistId) ?? [];
     existingItems.push(item);
     itemsByWatchlistId.set(item.watchlistId, existingItems);
+  }
+
+  for (const match of watchlistMatches) {
+    const existingMatches = matchesByWatchlistId.get(match.watchlistId) ?? [];
+    existingMatches.push(match);
+    matchesByWatchlistId.set(match.watchlistId, existingMatches);
   }
 
   for (const watchlist of watchlists) {
@@ -109,13 +127,44 @@ export const buildDashboardViewModel = (
 
       return left.name.localeCompare(right.name);
     })
-    .map((watchlist) => ({
-      ...watchlist,
-      gameTitle: gameTitleById.get(watchlist.gameId) ?? "Unassigned game",
-      items: (itemsByWatchlistId.get(watchlist.id) ?? []).sort((left, right) =>
-        left.keyword.localeCompare(right.keyword),
-      ),
-    }));
+    .map((watchlist) => {
+      const sortedMatches = [...(matchesByWatchlistId.get(watchlist.id) ?? [])].sort(
+        (left, right) => {
+          return (
+            getTimestamp(right.patchEntryPublishedAt ?? right.patchEntryCreatedAt) -
+            getTimestamp(left.patchEntryPublishedAt ?? left.patchEntryCreatedAt)
+          );
+        },
+      );
+
+      return {
+        ...watchlist,
+        gameTitle: gameTitleById.get(watchlist.gameId) ?? "Unassigned game",
+        items: (itemsByWatchlistId.get(watchlist.id) ?? []).sort((left, right) =>
+          left.keyword.localeCompare(right.keyword),
+        ),
+        matchCount: sortedMatches.length,
+        recentMatchAt:
+          sortedMatches[0]?.patchEntryPublishedAt ?? sortedMatches[0]?.patchEntryCreatedAt ?? null,
+      };
+    });
+
+  const recentMatches: RecentWatchlistMatch[] = [...watchlistMatches]
+    .sort((left, right) => {
+      const rightValue = right.patchEntryPublishedAt ?? right.patchEntryCreatedAt;
+      const leftValue = left.patchEntryPublishedAt ?? left.patchEntryCreatedAt;
+
+      return new Date(rightValue).getTime() - new Date(leftValue).getTime();
+    })
+    .slice(0, 6)
+    .map((match) => {
+      const watchlist = watchlists.find((entry) => entry.id === match.watchlistId);
+
+      return {
+        ...match,
+        gameTitle: gameTitleById.get(watchlist?.gameId ?? "") ?? "Unknown game",
+      };
+    });
 
   const topGames: TopGame[] = [...watchlistsByGameId.entries()]
     .map(([gameId, watchlistsForGame]) => {
@@ -143,6 +192,7 @@ export const buildDashboardViewModel = (
     recentPatchEntries: sortedPatchEntries.slice(0, 6),
     topGames,
     watchedGamesCount: watchlistsByGameId.size,
+    recentMatches,
     watchlistsWithItems,
   };
 };

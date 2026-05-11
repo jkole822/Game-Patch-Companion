@@ -152,7 +152,10 @@ export const watchlistItems = pgTable(
   },
   (t) => ({
     watchlistIdx: index("watchlist_items_watchlist_idx").on(t.watchlistId),
-    keywordUnique: uniqueIndex("watchlist_items_keyword_unique").on(t.keyword),
+    keywordUnique: uniqueIndex("watchlist_items_watchlist_keyword_unique").on(
+      t.watchlistId,
+      t.keyword,
+    ),
   }),
 );
 
