@@ -14,6 +14,8 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@sanity/image-url": "^2.0.3",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "groqd": "^1.7.1",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",

@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { unstable_cache } from "next/cache";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { cookies } from "next/headers";
@@ -76,6 +78,8 @@ export default async function RootLayout({
           />
         )}
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
