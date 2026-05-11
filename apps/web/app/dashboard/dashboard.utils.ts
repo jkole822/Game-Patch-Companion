@@ -94,6 +94,7 @@ export const buildDashboardViewModel = (
   });
 
   const gameTitleById = new Map(games.map((game) => [game.id, game.title]));
+  const watchlistById = new Map(watchlists.map((watchlist) => [watchlist.id, watchlist]));
   const itemsByWatchlistId = new Map<string, WatchlistItem[]>();
   const matchesByWatchlistId = new Map<string, WatchlistMatch[]>();
   const watchlistsByGameId = new Map<string, Watchlist[]>();
@@ -154,11 +155,11 @@ export const buildDashboardViewModel = (
       const rightValue = right.patchEntryPublishedAt ?? right.patchEntryCreatedAt;
       const leftValue = left.patchEntryPublishedAt ?? left.patchEntryCreatedAt;
 
-      return new Date(rightValue).getTime() - new Date(leftValue).getTime();
+      return getTimestamp(rightValue) - getTimestamp(leftValue);
     })
     .slice(0, 6)
     .map((match) => {
-      const watchlist = watchlists.find((entry) => entry.id === match.watchlistId);
+      const watchlist = watchlistById.get(match.watchlistId);
 
       return {
         ...match,
