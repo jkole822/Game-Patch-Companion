@@ -6,6 +6,7 @@ import {
   PatchEntriesModule,
   SourcesModule,
   WatchlistItemsModule,
+  WatchlistMatchesModule,
   WatchlistsModule,
 } from "@api-modules";
 import { db, dbPlugin } from "@api-utils";
@@ -45,6 +46,7 @@ const app = new Elysia()
   .use(SourcesModule)
   .use(WatchlistsModule)
   .use(WatchlistItemsModule)
+  .use(WatchlistMatchesModule)
   .listen(4000);
 
 if (isIngestJobEnabled) {

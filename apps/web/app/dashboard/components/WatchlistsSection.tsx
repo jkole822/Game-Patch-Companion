@@ -1,14 +1,19 @@
-import { Container } from "@/components";
+import { Button, Container } from "@/components";
 import { formatDate } from "@/lib/utils";
 
 import type { WatchlistWithItems } from "../dashboard.types";
 
 type WatchlistsSectionProps = {
   totalKeywords: number;
+  totalMatches: number;
   watchlists: WatchlistWithItems[];
 };
 
-export const WatchlistsSection = ({ totalKeywords, watchlists }: WatchlistsSectionProps) => {
+export const WatchlistsSection = ({
+  totalKeywords,
+  totalMatches,
+  watchlists,
+}: WatchlistsSectionProps) => {
   return (
     <Container className="w-full" contentClassName="space-y-6 p-7 sm:p-8">
       <div className="flex items-end justify-between gap-4">
@@ -16,7 +21,10 @@ export const WatchlistsSection = ({ totalKeywords, watchlists }: WatchlistsSecti
           <p className="eyebrow">Watchlists</p>
           <h2 className="hs-2">Tracked themes</h2>
         </div>
-        <p className="text-text-muted text-sm">{totalKeywords} total keywords</p>
+        <div className="text-text-muted text-right text-sm">
+          <p>{totalKeywords} total keywords</p>
+          <p className="mt-1">{totalMatches} total matches</p>
+        </div>
       </div>
 
       {watchlists.length > 0 ? (
@@ -36,27 +44,43 @@ export const WatchlistsSection = ({ totalKeywords, watchlists }: WatchlistsSecti
                   </div>
                   <div className="text-text-muted text-right text-xs tracking-[0.18em] uppercase">
                     <p>{watchlist.items.length} terms</p>
+                    <p className="mt-2">{watchlist.matchCount} matches</p>
                     {createdAtLabel ? (
                       <p className="mt-2 tracking-normal normal-case">Created {createdAtLabel}</p>
+                    ) : null}
+                    {watchlist.recentMatchAt ? (
+                      <p className="mt-2 tracking-normal normal-case">
+                        Last match {formatDate(watchlist.recentMatchAt) ?? "recently"}
+                      </p>
                     ) : null}
                   </div>
                 </div>
 
                 {watchlist.items.length > 0 ? (
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {watchlist.items.map((item) => (
-                      <span
-                        className="border-border bg-background/65 text-text rounded-full border px-3 py-1.5 text-sm"
-                        key={item.id}
-                      >
-                        {item.keyword}
-                      </span>
-                    ))}
-                  </div>
+                  <>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {watchlist.items.map((item) => (
+                        <span
+                          className="border-border bg-background/65 text-text rounded-full border px-3 py-1.5 text-sm"
+                          key={item.id}
+                        >
+                          {item.keyword}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-5">
+                      <Button href={`/watchlists?watchlistId=${watchlist.id}`}>
+                        Manage watchlist
+                      </Button>
+                    </div>
+                  </>
                 ) : (
-                  <p className="text-text-muted mt-5 text-sm leading-6">
-                    This watchlist has been created, but no keywords have been added yet.
-                  </p>
+                  <div className="mt-5 space-y-4">
+                    <p className="text-text-muted text-sm leading-6">
+                      This watchlist has been created, but no keywords have been added yet.
+                    </p>
+                    <Button href={`/watchlists?watchlistId=${watchlist.id}`}>Open watchlist</Button>
+                  </div>
                 )}
               </article>
             );
