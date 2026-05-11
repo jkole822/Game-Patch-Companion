@@ -4,7 +4,7 @@ import { EmailSchema, PasswordSchema } from "./authCommon";
 
 export const loginSchema = z.object({
   email: EmailSchema,
-  password: PasswordSchema,
+  password: z.string().min(1),
 });
 
 export const registerSchema = z.object({

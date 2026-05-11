@@ -19,7 +19,12 @@ export const AuthForm = ({ action, className, error, title, variant }: AuthFormP
       <FormMessage error={error} />
       <form action={action} className="flex w-full flex-col gap-4" method="post">
         <TextField autoComplete="email" label="Email" name="email" type="email" />
-        <TextField autoComplete="new-password" label="Password" name="password" type="password" />
+        <TextField
+          autoComplete={isRegistering ? "new-password" : "current-password"}
+          label="Password"
+          name="password"
+          type="password"
+        />
         {!isRegistering && (
           <p className="text-right text-sm text-white/85">
             <Link href="/forgot-password">Forgot password?</Link>
