@@ -23,6 +23,15 @@ const parsePositiveInt = (value: string | undefined, fallback: number): number =
   return parsed;
 };
 
+const parseCorsOrigins = (value: string | undefined): string[] => {
+  return (value ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+};
+
+const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGINS ?? process.env.APP_URL);
+const port = parsePositiveInt(process.env.PORT, 4000);
 const isIngestJobEnabled = process.env.INGEST_JOB_ENABLED !== "false";
 const ingestIntervalMs = parsePositiveInt(process.env.INGEST_INTERVAL_MS, 5 * 60 * 1000);
 const isIngestResyncJobEnabled = process.env.INGEST_RESYNC_JOB_ENABLED !== "false";
@@ -34,7 +43,7 @@ const ingestResyncIntervalMs = parsePositiveInt(
 const app = new Elysia()
   .use(
     cors({
-      origin: "http://localhost:3000",
+      origin: corsOrigins,
       credentials: true,
     }),
   )
@@ -47,7 +56,7 @@ const app = new Elysia()
   .use(WatchlistsModule)
   .use(WatchlistItemsModule)
   .use(WatchlistMatchesModule)
-  .listen(4000);
+  .listen(port);
 
 if (isIngestJobEnabled) {
   startIngestScheduler({
