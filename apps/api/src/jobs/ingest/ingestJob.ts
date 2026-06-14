@@ -1,4 +1,4 @@
-import { and, asc, eq, gt } from "@db/orm";
+import { and, asc, eq, gt, sql } from "@db/orm";
 import { patchEntries, patchEntryDiffs, sources, watchlistMatches } from "@db/schema";
 import { sourcesResponseSchema } from "@shared/schemas";
 
@@ -47,6 +47,15 @@ export type IngestResyncJobResult =
       activeJob: ContentSyncJobName;
       message: string;
     };
+
+export type PatchEntryDataPruneJobResult = {
+  status: "completed";
+  prunedRawEntries: number;
+  rawRetentionDays: number;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+};
 
 type EnabledSource = z.infer<typeof sourceResponseSchema>;
 export type ContentSyncJobName = "ingest" | "resync";
@@ -287,6 +296,41 @@ export const runIngestResyncJob = async ({ db }: { db: AppDb }): Promise<IngestR
   }
 };
 
+export const pruneExpiredPatchEntryData = async ({
+  db,
+  rawRetentionDays,
+}: {
+  db: AppDb;
+  rawRetentionDays: number;
+}): Promise<PatchEntryDataPruneJobResult> => {
+  const startedAt = new Date();
+  const cutoff = new Date(startedAt.getTime() - rawRetentionDays * 24 * 60 * 60 * 1000);
+
+  const prunedRows = await db
+    .update(patchEntries)
+    .set({ raw: null })
+    .where(
+      and(
+        sql`${patchEntries.raw} is not null`,
+        sql`coalesce(${patchEntries.fetchedAt}, ${patchEntries.createdAt}) < ${cutoff}`,
+      ),
+    )
+    .returning({
+      id: patchEntries.id,
+    });
+
+  const finishedAt = new Date();
+
+  return {
+    status: "completed",
+    prunedRawEntries: prunedRows.length,
+    rawRetentionDays,
+    startedAt: startedAt.toISOString(),
+    finishedAt: finishedAt.toISOString(),
+    durationMs: finishedAt.getTime() - startedAt.getTime(),
+  };
+};
+
 export const startIngestScheduler = ({
   db,
   intervalMs,
@@ -309,6 +353,40 @@ export const startIngestScheduler = ({
       }
     } catch (error) {
       console.error("[ingest] run failed", error);
+    }
+  };
+
+  if (runOnStartup) {
+    void run();
+  }
+
+  const timer = setInterval(() => {
+    void run();
+  }, intervalMs);
+
+  return () => clearInterval(timer);
+};
+
+export const startPatchEntryDataPruneScheduler = ({
+  db,
+  intervalMs,
+  rawRetentionDays,
+  runOnStartup,
+}: {
+  db: AppDb;
+  intervalMs: number;
+  rawRetentionDays: number;
+  runOnStartup: boolean;
+}): (() => void) => {
+  const run = async () => {
+    try {
+      const result = await pruneExpiredPatchEntryData({ db, rawRetentionDays });
+
+      console.warn(
+        `[patch-entry-prune] completed prunedRawEntries=${result.prunedRawEntries} rawRetentionDays=${result.rawRetentionDays} durationMs=${result.durationMs}`,
+      );
+    } catch (error) {
+      console.error("[patch-entry-prune] run failed", error);
     }
   };
 

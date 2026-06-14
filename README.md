@@ -45,4 +45,22 @@ To run the app:
 bun run dev
 ```
 
+## Ingest Worker
+
+The ingest worker defaults to a daily cadence:
+
+```bash
+INGEST_INTERVAL_MS=86400000
+INGEST_RESYNC_INTERVAL_MS=86400000
+```
+
+Patch entry raw HTML is pruned daily by default after 30 days. This keeps patch metadata,
+normalized content, checksums, and URLs intact while removing the bulkier debug copy:
+
+```bash
+PATCH_ENTRY_DATA_PRUNE_ENABLED=true
+PATCH_ENTRY_DATA_PRUNE_INTERVAL_MS=86400000
+PATCH_ENTRY_RAW_RETENTION_DAYS=30
+```
+
 This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
