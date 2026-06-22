@@ -1,4 +1,4 @@
-import { and, eq } from "@db/orm";
+import { and, desc, eq } from "@db/orm";
 import { patchEntries } from "@db/schema";
 import { patchEntriesResponseSchema } from "@shared/schemas";
 
@@ -8,6 +8,10 @@ import type { z } from "zod";
 
 type FindManyPatchEntriesInput = z.infer<typeof patchEntryQuerySchema>;
 type FindManyPatchEntriesSuccess = z.infer<typeof patchEntriesResponseSchema>;
+
+// Hard cap applied when the caller does not supply an explicit limit, so the
+// patch feed can never scan and serialize the entire table on a single request.
+const DEFAULT_PATCH_ENTRY_LIMIT = 100;
 
 export const findManyPatchEntries = async ({
   db,
@@ -39,7 +43,9 @@ export const findManyPatchEntries = async ({
       url: patchEntries.url,
     })
     .from(patchEntries)
-    .where(and(...filters));
+    .where(and(...filters))
+    .orderBy(desc(patchEntries.publishedAt), desc(patchEntries.createdAt))
+    .limit(query.limit ?? DEFAULT_PATCH_ENTRY_LIMIT);
 
   return {
     ok: true,

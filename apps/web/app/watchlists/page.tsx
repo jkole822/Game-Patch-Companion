@@ -76,7 +76,7 @@ export default async function WatchlistsPage({
 
   const [gamesResult, watchlistsResult, watchlistItemsResult, watchlistMatchesResult] =
     await Promise.all([
-      fetchWatchlistsResource("/games/find-many", authCookieHeader, EMPTY_GAMES),
+      fetchWatchlistsResource("/games/find-many", authCookieHeader, EMPTY_GAMES, 60),
       fetchWatchlistsResource("/watchlists/find-many", authCookieHeader, EMPTY_WATCHLISTS),
       fetchWatchlistsResource(
         "/watchlist-items/find-many",

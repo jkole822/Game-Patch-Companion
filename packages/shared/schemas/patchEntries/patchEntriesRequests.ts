@@ -10,6 +10,8 @@ import {
 export const patchEntryQuerySchema = z.object({
   gameId: GameIdSchema.optional(),
   id: PatchEntryIdSchema.optional(),
+  // Bounds the (otherwise unbounded) patch feed. Coerced from the query string.
+  limit: z.coerce.number().int().positive().max(200).optional(),
   sourceId: z.uuid().optional(),
   title: z.string().optional(),
   url: z.string().optional(),

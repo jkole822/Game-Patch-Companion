@@ -73,6 +73,11 @@ export const patchEntries = pgTable(
   (t) => ({
     sourceUrlUnique: uniqueIndex("patch_entries_source_url_unique").on(t.sourceId, t.url),
     gameIdx: index("patch_entries_game_idx").on(t.gameId),
+    // Supports ordering the patch feed by recency (publishedAt desc, createdAt desc).
+    publishedAtIdx: index("patch_entries_published_at_idx").on(
+      t.publishedAt.desc().nullsLast(),
+      t.createdAt.desc(),
+    ),
   }),
 );
 
@@ -137,6 +142,8 @@ export const watchlists = pgTable(
   },
   (t) => ({
     gameIdx: index("watchlists_game_idx").on(t.gameId),
+    // Every watchlist / item / match list query filters or joins on userId.
+    userIdx: index("watchlists_user_idx").on(t.userId),
   }),
 );
 
@@ -179,5 +186,9 @@ export const watchlistMatches = pgTable(
   (t) => ({
     patchEntryIdx: index("watchlist_matches_patch_entry_idx").on(t.patchEntryId),
     watchlistIdx: index("watchlist_matches_watchlist_idx").on(t.watchlistId),
+    // FK joined in findManyWatchlistMatches; previously unindexed.
+    watchlistItemIdx: index("watchlist_matches_watchlist_item_idx").on(t.watchlistItemId),
+    // Primary sort key for the matches feed.
+    createdAtIdx: index("watchlist_matches_created_at_idx").on(t.createdAt.desc()),
   }),
 );

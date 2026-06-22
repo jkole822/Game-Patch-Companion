@@ -39,7 +39,7 @@ export default async function DashboardPage() {
     watchlistMatchesResult,
     patchEntriesResult,
   ] = await Promise.all([
-    fetchDashboardResource("/games/find-many", authCookieHeader, EMPTY_GAMES),
+    fetchDashboardResource("/games/find-many", authCookieHeader, EMPTY_GAMES, 60),
     fetchDashboardResource("/watchlists/find-many", authCookieHeader, EMPTY_WATCHLISTS),
     fetchDashboardResource("/watchlist-items/find-many", authCookieHeader, EMPTY_WATCHLIST_ITEMS),
     fetchDashboardResource(
@@ -47,7 +47,11 @@ export default async function DashboardPage() {
       authCookieHeader,
       EMPTY_WATCHLIST_MATCHES,
     ),
-    fetchDashboardResource("/patch-entries/find-many", authCookieHeader, EMPTY_PATCH_ENTRIES),
+    fetchDashboardResource(
+      "/patch-entries/find-many?limit=20",
+      authCookieHeader,
+      EMPTY_PATCH_ENTRIES,
+    ),
   ]);
 
   if (

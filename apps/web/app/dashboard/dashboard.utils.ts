@@ -22,13 +22,18 @@ export const fetchDashboardResource = async <T>(
   path: string,
   cookieHeader: string,
   fallback: T,
+  // Pass a TTL (seconds) for globally-shared, non-user-scoped data (e.g. games)
+  // to reuse one cached response instead of re-querying the DB on every render.
+  revalidateSeconds?: number,
 ): Promise<FetchResult<T>> => {
   try {
     const response = await fetch(`${getApiBaseUrl()}${path}`, {
       headers: {
         Cookie: cookieHeader,
       },
-      cache: "no-store",
+      ...(revalidateSeconds === undefined
+        ? { cache: "no-store" as const }
+        : { next: { revalidate: revalidateSeconds } }),
     });
 
     if (response.status === 401) {
